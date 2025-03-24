@@ -1,0 +1,1371 @@
+{
+    "CT 3D": {},
+    "CT Abdomen & Pelvis": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Abdomen & Pelvis Lifesaver": {
+        "Select Type": [
+            "Plain"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Abdomen & Pelvis Triphasic": {
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Angiography Abdominal": {},
+    "CT Angiography Aortogram": {},
+    "CT Angiography Cerebral": {},
+    "CT Angiography Cerebral Venogram": {},
+    "CT Angiography Neck": {},
+    "CT Angiography Peripheral Arms": {},
+    "CT Angiography Peripheral Legs": {},
+    "CT Angiography Pulmonary": {},
+    "CT Angiography Renal": {},
+    "CT Angiography Thoracic": {},
+    "CT Brain": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Perfusion": {},
+    "MRI DWI": {},
+    "CT Brain & Face": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Brain Lifesaver": {
+        "Select Type": [
+            "Plain"
+        ]
+    },
+    "CT Cardiac": {},
+    "CT CBCT": {},
+    "CT Cisternography": {},
+    "CT Comparative Study": {},
+    "CT Covid": {},
+    "CT Enterography": {},
+    "CT Extremities Ankle": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Arm": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Clavicle": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Elbow": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Foot": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Foot With Ankle": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ]
+    },
+    "CT Extremities Forearm": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Hand": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Heel": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Hip Joints": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Knee": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Leg": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities PM Joint": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Shoulder": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Scapula": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities SI Joint": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Thigh": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Thumb": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities TM Joints": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Extremities Wrist": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "CT Face": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT KUB": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Lower Abdomen": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Maxillofacial": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Nasopharynx": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Neck": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Pelvis": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Pituitary": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Orbits": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Cervico Dorsal": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Sinogram": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT PNS": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT ROC Fungal": {},
+    "CT Sella": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Cervical": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Coccyx": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Dorsal": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine CV Junction": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Dorso Lumbar": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Lumbo Sacral": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Sacrum": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Spine Whole Spine": {},
+    "CT Temporal Bone": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "CT Thorax": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "CT Thorax HRCT": {
+        "Additional studies": []
+    },
+    "CT Upper Abdomen": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Venogram Peripheral Legs": {},
+    "CT Venogram Peripheral Arms": {},
+    "CT Urography": {
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "CT Whole Body": {},
+    "MRI Abdomen & Pelvis": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "MRI Angiography Abdominal": {},
+    "MRI Adrenal Region": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Angiography Aortogram": {},
+    "MRI Angiography Central Venogram": {},
+    "MRI Angiography Neck": {},
+    "MRI Angiography Peripheral Arms": {},
+    "MRI Angiography Peripheral Legs": {},
+    "MRI Angiography Pulmonary": {},
+    "MRI Angiography Renal": {},
+    "MRI Arthrogram": {},
+    "MRI Axilla": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Brachial Plexus": {},
+    "MRI Brain": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI MRA": {},
+    "MRI MRV": {},
+    "MRI Spectro": {},
+    "MRI Perfusion": {},
+    "MRI Brain Epilepsy Protocol": {},
+    "MRI Brain Stroke Protocol": {},
+    "MRI Breast": {
+        "Additional studies": []
+    },
+    "MRI Cardiac": {},
+    "MRI Cartigram": {},
+    "MRI Cisternography": {},
+    "MRI Comparative Study": {},
+    "MRI Cranial Nerves": {},
+    "MRI CSF Flow": {},
+    "MRI Defecography": {},
+    "MRI Enterography": {},
+    "MRI Face": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI KUB": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "MRI IAC (Inner Ear)": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Fetal": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Fistulogram": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Maxillofacial": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI MRCP": {},
+    "MRI MSK Ankle": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Arm": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Clavicle": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Elbow": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Foot With Ankle": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ]
+    },
+    "MRI MSK Hand": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Forearm": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Foot": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Heel": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Knee": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Leg": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Hip Joints": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK PM Joint": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Shoulder": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK SI Joint": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Thigh": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Scapula": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Thumb": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK TM Joints": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI MSK Wrist": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Additional studies": []
+    },
+    "MRI Multiparametric Prostate": {},
+    "MRI Neck": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Neurography": {},
+    "MRI Orbits": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Penile": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Perineum": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Placenta": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Pelvis": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "MRI PNS": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI ROC Fungal": {},
+    "MRI Screening Abdomen": {
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "MRI Screening Brain": {},
+    "MRI Screening Hip Joints": {},
+    "MRI Screening PBH": {},
+    "MRI Screening Orbits": {},
+    "MRI Screening Shoulder": {},
+    "MRI Screening Spine Cervical": {},
+    "MRI Screening SI Joint": {},
+    "MRI Screening Spine Dorsal": {},
+    "MRI Screening Spine Lumbo Sacral": {},
+    "MRI Screening Whole Spine": {},
+    "MRI Scrotum": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Sinogram": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Sella (Pituitary)": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Sleep Study": {},
+    "MRI Spine Cervico Dorsal": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Whole Spine Screening": {},
+    "MRI Spine Cervical": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Spine Coccyx": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Spine CV Junction": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Spine Dorso Lumbar": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Spine Whole Spine": {},
+    "MRI Spine Lumbo Sacral": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Spine Dorsal": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Spine Sacro Coccygeal": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Additional studies": []
+    },
+    "MRI Temporal Bone": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Tongue": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Upper Abdomen": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "MRI Urography": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ],
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "MRI Whole Body": {},
+    "MRI Upper Airway": {},
+    "MRI Thorax": {
+        "Select Type": [
+            "Plain",
+            "Contrast"
+        ]
+    },
+    "NM Comparative Study": {},
+    "NM Gamma Camera DMSA Scan": {},
+    "NM Gamma Camera DSMA Scan": {},
+    "NM Gamma Camera Bone Scan": {},
+    "NM Gamma Camera DTPA Scan": {},
+    "NM Gamma Camera HIDA Scan": {},
+    "NM Gamma Camera Lung Perfusion Scan": {},
+    "NM Gamma Camera Lung Ventilation Scan": {},
+    "NM Gamma Camera Myocardial Perfusion Scan": {},
+    "NM Gamma Camera Renal Scan": {},
+    "NM Gamma Camera Thyroid Scan": {},
+    "NM Gamma Camera Ventilation Perfusion Scan": {},
+    "NM Gamma Camera Whole Body Iodine Scan": {},
+    "NM PET CT PSMA": {},
+    "NM PET CT Whole Body": {},
+    "NM PET Whole Body": {},
+    "NM PET CT Brain": {},
+    "NM PET CT Cardiac": {},
+    "USG Abdomen": {},
+    "USG Abdomen & Pelvis": {
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "USG Anomaly Twins": {},
+    "USG BPP Doppler Twins": {},
+    "USG Breast": {},
+    "USG Artery Doppler": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ]
+    },
+    "USG Carotid Doppler": {},
+    "USG Fetal Echo": {},
+    "USG Cranuim": {},
+    "USG Early Obstetrics Twins": {},
+    "USG Growth": {},
+    "USG Hemithorax": {},
+    "USG KUB": {
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "USG Obstetrics Twins": {},
+    "USG NT/NB Twins": {},
+    "USG Pelvis": {
+        "Select Gender": [
+            "Male",
+            "Female"
+        ]
+    },
+    "USG Renal Doppler": {},
+    "USG Scrotal": {},
+    "USG Term Scan Twins": {},
+    "USG Venous Doppler": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ]
+    },
+    "XRAY Comparative Study": {},
+    "XRAY Mammography Both": {},
+    "XRAY Mammography Single": {},
+    "XRAY OPG": {},
+    "XRAY Osteocheck": {},
+    "XRAY Radiograph Abdomen": {
+        "Select View": [
+            "Erect",
+            "Supine",
+            "AP",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Adenoids": {
+        "Select View": [
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Chest": {
+        "Select View": [
+            "PA",
+            "AP",
+            "LAT",
+            "Oblique",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Big Toe": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Arm": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Ankle": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Mortis",
+            "Weight Bearing AP",
+            "Weight Bearing LAT",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Chest Lifesaver": {},
+    "XRAY Radiograph Clavicle": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "PA",
+            "AP",
+            "Chepalic",
+            "Portable",
+            "Zanca"
+        ]
+    },
+    "XRAY Radiograph Elbow": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Face": {
+        "Select View": [
+            "LAT",
+            "Water's",
+            "Caldwell"
+        ]
+    },
+    "XRAY Radiograph Forearm": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Hand": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "PA",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Heel": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "Calcaneal",
+            "LAT",
+            "Axial",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Foot": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Hindfoot",
+            "Portable",
+            "Weight Bearing"
+        ]
+    },
+    "XRAY Radiograph Hip": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Frog Leg",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Knee": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP Standing",
+            "AP Supine",
+            "LAT",
+            "Axial (Skyline)",
+            "Oblique",
+            "Rosenberg PA",
+            "Trans LAT",
+            "Internal oblique",
+            "External oblique",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph KUB": {
+        "Select View": [
+            "AP",
+            "Supine"
+        ]
+    },
+    "XRAY Radiograph Leg": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Mandible": {
+        "Select View": [
+            "AP",
+            "PA",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Mastoids": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "LAT",
+            "Oblique",
+            "AP"
+        ]
+    },
+    "XRAY Radiograph Nasal Bone": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "LAT",
+            "Water's",
+            "Caldwell"
+        ]
+    },
+    "XRAY Radiograph Nasopharynx": {
+        "Select View": [
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Neck": {
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Orbit": {
+        "Select View": [
+            "PA",
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Pelvis": {
+        "Select View": [
+            "AP",
+            "Inlet view",
+            "Outlet view",
+            "Obstrector view"
+        ]
+    },
+    "XRAY Radiograph PNS": {
+        "Select View": [
+            "Water's",
+            "Caldwell"
+        ]
+    },
+    "XRAY Radiograph Scapula": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "Axial",
+            "AP",
+            "Oblique",
+            "Y view"
+        ]
+    },
+    "XRAY Radiograph Shoulder": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "Axial (Skyline)",
+            "LAT",
+            "Oblique",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Sella": {
+        "Select View": [
+            "LAT",
+            "Cone Beam",
+            "Cone Down"
+        ]
+    },
+    "XRAY Radiograph Skull": {
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Spine Cervical": {
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Flexion",
+            "Extension",
+            "Trans LAT",
+            "Portable"
+        ]
+    },
+    "XRAY Radiograph Spine Dorsal": {
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Spine Sacrum": {
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Sternum": {
+        "Select View": [
+            "PA",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Thigh": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Spine Lumbar": {
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Flexion",
+            "Extension"
+        ]
+    },
+    "XRAY Radiograph Spine Coccyx": {
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
+    },
+    "XRAY Radiograph Thumb": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "PA",
+            "LAT",
+            "Oblique"
+        ]
+    },
+    "XRAY Radiograph Wrist": {
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Scapoid",
+            "Portable"
+        ]
+    },
+    "XRAY Special Case Bone Age": {},
+    "XRAY Radiograph TM Joints": {},
+    "XRAY Special Case ASU": {},
+    "XRAY Special Case Barium": {},
+    "XRAY Special Case Ductography": {},
+    "XRAY Special Case Fistulogram": {},
+    "XRAY Special Case Gastrografin": {},
+    "XRAY Special Case HSG": {},
+    "XRAY Special Case IVP": {},
+    "XRAY Special Case IVU": {},
+    "XRAY Special Case MCU": {},
+    "XRAY Special Case RGU": {},
+    "XRAY Special Case Scanogram": {},
+    "XRAY Special Case Sialogram": {},
+    "XRAY Special Case T Tube Cholangiogram": {},
+    "XRAY Special Case Sinogram": {},
+    "XRAY Tuberculosis Screening": {},
+    "USG Soft Tissue": {},
+    "USG Thyroid": {}
+}

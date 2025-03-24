@@ -1,156 +1,514 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import formattedOutput from "./formatted_output.json";
 import * as z from "zod";
+import { X } from "lucide-react";
 
-// Define form validation schema using Zod
 const formSchema = z.object({
-  fullName: z.string().min(2, "Full Name is required"),
-  age: z.string().min(1, "Age is required"),
-  gender: z.enum(["Male", "Female", "Other"]),
-  phone: z.string().optional(),
-  physician: z.string().min(2, "Referring physician is required"),
-  modality: z.enum(["X_Ray", "CT", "MRI", "Ultrasound", "PET_CT"]),
-  history: z.string().optional(),
-  bodyPart: z.string().min(2, "Specify body part"),
-  urgency: z.enum(["Routine", "Urgent", "Stat"]),
-  reportType: z.enum(["Preliminary", "Final"]),
-  specialInstructions: z.string().optional(),
+  doctor: z.string().min(1, "Doctor name is required"),
+  priority: z.enum(["Routine", "Urgent", "Stat"]).default("Routine"),
+  history: z.string().min(1, "Clinical history is required"),
+
+  // Study details - simpler validation
+  study: z.string().refine((val) => {
+    try {
+      const parsed = JSON.parse(val);
+      return Array.isArray(parsed) && parsed.length > 0;
+    } catch (e) {
+      // If it's not empty but can't be parsed, consider it valid
+      // This handles cases where the value is an empty array string "[]"
+      return val !== "[]" && val !== "";
+    }
+  }, "At least one study must be selected"),
+
+  // File Upload Validation
+  files: z
+    .array(
+      z.object({
+        filename: z.string().min(1, "Filename is required"),
+        path: z.string().min(1, "File path is required"),
+        uploadedAt: z.string().optional(), // ✅ Accepts ISO string format
+      })
+    )
+    // .min(1, "At least one file must be uploaded"),
+    .optional() // This makes the entire array optional
+    .default([]),
 });
 
+type StudyData = {
+  [studyName: string]: {
+    [field: string]: string[];
+  };
+};
+
+type FileObject = {
+  filename: string;
+  path: string;
+  uploadedAt?: string;
+};
+
 export default function PatientUploadForm() {
+  const [loading, setLoading] = useState(false);
+  const [rFiles, setRFiles] = useState<FileObject[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [studies, setStudies] = useState<StudyData>({});
+  const [search, setSearch] = useState("");
+  const [selectedStudies, setSelectedStudies] = useState<string[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(true);
+  const searchRef = useRef<HTMLDivElement | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<
+    Record<string, string[]>
+  >({});
+  const [selectedFields, setSelectedFields] = useState<string[]>([]);
+  const [selectedValues, setSelectedValues] = useState<string[]>([]);
+  const [structuredStudiesCheck, setStructuredStudiesCheck] = useState<
+    Record<string, Record<string, Record<string, string[]>>>
+  >({});
+
+  useEffect(() => {
+    setStudies(formattedOutput); // Set data directly
+  }, []);
+
+  const studyNames = Object.keys(studies);
+
+  // Filter studies based on search input
+  const filteredStudies = studyNames.filter((study) =>
+    study.toLowerCase().includes(search.toLowerCase())
+  );
+
+  // Handle study selection (multi-select)
+  const handleSelectStudy = (study: string) => {
+    if (!selectedStudies.includes(study)) {
+      setSelectedStudies((prev) => [...prev, study]);
+    }
+
+    if (!selectedStudies.includes(study)) {
+      setSelectedStudies([...selectedStudies, study]);
+      setSearch("");
+      setIsDropdownOpen(false); // Close the dropdown after selection
+    }
+    setSearch(""); // Clear search after selection
+  };
+
+  // Handle removing a selected study
+  const handleRemoveStudy = (study: string) => {
+    setSelectedStudies((prev) => prev.filter((s) => s !== study));
+
+    // Remove corresponding checkboxes when a study is removed
+    setSelectedOptions((prev) => {
+      const updatedOptions = { ...prev };
+      delete updatedOptions[study];
+      return updatedOptions;
+    });
+  };
+
+  // Modified handleCheckboxChange function
+  const handleCheckboxChange = (
+    study: string,
+    field: string,
+    value: string
+  ) => {
+    setSelectedOptions((prevOptions) => {
+      const updatedOptions = { ...prevOptions };
+
+      // Ensure study key exists
+      updatedOptions[study] = updatedOptions[study]
+        ? [...updatedOptions[study]]
+        : [];
+
+      if (field === "Select Gender") {
+        // ✅ Remove any previously selected gender before adding the new one
+        updatedOptions[study] = updatedOptions[study].filter(
+          (option) => !["Male", "Female"].includes(option)
+        );
+        updatedOptions[study].push(value);
+      } else {
+        // ✅ Handle checkboxes normally (Add/Remove selection)
+        if (updatedOptions[study].includes(value)) {
+          updatedOptions[study] = updatedOptions[study].filter(
+            (v) => v !== value
+          );
+        } else {
+          updatedOptions[study].push(value);
+        }
+      }
+
+      // ✅ Initialize arrays for storing selected options
+      let studyViews: string[] = [];
+      let studySides: string[] = [];
+      let studyTypes: string[] = [];
+
+      // ✅ Initialize sets to track selected fields & values
+      let selectedFieldsSet = new Set(selectedFields);
+      let selectedValuesSet = new Set(selectedValues);
+
+      // ✅ Process selected options
+      selectedStudies.forEach((studyKey) => {
+        if (updatedOptions[studyKey]) {
+          const studyFields = studies[studyKey] || {}; // Ensure study fields exist
+
+          Object.entries(studyFields).forEach(([fieldName, values]) => {
+            const selectedForField = updatedOptions[studyKey].filter((option) =>
+              (values as string[]).includes(option)
+            );
+
+            // ✅ Categorize selected options
+            if (["Study View", "View Type"].includes(fieldName)) {
+              studyViews = [...new Set([...studyViews, ...selectedForField])];
+            } else if (["Side", "Study Side"].includes(fieldName)) {
+              studySides = [...new Set([...studySides, ...selectedForField])];
+            } else {
+              studyTypes = [...new Set([...studyTypes, ...selectedForField])];
+            }
+
+            // ✅ Track selected fields & values
+            if (
+              ["Select Type", "Select Side", "Select View"].includes(fieldName)
+            ) {
+              selectedFieldsSet.add(fieldName);
+              selectedValuesSet = new Set([
+                ...selectedValuesSet,
+                ...selectedForField,
+              ]);
+            }
+          });
+        }
+      });
+
+      // ✅ Ensure empty arrays are explicitly set
+      setValue("studyView", studyViews.length > 0 ? studyViews : []);
+      setValue("studySide", studySides.length > 0 ? studySides : []);
+      setValue("studyType", studyTypes.length > 0 ? studyTypes : []);
+
+      // ✅ Update selectedFields & selectedValues states
+      setSelectedFields(Array.from(selectedFieldsSet));
+      setSelectedValues(Array.from(selectedValuesSet));
+
+      return updatedOptions; // ✅ Update state correctly
+    });
+  };
+
+  // Toggle dropdown visibility when clicking on the search bar
+  const handleSearchClick = () => {
+    if (!isDropdownOpen) {
+      setIsDropdownOpen(true);
+    }
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(formSchema),
   });
 
-  const [rFiles, setRFiles] = useState<File[]>([]);
+  const handleReport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles: FileObject[] = Array.from(e.target.files).map((file) => ({
+        filename: file.name,
+        path: URL.createObjectURL(file), // Temporary preview URL
+        uploadedAt: new Date().toISOString(), // ✅ Convert Date to String (ISO format)
+      }));
 
-  const handleReport = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setRFiles([...rFiles, ...Array.from(event.target.files)]);
+      // Update React Hook Form & Local State
+      const updatedFiles = [...rFiles, ...newFiles];
+      setRFiles(updatedFiles); // Update local state for UI rendering
+      setValue("files", updatedFiles, { shouldValidate: true }); // Update form state
     }
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  useEffect(() => {
+    console.log("Studies Data Loaded:", studies);
+  }, [studies]);
+
+  useEffect(() => {
+    console.log("Selected Studies:", selectedStudies);
+  }, [selectedStudies]);
+
+  useEffect(() => {
+    const structuredStudies: Record<
+      string,
+      Record<string, Record<string, string[]>>
+    > = {};
+
+    selectedStudies.forEach((study) => {
+      structuredStudies[study] = {};
+
+      Object.entries(studies[study] || {}).forEach(([field, values]) => {
+        structuredStudies[study][field] = {};
+
+        (values as string[]).forEach((value) => {
+          if (selectedOptions[study]?.includes(value)) {
+            if (!structuredStudies[study][field][value]) {
+              structuredStudies[study][field][value] = [];
+            }
+            structuredStudies[study][field][value].push(value);
+          }
+        });
+      });
+    });
+
+    // Update state only once after processing is complete
+    setStructuredStudiesCheck(structuredStudies);
+
+    console.log("Selected Options:", structuredStudies);
+  }, [selectedStudies, selectedOptions, studies]); // Dependencies that trigger recalculation
+
+  useEffect(() => {
+    console.log("Uploaded Files:", rFiles);
+  }, [rFiles]);
+
+  useEffect(() => {
+    if (selectedStudies.length > 0) {
+      setValue("study", JSON.stringify(selectedStudies), {
+        shouldValidate: true,
+      });
+    }
+  }, [selectedStudies, setValue]);
+
+  const handleRemoveFile = (index: number) => {
+    const updatedFiles = rFiles.filter((_, i) => i !== index);
+    setRFiles(updatedFiles);
+    setValue("files", updatedFiles, { shouldValidate: true }); // Sync form state
+  };
 
   const onSubmit = async (data: any) => {
-    if (isSubmitting) return; // Prevent multiple submissions
+    console.log("onSubmit function called!");
+    if (isSubmitting) return;
+    setLoading(true);
     setIsSubmitting(true);
 
-    console.log("onSubmit function called!");
-
     try {
-      // Prepare final form data object
-      const formData = { ...data };
-      console.log("Final Form Data:", formData);
+      const formData = new FormData();
 
-      // Send data to your backend API
+      // Add text fields
+      formData.append("doctor", data.doctor);
+      formData.append("priority", data.priority || "Routine");
+      formData.append("history", data.history);
+
+      // Transform selected options into structured format
+      const structuredStudies: Record<
+        string,
+        Record<string, Record<string, string[]>>
+      > = {};
+
+      selectedStudies.forEach((study) => {
+        structuredStudies[study] = {};
+
+        Object.entries(studies[study] || {}).forEach(([field, values]) => {
+          structuredStudies[study][field] = {};
+
+          (values as string[]).forEach((value) => {
+            if (selectedOptions[study]?.includes(value)) {
+              if (!structuredStudies[study][field][value]) {
+                structuredStudies[study][field][value] = [];
+              }
+              structuredStudies[study][field][value].push(value);
+            }
+          });
+        });
+      });
+
+      formData.append("selectedStudies", JSON.stringify(structuredStudies));
+
+      // Add files
+      if (rFiles && rFiles.length > 0) {
+        for (const file of rFiles) {
+          try {
+            const response = await fetch(file.path);
+            const blob = await response.blob();
+            const fileObj = new File([blob], file.filename, {
+              type: blob.type,
+            });
+            formData.append("files", fileObj);
+          } catch (error) {
+            console.error("Error processing file:", error);
+          }
+        }
+      }
+
+      // Send data to backend
       const response = await fetch("/api/cases", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: formData,
+        headers: {
+          Accept: "application/json", // Add this to ensure proper response parsing
+        },
       });
 
       if (response.ok) {
-        console.log("Form submitted successfully");
+        const result = await response.json();
+        console.log("Form submitted successfully", result);
         reset();
-        // Show success notification
+        setSelectedStudies([]);
+        setSelectedOptions({});
+        setRFiles([]);
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
-        console.error("Error submitting form");
+        const errorData = await response.json();
+        console.error("Error submitting form:", errorData);
+        alert("Failed to submit form. Please try again later.");
       }
     } catch (error) {
       console.error("Error:", error);
+      alert("Connection error. Please check your internet connection.");
     } finally {
+      setLoading(false);
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="w-full mx-auto border-[1px] border-stone-200 shadow-lg max-sm:p-2 p-6 mt-4 relative">
+    <div className="w-full mx-auto border border-stone-200 shadow-lg p-4 max-sm:p-4 relative">
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
+          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
       {/* Success Notification */}
       {showSuccess && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 rounded-md shadow-lg text-center transition-opacity duration-500">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 shadow-lg text-center transition-opacity duration-500 rounded">
           ✅ Case submitted successfully!
         </div>
       )}
 
-      <h2 className="text-2xl font-semibold text-stone-800 mb-6">
+      <h2 className="text-2xl font-semibold text-stone-800 mb-2">
         Upload Case
       </h2>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 max-sm:space-y-2"
+        className="space-y-6 max-sm:space-y-4"
       >
-        {/* Patient Information */}
-        <div className="grid grid-cols-1 max-lg:grid-cols-1 lg:grid-cols-2 gap-4 ">
-          {/* Clinical Information */}
-          <div className="flex flex-col gap-1 order px-6 py-4 bg-stone-200 shadow-lg">
-            <h1 className=" font-medium text-stone-700">
-              1. Referring Doctor/Physician
-            </h1>
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* 1. Referring Doctor/Physician */}
+          <div className="bg-white rounded shadow-sm p-4">
+            <h3 className="font-medium text-stone-700 mb-3">
+              1. Referring Doctor
+            </h3>
             <div className="flex max-sm:flex-col flex-row items-start">
-              <label className="font-xs min-w-36 flex">Doctor Name</label>
-              <input
-                {...register("physician")}
-                placeholder="Doctor/Physician Name"
-                className=" w-full h-full border border-stone-500  px-1 py-[1px]  focus:outline-none"
-              />
-              {errors?.physician && (
-                <p className="text-red-500 ml-1">
-                  {String(errors.physician.message)}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Reporting Preferences */}
-          <div className="flex flex-col gap-1 order px-6 py-4 bg-stone-200 shadow-lg">
-            <h1 className=" font-medium text-stone-700">
-              2. Reporting Preferences
-            </h1>
-            <div className="grid grid-cols-1 gap-1">
-              <div className="flex max-sm:flex-col flex-row items-start">
-                <label className="font-xs w-32 lg:w-36 flex-none">
-                  Report Priority
-                </label>
-                <select
-                  {...register("urgency")}
-                  className=" w-full h-full border border-stone-500 bg-stone-100 py-[1px] text-stone-700 focus:outline-none"
-                >
-                  <option value="Routine">Routine</option>
-                  <option value="Urgent">Urgent</option>
-                  <option value="Stat">Stat</option>
-                </select>
+              <label className="text-stone-700 min-w-36 p-1 mt-1">
+                Doctor Name <span className="text-red-500 font-bold"> *</span>
+              </label>
+              <div className="w-full">
+                <input
+                  placeholder="Doctor Name"
+                  className="w-full text-stone-600 p-2 border border-stone-300 hover:border-stone-500 focus:border-stone-500 focus:outline-none rounded"
+                  {...register("doctor")}
+                />
+                {errors?.doctor && (
+                  <p className="text-red-500 text-xs">
+                    {String(errors.doctor.message)}
+                  </p>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Report File Upload */}
-          <div className="border flex flex-row justify-between px-6 py-4 bg-stone-200 shadow-lg">
-            {/* Left side - Clinical History/Report */}
-            <div className="flex flex-1 flex-col">
-              <h3 className="text-stone-700">3. Clinical History/Report</h3>
-              <textarea className="focus:outline-none border flex-1 resize-none"></textarea>
+          {/* 2. Reporting Preferences */}
+          <div className="bg-white rounded shadow-sm p-4">
+            <h3 className="font-medium text-stone-700 mb-3">
+              2. Reporting Preferences
+            </h3>
+            <div className="flex max-sm:flex-col flex-row items-start">
+              <label className="text-stone-700 w-32 lg:w-36 flex-none p-1">
+                Report Priority{" "}
+                <span className="text-red-500 font-bold"> *</span>
+              </label>
+              <div className="flex flex-wrap gap-3 mt-1">
+                {["Routine", "Urgent", "Stat"].map((priority) => (
+                  <label
+                    key={priority}
+                    className="flex items-center space-x-2 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      value={priority}
+                      {...register("priority")}
+                      className="accent-purple-600"
+                      defaultChecked={priority === "Routine"}
+                    />
+                    <span className="text-stone-700">{priority}</span>
+                  </label>
+                ))}
+              </div>
             </div>
+          </div>
 
-            {/* Right side - Upload Section */}
-            <div className="flex flex-col ml-4 w-[160px] justify-center ">
-              <h1 className="text-stone-600 text-md">Upload Documents</h1>
-              <div>
-                <label className="font-xs border-dashed border-2 bg-stone-100 hover:bg-stone-200 border-stone-400 p-2 flex flex-col items-center cursor-pointer">
-                  <span className="text-stone-600 text-sm">
-                    Upload or Drag/Drop
-                  </span>
+          {/* 3. Clinical History/Report with File Upload */}
+          <div className="bg-white rounded shadow-sm p-4">
+            <h3 className="font-medium text-stone-700 mb-3">
+              3. Clinical History{" "}
+              <span className="text-red-500 font-bold"> *</span>
+            </h3>
+            <textarea
+              className="w-full text-stone-700 h-32 border border-stone-300 rounded p-2 resize-none focus:outline-none hover:border-stone-500 focus:border-stone-500"
+              placeholder="Enter clinical history or additional notes here..."
+              {...register("history")}
+            ></textarea>
+            {errors?.history && (
+              <p className="text-red-500 text-xs -mt-1">
+                {String(errors.history.message)}
+              </p>
+            )}
+
+            {/* File Upload/Drag & Drop Section */}
+            <div className="">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-stone-600">
+                  Documents
+                </span>
+                <span className="text-xs text-stone-500">
+                  Drag files or click to upload
+                </span>
+              </div>
+
+              <div className="relative">
+                <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-stone-300 rounded-md hover:bg-stone-50 hover:border-purple-300 transition-colors cursor-pointer bg-stone-50">
+                  <div className="flex flex-col items-center justify-center ">
+                    <svg
+                      className="w-8 h-8 text-stone-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                      ></path>
+                    </svg>
+                    <p className="text-xs text-stone-500">
+                      Upload files or drag and drop
+                    </p>
+                  </div>
                   <input
                     type="file"
                     className="hidden"
@@ -158,90 +516,233 @@ export default function PatientUploadForm() {
                     multiple
                   />
                 </label>
-
-                {/* Fixed List to Prevent Overflow */}
-                <ul className="mt-2 text-sm text-stone-500 max-w-full break-words">
-                  {rFiles.map((file, index) => (
-                    <li
-                      key={index}
-                      className="truncate overflow-hidden text-ellipsis w-full"
-                    >
-                      {file.name}
-                    </li>
-                  ))}
-                </ul>
+                {/* {errors?.files && (
+                  <p className="text-red-500 text-xs">
+                    {String(errors.files.message)}
+                  </p>
+                )} */}
               </div>
+
+              {/* File List */}
+              <ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {rFiles.map((file, index) => (
+                  <li
+                    key={index}
+                    className="mt-1 flex items-center justify-between text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded relative"
+                    title={file.filename} // Changed from file.name
+                  >
+                    <div className="flex items-center truncate">
+                      <svg
+                        className="w-4 h-4 mr-2 flex-shrink-0 text-purple-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        ></path>
+                      </svg>
+                      <span className="truncate">{file.filename}</span>{" "}
+                      {/* Fixed property */}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFile(index)}
+                      className="ml-2 text-purple-700 hover:text-purple-900"
+                      title="Remove file"
+                    >
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M6 18L18 6M6 6l12 12"
+                        ></path>
+                      </svg>
+                    </button>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
-          {/* <div className="flex flex-col gap-1">
-            <h1 className=" font-medium text-stone-700">
-              1. Assign Radiologist
-            </h1>
-            <div className="flex max-sm:flex-col flex-row items-start">
-              <label className="font-xs min-w-36 flex">User Name</label>
-              <input
-                {...register("history")}
-                placeholder=""
-                className=" w-full h-full border border-stone-500  px-1 py-[1px] text-stone-700 focus:outline-none "
-                />
-            </div>
-            <div className="flex max-sm:flex-col flex-row items-start">
-              <label className="font-xs min-w-36 flex">
-                Referring Physician
-              </label>
-              <input
-                {...register("physician")}
-                placeholder="Referring Physician"
-                className=" w-full h-full border border-stone-500  px-1 py-[1px]  focus:outline-none"
-                />
-                {errors?.physician && <p className="text-red-500 ml-1">{String(errors.physician.message)}</p>}
-            </div>
-          </div> */}
+          {/* 4. Select Study */}
+          <div className="bg-white rounded shadow-sm p-4">
+            <h3 className="font-medium text-stone-700 mb-3">
+              4. Select Study <span className="text-red-500 font-bold"> *</span>
+            </h3>
 
-          {/* Imaging Details */}
-          <div className="flex flex-col gap-1 border justify-between px-6 py-4 bg-stone-200 shadow-lg">
-            <h3 className="text-stone-700">4. Study Details</h3>
-            <div className="flex flex-row gap-2 items-center">
-              <label  className="font-xs  min-w-20 flex-none">Modality</label>
-              <select
-                {...register("modality")}
-                className="w-full h-full border border-stone-500 bg-stone-100 py-[1px]  text-stone-700 focus:outline-none"
-              >
-                <option value="X_Ray">X-Ray</option>
-                <option value="CT">CT</option>
-                <option value="PET_CT">PET-CT</option>
-                <option value="MRI">MRI</option>
-                <option value="Ultrasound">Ultrasound</option>
-              </select>
+            {/* Search Input */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search for a study..."
+                className={`border hover:border-stone-500 text-stone-700 ${
+                  errors?.study ? "border-red-500" : "border-stone-300"
+                } p-2 w-full rounded focus:outline-none focus:border-stone-500`}
+                value={search}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setSearch(e.target.value)
+                }
+                onClick={handleSearchClick}
+              />
+
+              {/* Display error message */}
+              {errors?.study && (
+                <p className="text-red-500 text-xs mb-1">
+                  {String(errors.study.message)}
+                </p>
+              )}
+
+              {/* Dropdown */}
+              {isDropdownOpen && (
+                <div className="absolute z-10 left-0 right-0 top-full border border-stone-300 bg-white max-h-[205px] overflow-auto rounded shadow-md">
+                  {filteredStudies.length > 0 ? (
+                    filteredStudies.map((study) => (
+                      <div
+                        key={study}
+                        className="p-2 cursor-pointer border-b text-md hover:bg-purple-100 text-stone-700"
+                        onClick={() => handleSelectStudy(study)}
+                      >
+                        {study}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="p-2 text-stone-500">No matches found</div>
+                  )}
+                </div>
+              )}
             </div>
-            <div className="flex flex-row gap-2 items-center">
-              <label  className="font-xs  min-w-20 flex-none">View</label>
-              <select
-                {...register("modality")}
-                className="w-full h-full border border-stone-500 bg-stone-100 py-[1px]  text-stone-700 focus:outline-none"
-              >
-                <option value="PA">PA</option>
-                <option value="AP">AP</option>
-                <option value="LAT">LAT</option>
-                <option value="Oblique">Oblique</option>
-                <option value="Portable">Portabl</option>
-              </select>
+
+            {/* Hidden input to store the selected studies for React Hook Form */}
+            <input
+              type="hidden"
+              {...register("study")}
+              value={JSON.stringify(selectedStudies)}
+            />
+
+            {/* Selected Studies Pills */}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {selectedStudies.map((study) => (
+                <span
+                  key={study}
+                  className="bg-purple-500 text-white px-3 py-1 rounded-sm flex items-center text-sm"
+                >
+                  {study}
+                  <button
+                    onClick={() => handleRemoveStudy(study)}
+                    className="ml-2 text-white font-bold"
+                    type="button"
+                  >
+                    <X size={16} />
+                  </button>
+                </span>
+              ))}
             </div>
           </div>
         </div>
 
+        {/* Study Options (Only shown when studies are selected) */}
+        {selectedStudies.filter(
+          (study) => Object.keys(studies[study] || {}).length > 0
+        ).length > 0 && (
+          <div className="bg-white rounded shadow-md p-4">
+            <h3 className="font-medium text-stone-700 mb-2">Study Details</h3>
+            <div className="space-y-4">
+              {selectedStudies
+                .filter((study) => Object.keys(studies[study] || {}).length > 0)
+                .map((study, index) => (
+                  <div
+                    key={study}
+                    className="bg-purple-50 rounded p-3 shadow-sm"
+                  >
+                    <h4 className="text-md font-semibold text-purple-800 mb-2">
+                      {`${index + 1}. ${study}`}
+                    </h4>
+                    <div className="flex flex-wrap gap-3">
+                      {Object.entries(studies[study] || {}).map(
+                        ([field, values]) => (
+                          <div
+                            key={field}
+                            className="bg-white p-2 rounded border border-purple-100 flex-grow"
+                          >
+                            <h5 className="text-sm text-purple-600 font-medium mb-1">
+                              {field}
+                              {field != "Select Gender" && (
+                                <span className="text-red-500 font-bold">
+                                  {" "}
+                                  *
+                                </span>
+                              )}
+                            </h5>
+                            <div className="flex flex-row flex-wrap items-center">
+                              {Array.isArray(values) &&
+                                values.map((value) => (
+                                  <label
+                                    key={value}
+                                    className="flex items-center mr-4 mb-2 text-sm text-stone-700 whitespace-nowrap"
+                                  >
+                                    <input
+                                      type={
+                                        field == "Select Gender"
+                                          ? "radio"
+                                          : "checkbox"
+                                      }
+                                      name={
+                                        field == "Select Gender"
+                                          ? `${study}-gender`
+                                          : undefined
+                                      }
+                                      className="accent-purple-500 mr-1"
+                                      checked={
+                                        selectedOptions[study]?.includes(
+                                          value
+                                        ) || false
+                                      }
+                                      onChange={() =>
+                                        handleCheckboxChange(
+                                          study,
+                                          field,
+                                          value
+                                        )
+                                      }
+                                    />
+                                    <span>{value}</span>
+                                  </label>
+                                ))}
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </div>
+                    <div className="flex flex-row gap-4">
+                      {errors?.study && (
+                        <div className="text-red-500 text-xs">
+                          {String(errors.study.message)}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
+
         {/* Submit Button */}
-        <div className="flex justify-end space-x-4">
-          {/* <button
-            type="button"
-            className="px-4 py-2 border text-stone-700 rounded-md hover:bg-stone-50"
-          >
-            Cancel
-          </button> */}
+        <div className="flex justify-center">
           <button
             type="submit"
-            className="px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600"
+            className="px-8 py-2 -mt-2 bg-purple-500 rounded text-white hover:bg-purple-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-300 disabled:opacity-70"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

@@ -11,11 +11,12 @@ function Page() {
   const gender = searchParams?.get("gender");
   const modality = searchParams?.get("modality");
   const studyDate = searchParams?.get("studyDate");
+  const studyTime = searchParams?.get("time");
   const series = searchParams?.get("series");
 
   return (
     <div className="p-4 h-auto min-h-screen bg-stone-100">
-      <table className="w-full border-b border-l border-r border-stone-300 shadow-lg">
+      <table className="text-stone-700 w-full border-b border-l border-r border-stone-300 shadow-lg">
         <thead
           className="bg-purple-600 text-white shadow-lg px-2 py-2 text-center whitespace-nowrap"
           style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
@@ -37,7 +38,7 @@ function Page() {
             <td className="px-4 py-2 text-center">{studyDescription}</td>
             <td className="px-4 py-2 text-center">{gender}</td>
             <td className="px-4 py-2 text-center">{modality}</td>
-            <td className="px-4 py-2 text-center">{studyDate}</td>
+            <td className="px-4 py-2 text-center">{studyDate} {studyTime}</td>
             <td className="px-4 py-2 text-center">{series}</td>
           </tr>
         </tbody>

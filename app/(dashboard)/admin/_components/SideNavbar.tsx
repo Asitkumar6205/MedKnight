@@ -159,11 +159,11 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
 
       {showLogoutConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white text-black p-6 rounded-lg shadow-md">
+          <div className="bg-purple-50 bg-opacity-50 text-black p-6 rounded-sm shadow-md">
             <p className="mb-4">Are you sure you want to logout?</p>
             <div className="flex space-x-4 justify-center">
               <button
-                className="px-4 py-2 bg-stone-200 rounded hover:bg-stone-400"
+                className="px-4 py-2 bg-stone-200 rounded-sm hover:bg-stone-300"
                 onClick={() => setShowLogoutConfirm(false)}
               >
                 Cancel

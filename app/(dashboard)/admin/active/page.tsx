@@ -1,9 +1,9 @@
 "use client";
 import { ChevronLeft, ChevronRight, Trash } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
+import DateRangeSelector from "./_components/DateRangeSelector";
 
 interface Study {
   ID: string;
@@ -15,6 +15,13 @@ interface Study {
   StudyTime: string;
   Modality: string;
   Series: number;
+}
+
+interface DateRangeSelectorProps {
+  fromDate: string;
+  setFromDate: (e: { target: { value: string } }) => void;
+  toDate: string;
+  setToDate: (e: { target: { value: string } }) => void;
 }
 
 export default function ActiveCasesPage() {
@@ -213,48 +220,54 @@ export default function ActiveCasesPage() {
       <h1 className="text-2xl font-semibold mb-4">Active Cases </h1>
 
       {/* Search Bar & Date Filters */}
-      <div className="flex flex-wrap justify-between items-center gap-4 mb-1">
-        <div className="flex flex-wrap gap-4">
-          <input
-            type="text"
-            placeholder="Search by Order Id, Patient, Modality ..."
-            className="border bg-stone-100 p-2 rounded-sm min-w-96 md:w-1/3 focus:outline-none"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <input
-            type="date"
-            className="border bg-stone-100 p-2 rounded-sm focus:outline-none"
-            value={fromDate}
-            onChange={(e) => setFromDate(e.target.value)}
-          />
-          <input
-            type="date"
-            className="border bg-stone-100 p-2 rounded focus:outline-none"
-            value={toDate}
-            onChange={(e) => setToDate(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-wrap gap-4 items-end cursor-pointer">
-          <div className="relative group">
-            {/* Sort Icon */}
-            <RxCaretSort className="h-8 w-8" />
+      <div className="w-full">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          {/* Left side: Search input and Date range selector */}
+          <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
+            {/* Search input - wider than date pickers */}
+            <div className="w-full sm:w-60 md:w-72 lg:w-80">
+              <input
+                type="text"
+                placeholder="Search by Order Id, Patient, Modality ..."
+                className="w-full border bg-stone-50 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
 
-            {/* Tooltip - Positioned just above the icon */}
-            <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
-              Sort
-            </span>
+            {/* Date range selector */}
+            <div className="w-full sm:w-auto">
+              <DateRangeSelector
+                fromDate={fromDate}
+                setFromDate={(e) => setFromDate(e.target.value)}
+                toDate={toDate}
+                setToDate={(e) => setToDate(e.target.value)}
+              />
+            </div>
           </div>
 
-          {/* Button */}
-          <button
-            style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
-            onClick={() => setShowConfirmModal(true)}
-            disabled={loading}
-            className="bg-red-500 text-white px-4 py-2 rounded-sm shadow-md hover:bg-red-600 disabled:opacity-50"
-          >
-            Clear All
-          </button>
+          {/* Right side: Sort icon and Clear All button */}
+          <div className="flex items-center gap-4 self-end md:self-auto mt-2 md:mt-0">
+            <div className="relative group p-1 hover:bg-purple-200 rounded-full">
+              {/* Sort Icon */}
+              <RxCaretSort className="h-6 w-6 text-purple-800" />
+
+              {/* Tooltip - Positioned just above the icon */}
+              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                Sort
+              </span>
+            </div>
+
+            {/* Button */}
+            <button
+              style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+              onClick={() => setShowConfirmModal(true)}
+              disabled={loading}
+              className="bg-red-500 text-white px-4 py-2 rounded-sm shadow-md hover:bg-red-600 disabled:opacity-50 whitespace-nowrap"
+            >
+              Clear All
+            </button>
+          </div>
         </div>
       </div>
 
@@ -274,7 +287,7 @@ export default function ActiveCasesPage() {
             ].map((col) => (
               <th
                 key={col}
-                className="bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap"
+                className="bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap "
                 style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
               >
                 {col}
@@ -287,7 +300,7 @@ export default function ActiveCasesPage() {
             ? displayedOrders.map((study) => (
                 <tr
                   key={study.ID}
-                  className="hover:bg-stone-200 bg-stone-100 shadow-md"
+                  className="hover:bg-purple-100 bg-stone-100 shadow-md text-purple-950"
                 >
                   <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
                     {study.PatientID}
@@ -356,7 +369,7 @@ export default function ActiveCasesPage() {
       {/* Confirmation Modal */}
       {showConfirmModal && !loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white p-6 rounded-sm shadow-lg w-96 text-center">
+          <div className="bg-purple-50 bg-opacity-50 p-6 rounded-sm shadow-lg w-96 text-center">
             <p className="mb-4">
               Are you sure you want to delete all studies? This action cannot be
               undone.
@@ -364,7 +377,7 @@ export default function ActiveCasesPage() {
             <div className="flex justify-center gap-4">
               <button
                 onClick={() => setShowConfirmModal(false)}
-                className="bg-stone-200 px-4 py-2 rounded-sm shadow-sm hover:bg-stone-400"
+                className="bg-stone-200 px-4 py-2 rounded-sm shadow-sm hover:bg-stone-300"
               >
                 Cancel
               </button>
@@ -383,11 +396,11 @@ export default function ActiveCasesPage() {
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && !loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 backdrop-blur-sm">
-          <div className="bg-white text-black p-6 rounded-sm shadow-md">
+          <div className="bg-purple-50 bg-opacity-50 text-black p-6 rounded-sm shadow-md">
             <p className="mb-4">Are you sure you want to delete this study?</p>
             <div className="flex space-x-4 justify-center">
               <button
-                className="px-4 py-2 bg-stone-200 rounded-sm shadow-sm hover:bg-stone-400"
+                className="px-4 py-2 bg-stone-200 rounded-sm shadow-sm hover:bg-stone-300"
                 onClick={() => setShowDeleteConfirm(false)}
               >
                 Cancel
@@ -411,7 +424,7 @@ export default function ActiveCasesPage() {
             className={`p-1 rounded-full ${
               currentPage === 1
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-stone-200"
+                : "hover:bg-purple-200 text-purple-800"
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -439,7 +452,7 @@ export default function ActiveCasesPage() {
                 className={`px-2 py-[2px] rounded-full text-sm ${
                   currentPage === page
                     ? "bg-purple-500 text-white"
-                    : "bg-stone-200 hover:bg-stone-300"
+                    : "bg-purple-100 hover:bg-purple-200"
                 }`}
                 onClick={() => setCurrentPage(page)}
               >
@@ -453,7 +466,7 @@ export default function ActiveCasesPage() {
             className={`p-1 rounded-full ${
               currentPage === totalPages
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-stone-200"
+                : "hover:bg-purple-200 text-purple-800"
             }`}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))

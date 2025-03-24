@@ -60,54 +60,48 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Order {
-  id                  String     @id @default(cuid())
-  fullName            String
-  age                 String
-  gender              Gender
-  phone               String?
-  physician           String
-  modality            Modality
-  history             String?
-  bodyPart            String
-  urgency             Urgency
-  reportType          ReportType
-  specialInstructions String?
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
+model Active {
+  id         String     @id @default(cuid())
+  doctor     String   
+  priority   Priority  
+  history    String  
+  files      File[]     
+  studies    Study[]    // Many-to-many relationship without fields/references
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
-enum Gender {
-  Male
-  Female
-  Other
+model Study {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  studyView String[] @default([]) 
+  studySide String[] @default([]) 
+  studyType String[] @default([]) 
+  actives   Active[]  // Many-to-many relationship without fields/references
 }
 
-enum Modality {
-  X_Ray
-  CT
-  MRI
-  Ultrasound
-  PET_CT
+model File {
+  id        String   @id @default(cuid())
+  filename  String   
+  path      String   
+  activeId  String   
+  active    Active   @relation(fields: [activeId], references: [id], onDelete: Cascade)
+  uploadedAt DateTime @default(now())
+  @@index([activeId])  
 }
 
-enum Urgency {
+enum Priority {
   Routine
   Urgent
   Stat
 }
 
-enum ReportType {
-  Preliminary
-  Final
-}
-
 model Hospital {
-  id        String  @id @default(uuid()) // Unique ID (UUID)
-  name      String  
-  email     String  @unique // Unique email
-  phone     String  
-  isDefault Boolean @default(false) // Default user flag
-  createdAt DateTime @default(now()) // Timestamp
-  updatedAt           DateTime   @updatedAt
+  id         String     @id @default(cuid()) 
+  name       String  
+  email      String     @unique 
+  phone      String  
+  isDefault  Boolean    @default(false) 
+  createdAt  DateTime   @default(now()) 
+  updatedAt  DateTime   @updatedAt
 }
