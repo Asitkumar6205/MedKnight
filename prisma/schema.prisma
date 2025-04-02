@@ -48,7 +48,6 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
-
   @@map("users")
 }
 
@@ -62,11 +61,20 @@ model VerificationToken {
 
 model Active {
   id         String     @id @default(cuid())
+  patientId  String     @unique
   doctor     String   
   priority   Priority  
   history    String  
+  activeCase Boolean    @default(false)
   files      File[]     
   studies    Study[]    // Many-to-many relationship without fields/references
+  patientName  String
+  studyDescription  String
+  gender     String
+  modality   String
+  series     String
+  studyDate  String
+  studyTime  String
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
@@ -100,8 +108,32 @@ model Hospital {
   id         String     @id @default(cuid()) 
   name       String  
   email      String     @unique 
-  phone      String  
+  phone      String     @unique
   isDefault  Boolean    @default(false) 
   createdAt  DateTime   @default(now()) 
   updatedAt  DateTime   @updatedAt
+}
+
+model Radiologist {
+  id                 String     @id @default(cuid()) 
+  name               String  
+  email              String     @unique 
+  phone              String     @unique 
+  qualifications     String
+  designation        String
+  mrn                String     @unique
+  signature          Signature?
+  isDefault          Boolean    @default(false) 
+  createdAt          DateTime   @default(now()) 
+  updatedAt          DateTime   @updatedAt
+}
+
+model Signature {
+  id              String       @id @default(cuid())
+  filename        String   
+  path            String   
+  radiologistId   String       @unique
+  radiologist     Radiologist? @relation(fields: [radiologistId], references: [id], onDelete: Cascade)
+  uploadedAt      DateTime     @default(now())
+  @@index([radiologistId])  
 }

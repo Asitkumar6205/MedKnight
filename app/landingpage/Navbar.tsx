@@ -170,7 +170,7 @@ function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
     // </svg>
     <h2>
       <span>Med</span>
-      <span className="bg-gradient-to-r from-teal-600 to-stone-700 bg-clip-text text-transparent">night</span>
+      <span className="bg-gradient-to-r from-teal-600 to-stone-700 bg-clip-text text-transparent">Knight</span>
     </h2>
   );
 }

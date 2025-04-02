@@ -14,7 +14,7 @@ function Footer() {
               <Link href={"/#home"}>
                 <span>Med</span>
                 <span className="bg-gradient-to-r from-teal-600 to-stone-700 bg-clip-text text-transparent">
-                  night
+                  Knight
                 </span>
               </Link>
             </h2>
@@ -112,7 +112,7 @@ function Footer() {
             <li>
               <div className="flex flex-row gap-4 items-end">
                 <MdOutlineMailOutline className="h-8 w-8 p-1 text-stone-100 bg-teal-500 rounded-lg flex-none" />
-                <h2 className="text-stone-400">contact@mednight.com</h2>
+                <h2 className="text-stone-400">contact@medknight.com</h2>
               </div>
             </li>
           </ul>
@@ -123,7 +123,7 @@ function Footer() {
       </div>
       <div className="my-7 mx-14 py-4 flex flex-row justify-between ">
         <div className="text-stone-500 max-sm:text-xs">
-          © 2025 Mednight Healthcare. All rights reserved.
+          © 2025 MedKnight Healthcare. All rights reserved.
         </div>
         <div className="flex flex-row gap-4">
           <Link href={"#"} className="text-stone-500 max-sm:text-xs">Privacy Policy</Link>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import * as z from "zod";
+import { createTransport } from "nodemailer";
 
 const signInSchema = z.object({
   username: z.string().min(1, "Username is required").max(100),
@@ -16,11 +17,78 @@ const signInSchema = z.object({
     .max(32, "Password must be less than 32 characters"),
 });
 
+async function sendVerificationEmail(email: string, token: string, userData: { username: string, password: string }) {
+  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  // Store user data in the token query params (encrypted as JSON)
+  const userDataParam = Buffer.from(JSON.stringify(userData)).toString('base64');
+  
+  // Changed from /api/auth/verify to /api/verify-email
+  const url = `${baseUrl}/api/verify-email?token=${token}&email=${encodeURIComponent(email)}&data=${userDataParam}`;
+  
+  const emailServer = process.env.EMAIL_SERVER || {
+    host: process.env.EMAIL_SERVER_HOST || '',
+    port: Number(process.env.EMAIL_SERVER_PORT || 587),
+    auth: {
+      user: process.env.EMAIL_SERVER_USER || '',
+      pass: process.env.EMAIL_SERVER_PASSWORD || '',
+    },
+  };
+  
+  const from = process.env.EMAIL_FROM || 'noreply@example.com';
+  const { host } = new URL(url);
+  
+  const transport = createTransport(emailServer);
+  
+  await transport.sendMail({
+    to: email,
+    from,
+    subject: `Sign in to ${host}`,
+    text: `Sign in to ${host}\n${url}\n\n`,
+    html: `
+      <body style="background: #f9f9f9;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center" style="padding: 10px 0px 20px 0px; font-size: 22px; font-family: Helvetica, Arial, sans-serif; color: #444444;">
+              <strong>${host}</strong>
+            </td>
+          </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="20" cellpadding="0" style="background: #ffffff; max-width: 600px; margin: auto; border-radius: 10px;">
+          <tr>
+            <td align="center" style="padding: 10px 0px 0px 0px; font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #444444;">
+              Verify your email: <strong>${email.replace(/\./g, "&#8203;.")}</strong>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding: 20px 0;">
+              <table border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center" style="border-radius: 5px;" bgcolor="#346df1">
+                    <a href="${url}" target="_blank" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid #346df1; display: inline-block; font-weight: bold;">
+                      Verify Email
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: #444444;">
+              If you did not request this email you can safely ignore it.
+            </td>
+          </tr>
+        </table>
+      </body>
+    `,
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { username, email, password } = signInSchema.parse(body);
 
+    // Check if username already exists
     const existingUserByUsername = await db.user.findUnique({
       where: { username: username },
     });
@@ -32,6 +100,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check if email already exists
     const existingUserByEmail = await db.user.findUnique({
       where: { email: email },
     });
@@ -42,24 +111,34 @@ export async function POST(req: Request) {
         { status: 409 }
       );
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = await db.user.create({
+    
+    // Create a verification token
+    const token = `${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`;
+    
+    // Store user data temporarily in the verification token
+    await db.verificationToken.create({
       data: {
-        username,
-        email,
-        password: hashedPassword,
+        identifier: email,
+        token,
+        expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
       },
     });
-
-    const { password: newUserPassword, ...rest } = newUser;
+    
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Send verification email with the token and user data
+    await sendVerificationEmail(email, token, { 
+      username,
+      password: hashedPassword // Send the already hashed password
+    });
 
     return NextResponse.json(
-      { user: rest, message: "User created successfully" },
-      { status: 201 }
+      { message: "Verification email sent. Please check your inbox to complete registration." },
+      { status: 200 }
     );
   } catch (error) {
+    console.error("Signup error:", error);
     return NextResponse.json(
       { message: "Something went wrong" },
       { status: 500 }

@@ -22,66 +22,67 @@ const FormSchema = z
     message: "Passwords do not match",
   });
 
-export default function SignUp() {
-  const router = useRouter();
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors },
-  } = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-  });
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
-  const toggleConfirmPasswordVisibility = () =>
-    setShowConfirmPassword((prev) => !prev);
-
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-    setLoading(true);
-    try {
-      const response = await fetch("/api/user", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: data.username,
-          email: data.email,
-          password: data.password,
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (response.ok) {
-        router.push("/signin");
-      } else if (response.status === 409) {
-        if (responseData.error === "email_exists") {
-          setError("email", { type: "manual", message: responseData.message });
-        } else if (responseData.error === "username_exists") {
-          setError("username", {
-            type: "manual",
-            message: responseData.message,
-          });
-        } else {
-          setError("root", {
-            type: "manual",
-            message: "Something went wrong. Please try again.",
-          });
+  export default function SignUp() {
+    const router = useRouter();
+    const {
+      register,
+      handleSubmit,
+      setError,
+      formState: { errors },
+    } = useForm<z.infer<typeof FormSchema>>({
+      resolver: zodResolver(FormSchema),
+    });
+  
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+  
+    const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+    const toggleConfirmPasswordVisibility = () =>
+      setShowConfirmPassword((prev) => !prev);
+  
+    const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+      setLoading(true);
+      try {
+        const response = await fetch("/api/user", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: data.username,
+            email: data.email,
+            password: data.password,
+          }),
+        });
+  
+        const responseData = await response.json();
+  
+        if (response.ok) {
+          // Redirect to signin page with a query parameter to show verification message
+          router.push("/signin?needsVerification=true");
+        } else if (response.status === 409) {
+          if (responseData.error === "email_exists") {
+            setError("email", { type: "manual", message: responseData.message });
+          } else if (responseData.error === "username_exists") {
+            setError("username", {
+              type: "manual",
+              message: responseData.message,
+            });
+          } else {
+            setError("root", {
+              type: "manual",
+              message: "Something went wrong. Please try again.",
+            });
+          }
         }
+      } catch (error) {
+        setError("root", {
+          type: "manual",
+          message: "Network error. Please try again later.",
+        });
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      setError("root", {
-        type: "manual",
-        message: "Network error. Please try again later.",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-stone-100 p-6">

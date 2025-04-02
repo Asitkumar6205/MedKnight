@@ -74,3 +74,27 @@ html {
     @apply bg-background text-foreground;
   }
 }
+
+/* Ensure bullets appear */
+.ProseMirror ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0; /* Remove extra margins */
+}
+
+.ProseMirror ol {
+  list-style-type: decimal;
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.ProseMirror li {
+  margin: 0.25rem 0; /* Ensure proper spacing */
+}
+
+blockquote {
+  border-left: 4px solid #7c3aed; /* Purple border */
+  padding-left: 10px;
+  color: #4a5568; /* Dark gray text */
+  font-style: italic;
+}

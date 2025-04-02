@@ -9,6 +9,22 @@ export default {
   ],
   theme: {
   	extend: {
+		typography: {
+			DEFAULT: {
+			  css: {
+				ul: {
+				  marginTop: "0", // Remove top margin
+				  marginBottom: "0", // Remove bottom margin
+				  paddingLeft: "1rem", // Adjust padding for bullet lists
+				},
+				li: {
+				  marginTop: "0", // Remove top margin for list items
+				  marginBottom: "0", // Remove bottom margin for list items
+				},
+				maxWidth: "100%",
+			  },
+			},
+		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -59,5 +75,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

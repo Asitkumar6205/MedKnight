@@ -4,6 +4,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import { compare } from "bcryptjs";
 import GoogleProvider from "next-auth/providers/google";
+import EmailProvider from "next-auth/providers/email";
 
 export const authOptions: NextAuthOptions = {
   debug: true,
@@ -15,9 +16,21 @@ export const authOptions: NextAuthOptions = {
   
   pages: {
     signIn: "/signin",
-    signOut: "/signin",
+    verifyRequest: "/verify-request", // Custom page to display after a verification email is sent
+    newUser: "/signup", // Redirect new users here after email verification
   },
   providers: [
+    EmailProvider({
+      server: process.env.EMAIL_SERVER || {
+        host: process.env.EMAIL_SERVER_HOST,
+        port: Number(process.env.EMAIL_SERVER_PORT),
+        auth: {
+          user: process.env.EMAIL_SERVER_USER || "",
+          pass: process.env.EMAIL_SERVER_PASSWORD || "",
+        },
+      },
+      from: process.env.EMAIL_FROM || "noreply@example.com",
+    }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
@@ -90,19 +103,18 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, user, token }) {
-      console.log(session, user, token)
+    async session({ session, token }) {
       return {
         ...session,
         user: {
           ...session.user,
           username: token.username,
         },
-      }
+      };
     },
-    // async redirect({ url, baseUrl }) {
-    //   return baseUrl + "/signin"; // Ensures redirection always goes to /signin
-    // },
   },
 };
 
+// async redirect({ url, baseUrl }) {
+//   return baseUrl + "/signin"; // Ensures redirection always goes to /signin
+// },

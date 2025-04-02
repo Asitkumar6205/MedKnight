@@ -42,18 +42,18 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
 
   const menuItems = [
     {
-      name: "Active",
-      path: "/admin/active",
+      name: "Active Orders",
+      path: "/admin/active-orders",
       icon: <MonitorDot className="w-5 h-5" />,
     },
     {
       name: "Completed",
-      path: "/admin/completed",
+      path: "/admin/completed-orders",
       icon: <ClipboardCheck className="w-5 h-5" />,
     },
     {
       name: "Users",
-      path: "/admin/users",
+      path: "/admin/hospital-users",
       icon: <CircleUserRound className="w-5 h-5" />,
     },
     {
@@ -65,6 +65,16 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
       name: "Settings",
       path: "/admin/settings",
       icon: <Settings className="w-5 h-5" />,
+    },
+    {
+      name: "Active Studies",
+      path: "/admin/active-studies",
+      icon: <MonitorDot className="w-5 h-5" />,
+    },
+    {
+      name: "Radiologists",
+      path: "/admin/radiologists",
+      icon: <CircleUserRound className="w-5 h-5" />,
     },
   ];
 

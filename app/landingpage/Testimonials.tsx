@@ -17,7 +17,7 @@ function Testimonials() {
         <div className="flex flex-col gap-4 shadow-2xl lg:p-10 max-lg:p-6 rounded-lg">
           <BiSolidQuoteLeft className="text-teal-500 text-6xl"/>
           <h2 className="text-stone-600 text-lg">
-            "Mednight has revolutionized our radiology workflow. Their quick
+            "MedKnight has revolutionized our radiology workflow. Their quick
             turnaround times and accurate reporting have significantly improved
             our patient care delivery."
           </h2>
@@ -36,7 +36,7 @@ function Testimonials() {
         <div className="flex flex-col gap-4 shadow-2xl lg:p-10 max-lg:p-6 rounded-lg">
           <BiSolidQuoteLeft className="text-teal-500 text-6xl"/>
           <h2 className="text-stone-600 text-lg">
-          "The quality of reporting and the sophisticated technology platform have made Mednight an invaluable partner in our diagnostic services."
+          "The quality of reporting and the sophisticated technology platform have made MedKnight an invaluable partner in our diagnostic services."
           </h2>
           <h2 className="text-xl font-bold">Dr. Robert Thompson</h2>
           <div className="-mt-4 flex flex-row justify-between items-center">

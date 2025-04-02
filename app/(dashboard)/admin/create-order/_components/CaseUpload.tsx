@@ -5,12 +5,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import formattedOutput from "./formatted_output.json";
 import * as z from "zod";
 import { X } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useActiveCase } from "@/app/context/ActiveCaseContext";
 
 const formSchema = z.object({
   doctor: z.string().min(1, "Doctor name is required"),
   priority: z.enum(["Routine", "Urgent", "Stat"]).default("Routine"),
   history: z.string().min(1, "Clinical history is required"),
-
+ 
   // Study details - simpler validation
   study: z.string().refine((val) => {
     try {
@@ -51,6 +53,8 @@ type FileObject = {
 
 export default function PatientUploadForm() {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showError, setShowError] = useState(false);
   const [rFiles, setRFiles] = useState<FileObject[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -67,6 +71,18 @@ export default function PatientUploadForm() {
   const [structuredStudiesCheck, setStructuredStudiesCheck] = useState<
     Record<string, Record<string, Record<string, string[]>>>
   >({});
+
+  const { setActiveCase } = useActiveCase();
+
+  const searchParams = useSearchParams();
+  const patientId = searchParams?.get("patientId");
+  const patientName = searchParams?.get("name");
+  const studyDescription = searchParams?.get("description");
+  const gender = searchParams?.get("gender");
+  const modality = searchParams?.get("modality");
+  const studyDate = searchParams?.get("studyDate");
+  const studyTime = searchParams?.get("time");
+  const series = searchParams?.get("series");
 
   useEffect(() => {
     setStudies(formattedOutput); // Set data directly
@@ -303,6 +319,33 @@ export default function PatientUploadForm() {
     try {
       const formData = new FormData();
 
+      if (patientId) {
+        formData.append("patientId", patientId);
+        setActiveCase(patientId, true);
+      }
+      if (patientName) {
+        formData.append("patientName", patientName);
+      }
+      if (studyDescription) {
+        formData.append("studyDescription", studyDescription);
+      }
+      if (gender) {
+        formData.append("gender", gender);
+      }
+      if (modality) {
+        formData.append("modality", modality);
+      }
+      
+      if (studyDate) {
+        formData.append("studyDate", studyDate);
+      }
+      if (studyTime) {
+        formData.append("studyTime", studyTime);
+      }
+      if (series) {
+        formData.append("series", series);
+      }
+      
       // Add text fields
       formData.append("doctor", data.doctor);
       formData.append("priority", data.priority || "Routine");
@@ -350,7 +393,7 @@ export default function PatientUploadForm() {
       }
 
       // Send data to backend
-      const response = await fetch("/api/cases", {
+      const response = await fetch("/api/postOrder", {
         method: "POST",
         body: formData,
         headers: {
@@ -369,12 +412,13 @@ export default function PatientUploadForm() {
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
         const errorData = await response.json();
-        console.error("Error submitting form:", errorData);
-        alert("Failed to submit form. Please try again later.");
+        setError(errorData.error);
+        setShowError(true);
+        console.warn("Error submitting form:", errorData);
+        setTimeout(() => setShowError(false), 3000);
       }
     } catch (error) {
       console.error("Error:", error);
-      alert("Connection error. Please check your internet connection.");
     } finally {
       setLoading(false);
       setIsSubmitting(false);
@@ -393,6 +437,12 @@ export default function PatientUploadForm() {
       {showSuccess && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-2 px-4 shadow-lg text-center transition-opacity duration-500 rounded">
           ✅ Case submitted successfully!
+        </div>
+      )}
+
+      {showError && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white py-2 px-4 shadow-lg text-center transition-opacity duration-500 rounded">
+          ❌ {error}!
         </div>
       )}
 

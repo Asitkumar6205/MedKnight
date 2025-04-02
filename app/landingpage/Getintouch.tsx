@@ -29,7 +29,7 @@ function Getintouch() {
             <div>
               <h2>Email</h2>
               <h2>Get in Touch</h2>
-              <h2 className="text-teal-500">contact@mednight.com</h2>
+              <h2 className="text-teal-500">contact@medknight.com</h2>
             </div>
           </div>
           <div></div>
@@ -64,7 +64,7 @@ function Getintouch() {
             <Label className="text-stone-600 font-bold">Message</Label>
             <Textarea
               placeholder="Type Your Message"
-              className="bg-white h-24"
+              className="bg-white h-24 resize-none"
               required
             />
           </div>
