@@ -3,7 +3,7 @@ import React, { createContext, useState, useContext, useEffect, ReactNode } from
 
 type ActiveCaseContextType = {
   activeCases: Record<string, boolean>;
-  setActiveCase: (patientId: string, isActive: boolean) => void;
+  setActiveCase: (patientId: string, isActive: boolean, skipDatabaseUpdate?: boolean) => void;
   isActiveCase: (patientId: string) => boolean;
 };
 
@@ -15,8 +15,8 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
   // Load active cases from localStorage on first render
   useEffect(() => {
     const storedActiveCases: Record<string, boolean> = {};
-    
-    // Check all localStorage keys for activeCase_ prefix
+
+    // Check all localStorage keys for activeCase prefix
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith('activeCase_')) {
@@ -26,24 +26,44 @@ export function ActiveCaseProvider({ children }: { children: ReactNode }) {
         }
       }
     }
-    
+
     setActiveCases(storedActiveCases);
   }, []);
 
-  const setActiveCase = (patientId: string, isActive: boolean) => {
+  const setActiveCase = async (patientId: string, isActive: boolean, skipDatabaseUpdate = false) => {
     // Update state
     setActiveCases(prev => ({
       ...prev,
       [patientId]: isActive
     }));
-    
+
     // Persist to localStorage
     if (isActive) {
       localStorage.setItem(`activeCase_${patientId}`, 'true');
     } else {
       localStorage.removeItem(`activeCase_${patientId}`);
     }
-    
+
+    // Update database only if skipDatabaseUpdate is false
+    if (!skipDatabaseUpdate) {
+      try {
+        const response = await fetch("/api/updateActiveCase", {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ patientId, isActive })
+        });
+        
+        if (!response.ok) {
+          const data = await response.json().catch(() => ({}));
+          console.error("Failed to update case status in database:", data.message || response.statusText);
+        }
+      } catch (error) {
+        console.error("Error updating case status in database:", error);
+      }
+    }
+
     // Dispatch event for other components
     window.dispatchEvent(new CustomEvent('activeCaseUpdated', {
       detail: { patientId, active: isActive }

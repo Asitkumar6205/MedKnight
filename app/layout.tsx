@@ -3,6 +3,7 @@ import { Mulish } from "next/font/google";
 import "./globals.css";
 import Provider from "./Provider";
 import { ActiveCaseProvider } from "./context/ActiveCaseContext";
+import { CompletedCaseProvider } from "./context/CompletedCaseContext";
 
 const mulish = Mulish({
   variable: "--font-muli",
@@ -13,7 +14,10 @@ const mulish = Mulish({
 export const metadata: Metadata = {
   title: "MedKnight",
   icons: {
-    icon: "/favicon.ico",
+    icon: {
+      url: "/favicon.ico",
+      sizes: "64x64", // Current size (example)
+    },
   },
 };
 
@@ -25,13 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Provider>
-        <ActiveCaseProvider>
-          <body
-            className={`${mulish.variable} ${mulish.variable} antialiased bg-stone-900`}
-          >
-            {children}
-          </body>
-        </ActiveCaseProvider>
+        <CompletedCaseProvider>
+          <ActiveCaseProvider>
+            <body
+              className={`${mulish.variable} ${mulish.variable} antialiased bg-stone-900`}
+            >
+              {children}
+            </body>
+          </ActiveCaseProvider>
+        </CompletedCaseProvider>
       </Provider>
     </html>
   );

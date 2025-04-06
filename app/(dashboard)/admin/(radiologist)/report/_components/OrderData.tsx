@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ChevronsRight } from "lucide-react";
+import { ChevronsRight, PencilLine } from "lucide-react";
 
 interface Study {
   id: string;
@@ -51,7 +51,7 @@ export default function OrderData({
   useEffect(() => {
     const fetchCases = async () => {
       try {
-        const response = await fetch("/api/getOrder");
+        const response = await fetch("/api/getCases");
         const data = await response.json();
         setCases(data.cases);
       } catch (error) {
@@ -90,7 +90,7 @@ export default function OrderData({
       ) : (
         <div className="space-y-4 mt-4">
           {filteredCases.map((caseItem) => (
-            <div key={caseItem.id} className="bg-white rounded shadow-sm p-5">
+            <div key={caseItem.id} className="bg-white rounded shadow-lg p-5">
               <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold text-stone-700">
                   Patient Case Records
@@ -110,49 +110,48 @@ export default function OrderData({
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                 {/* Patient Details Column */}
-                <div>
-                  <div className="">
-                    <div className="flex flex-row items-start">
-                      <label className="text-stone-700 font-bold min-w-36 p-1">
-                        Refering Doctor
-                      </label>
-                      <div className="w-full text-stone-600">
-                        {caseItem.doctor}
-                      </div>
-                    </div>
 
-                    <div className="flex flex-row items-start">
-                      <label className="text-stone-700 font-bold min-w-36 p-1">
-                        Created At
-                      </label>
-                      <div className="w-full text-stone-600">
-                        {new Date(caseItem.createdAt).toLocaleString()}
-                      </div>
+                <div className="p-2 mr-2">
+                  <div className="flex flex-row items-center">
+                    <label className="text-stone-700 font-bold min-w-36 p-1">
+                      Refering Doctor
+                    </label>
+                    <div className="w-full text-stone-600">
+                      {caseItem.doctor}
                     </div>
+                  </div>
 
-                    <div className="flex flex-row items-start">
-                      <label className="text-stone-700 font-bold min-w-36 p-1">
-                        Clinical History
-                      </label>
-                      <div className="w-full text-stone-600">
-                        {caseItem.history}
-                      </div>
+                  <div className="flex flex-row items-center">
+                    <label className="text-stone-700 font-bold min-w-36 p-1">
+                      Created At
+                    </label>
+                    <div className="w-full text-stone-600">
+                      {new Date(caseItem.createdAt).toLocaleString()}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-row items-center">
+                    <label className="text-stone-700 font-bold min-w-36 p-1">
+                      Clinical History
+                    </label>
+                    <div className="w-full text-stone-600">
+                      {caseItem.history}
                     </div>
                   </div>
                 </div>
 
                 {/* Studies Column */}
-                <div className="">
+                <div className="p-2">
                   <h3 className="text-stone-700 font-bold mb-2">Studies</h3>
                   {caseItem.studies.length > 0 ? (
                     <ul className="space-y-2">
                       {caseItem.studies.map((study) => (
                         <li
                           key={study.id}
-                          className="bg-stone-50 p-2 rounded border border-stone-300"
+                          className="bg-stone-50 p-2 rounded border border-stone-300 "
                         >
                           <div className="flex justify-between items-center">
-                            <strong className="text-stone-700">
+                            <strong className="text-stone-700 ">
                               {study.name}
                             </strong>
                           </div>
@@ -243,10 +242,17 @@ export default function OrderData({
                   href={weasisUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-8 py-2 font-bold  bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-300 text-center flex items-cente"
+                  className="px-8 py-2 font-bold bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-300 text-center flex items-center"
                   style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
                 >
-                  View Study in Weasis
+                  View Study
+                  <span className="ml-1">
+                    <img
+                      src="/Weasis-512.svg.png"
+                      className="h-6 w-6"
+                      alt="Weasis Logo"
+                    />
+                  </span>
                 </Link>
                 <Link
                   href={{
@@ -266,7 +272,7 @@ export default function OrderData({
                   style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
                 >
                   Start Reporting
-                  <ChevronsRight className=" w-6 h-6" />
+                  <PencilLine className="ml-1 w-5 h-5" />
                 </Link>
               </div>
             </div>

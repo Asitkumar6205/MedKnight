@@ -47,7 +47,7 @@ const ObservationsEditor: React.FC<ObservationsEditorProps> = ({
     editorProps: {
       attributes: {
         class:
-          "w-full min-h-52 rounded border p-3 focus:outline-none focus:ring-1 focus:ring-purple-500",
+          "w-full min-h-96 rounded border p-3 focus:outline-none focus:ring-1 focus:ring-purple-500",
       },
     },
     onUpdate: ({ editor }) => {
@@ -69,7 +69,7 @@ const ObservationsEditor: React.FC<ObservationsEditorProps> = ({
 
   return (
     <div>
-      <label className="text-lg font-bold text-gray-600">
+      <label className="text-lg font-bold text-stone-700">
         Observations
       </label>
       <div className="mt-1">

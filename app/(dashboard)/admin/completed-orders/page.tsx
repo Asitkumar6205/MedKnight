@@ -1,88 +1,393 @@
-"use client"
+"use client";
+import { ChevronLeft, ChevronRight, File, FileCheck } from "lucide-react";
 import { useEffect, useState } from "react";
+import { RxCaretSort } from "react-icons/rx";
+import DateRangeSelector from "../../../(dashboard)/admin/_components/DateRangeSelector";
+import Link from "next/link";
 
-interface CompletedOrder {
-  id: number;
+interface Case {
+  id: string;
   patientName: string;
+  patientId: string;
   gender: string;
-  study: string;
+  studyDescription: string;
+  studyDate: string;
+  studyTime: string;
+  radiologist: string;
   modality: string;
-  assignedTo: string;
-  date: string;
-  priority: string;
-  report: string;
-  files: string[];
-  image: string;
+  studies: Study[];
+  priority: String;
+  report: Report;
+  series: number;
 }
 
-export default function page() {
-  const [completedOrders, setCompletedOrders] = useState<CompletedOrder[]>([]);
+interface Study {
+  id: string;
+  name: string;
+  studyType: string[];
+  studyView: string[];
+  studySide: string[];
+}
 
-//   useEffect(() => {
-//     // Fetch completed cases from API (Replace with your actual API endpoint)
-//     fetch("/api/completed-orders")
-//       .then((res) => res.json())
-//       .then((data) => setCompletedOrders(data))
-//       .catch((error) => console.error("Error fetching completed orders:", error));
-//   }, []);
+interface Report {
+  id: string;
+  filename: string;
+  path: string;
+  uploadedAt: string;
+}
+
+interface DateRangeSelectorProps {
+  fromDate: string;
+  setFromDate: (e: { target: { value: string } }) => void;
+  toDate: string;
+  setToDate: (e: { target: { value: string } }) => void;
+}
+
+export default function ActiveCasesPage() {
+  const [loading, setLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
+  const [studies, setStudies] = useState<Case[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState<string>("");
+  const rowsPerPage = 5;
+
+  const fetchStudies = async () => {
+    try {
+      const response = await fetch("/api/getCompletedCases");
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${await response.text()}`);
+      }
+
+      const data = await response.json();
+
+      // Check if we got cases data before setting the state
+      if (data.cases && Array.isArray(data.cases)) {
+        setStudies(data.cases);
+      } else {
+        console.error("Unexpected data format received:", data);
+        setError("Failed to fetch studies: Unexpected data format");
+      }
+    } catch (error) {
+      console.error("Error fetching active cases:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch studies"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchStudies(); // Initial fetch
+    const interval = setInterval(fetchStudies, 5000); // Poll every 5 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+  // Filter Orders Based on Search & Date Range
+  const filteredStudies = studies.filter((study) => {
+    // For search filtering (case-insensitive)
+    const lowerQuery = searchQuery.toLowerCase();
+    const matchesSearch =
+      searchQuery === ""
+        ? true
+        : study.patientName.toLowerCase().includes(lowerQuery) ||
+          study.patientId.toLowerCase().includes(lowerQuery) ||
+          study.studyDescription.toLowerCase().includes(lowerQuery) ||
+          study.studyDate.includes(searchQuery) ||
+          study.studyTime.includes(searchQuery) ||
+          study.modality.toLowerCase().includes(lowerQuery);
+
+    // If we're not filtering by date or search query is empty, skip date parsing
+    if ((!fromDate && !toDate) || !matchesSearch) {
+      return matchesSearch;
+    }
+
+    // Parse studyDate (DD/MM/YYYY) to Date object
+    try {
+      // Split the date parts
+      const [day, month, year] = study.studyDate
+        .split("/")
+        .map((part) => parseInt(part, 10));
+
+      // Create Date object (months are 0-indexed in JavaScript)
+      const studyDateObj = new Date(year, month - 1, day);
+
+      // Create Date objects from fromDate and toDate (which are in YYYY-MM-DD format)
+      const fromDateObj = fromDate ? new Date(fromDate) : null;
+      const toDateObj = toDate ? new Date(toDate) : null;
+
+      // Ensure beginning and end of day for proper comparison
+      if (fromDateObj) fromDateObj.setHours(0, 0, 0, 0);
+      if (toDateObj) toDateObj.setHours(23, 59, 59, 999);
+
+      // Check if date is in range
+      const afterFromDate = !fromDateObj || studyDateObj >= fromDateObj;
+      const beforeToDate = !toDateObj || studyDateObj <= toDateObj;
+
+      return afterFromDate && beforeToDate;
+    } catch (e) {
+      // If date parsing fails, exclude from results when date filtering is active
+      console.log("Date parsing error for study:", study.id, e);
+      return false;
+    }
+  });
+
+  // Calculate Pagination
+  const totalPages = Math.ceil(filteredStudies.length / rowsPerPage);
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const displayedOrders = filteredStudies.slice(
+    startIndex,
+    startIndex + rowsPerPage
+  );
+
+  useEffect(() => {
+    if (displayedOrders.length === 0 && filteredStudies.length > 0) {
+      setCurrentPage(1); // Redirect to first page if empty
+    }
+  }, [displayedOrders, filteredStudies]);
 
   return (
-    <div className="overflow-x-auto p-4">
-      <h1 className="text-2xl font-semibold">Completed Cases</h1>
-      <table className="w-full border-collapse border border-stone-300 shadow-lg">
-        <thead className="bg-stone-200">
+    <div className="p-4 relative h-auto min-h-screen">
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
+          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      <h1 className="text-2xl font-semibold mb-4">Completed Studies </h1>
+
+      {/* Search Bar & Date Filters */}
+      <div className="w-full">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+          {/* Left side: Search input and Date range selector */}
+          <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
+            {/* Search input - wider than date pickers */}
+            <div className="w-full sm:w-60 md:w-72 lg:w-80">
+              <input
+                type="text"
+                placeholder="Search by Order Id, Patient, Modality ..."
+                className="w-full border bg-stone-50 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            {/* Date range selector */}
+            <div className="w-full sm:w-auto">
+              <DateRangeSelector
+                fromDate={fromDate}
+                setFromDate={(e) => setFromDate(e.target.value)}
+                toDate={toDate}
+                setToDate={(e) => setToDate(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Right side: Sort icon and Clear All button */}
+          <div className="flex items-center gap-4 self-end md:self-auto mt-2 md:mt-0">
+            <div className="relative group p-1 hover:bg-purple-200 rounded-full">
+              {/* Sort Icon */}
+              <RxCaretSort className="h-6 w-6 text-purple-800" />
+
+              {/* Tooltip - Positioned just above the icon */}
+              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+                Sort
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <table className="w-full border-separate border-spacing-y-3">
+        <thead>
           <tr>
             {[
-              "Order Id",
+              "Study Id",
               "Patient Name",
-              "Gender",
               "Study",
-              "Modality",
-              "Assigned To",
-              "Date",
+              "Gender",
+              "Study Date",
+              "Radiologist",
               "Priority",
-              "Report",
-              "Files",
-              "Image",
               "Action",
             ].map((col) => (
-              <th key={col} className="border border-stone-300 px-4 py-2 text-left">
+              <th
+                key={col}
+                className="bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap "
+                style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+              >
                 {col}
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {completedOrders.length > 0 ? (
-            completedOrders.map((order) => (
-              <tr key={order.id} className="hover:bg-stone-100">
-                <td className="border border-stone-300 px-4 py-2">{order.id}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.patientName}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.gender}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.study}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.modality}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.assignedTo}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.date}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.priority}</td>
-                <td className="border border-stone-300 px-4 py-2">{order.report}</td>
-                <td className="border border-stone-300 px-4 py-2">
-                  {order.files.length} files
-                </td>
-                <td className="border border-stone-300 px-4 py-2">
-                  <img src={order.image} alt="Scan" className="w-10 h-10 object-cover" />
-                </td>
-                <td className="border border-stone-300 px-4 py-2">
-                  <button className="bg-green-500 text-white px-3 py-1 rounded">View Report</button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={12} className="text-center py-4">No Completed Cases Found</td>
-            </tr>
-          )}
+          {displayedOrders.length > 0
+            ? displayedOrders.map((study, index) => {
+                const dicomPath = `C:/Users/asit_/Downloads/case${index + 1}`;
+                const weasisUrl = `weasis://${encodeURIComponent(
+                  `$dicom:get -l "${dicomPath}"`
+                )}`;
+                return (
+                  <tr
+                    key={study.id}
+                    className="hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
+                  >
+                    <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.patientId}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.patientName}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.studies.length > 0 && (
+                        <div>
+                          {study.studies.map((studyItem, index) => (
+                            <span key={studyItem.id || index}>
+                              {studyItem.name}
+                              {(studyItem.studySide.length > 0 ||
+                                studyItem.studyView.length > 0 ||
+                                studyItem.studyType.length > 0) &&
+                                " - "}
+                              {studyItem.studySide.length > 0
+                                ? studyItem.studySide.join(", ")
+                                : studyItem.studyView.length > 0
+                                ? studyItem.studyView.join(", ")
+                                : studyItem.studyType.length > 0
+                                ? studyItem.studyType.join(", ")
+                                : ""}
+                              {index < study.studies.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.gender}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.studyDate} {study.studyTime}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.radiologist}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.priority}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center flex justify-center">
+                      <div className="items-center justify-center flex flex-col">
+                        <Link
+                          href={study.report?.path || ""}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple-800 hover:underline"
+                        >
+                          <FileCheck strokeWidth={1} size={30}/>
+                        </Link>
+                        {/* <h3 className="text-xs -mb-4">Report</h3> */}
+                      </div>
+                      <Link
+                        href={{
+                          pathname: "/admin/completed-orders/case-review",
+                          query: {
+                            id: study.id,
+                            patientId: study.patientId,
+                            name: study.patientName,
+                            description: study.studyDescription,
+                            gender: study.gender,
+                            modality: study.modality,
+                            studyDate: study.studyDate,
+                            time: study.studyTime,
+                            series: study.series,
+                          },
+                        }}
+                      >
+                        <ChevronRight
+                          className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                          onClick={() => {
+                            setLoading(true);
+                          }}
+                        />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })
+            : !loading && (
+                <tr>
+                  <td colSpan={8} className="text-center py-4 text-gray-500">
+                    No completed studies found
+                  </td>
+                </tr>
+              )}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && ( // Hide pagination if there's only 1 page
+        <div className="fixed bottom-4 right-4 flex items-center space-x-2 p-2">
+          {/* Previous Button */}
+          <button
+            className={`p-1 rounded-full ${
+              currentPage === 1
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-purple-200 text-purple-800"
+            }`}
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft />
+          </button>
+
+          {/* Page Numbers (Only show up to 5 pages at a time) */}
+          {(() => {
+            const pages = [];
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+
+            if (endPage - startPage < 4) {
+              startPage = Math.max(1, endPage - 4);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+              pages.push(i);
+            }
+
+            return pages.map((page) => (
+              <button
+                key={page}
+                className={`px-2 py-[2px] rounded-full text-sm ${
+                  currentPage === page
+                    ? "bg-purple-500 text-white"
+                    : "bg-purple-100 hover:bg-purple-200"
+                }`}
+                onClick={() => setCurrentPage(page)}
+              >
+                {page}
+              </button>
+            ));
+          })()}
+
+          {/* Next Button */}
+          <button
+            className={`p-1 rounded-full ${
+              currentPage === totalPages
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-purple-200 text-purple-800"
+            }`}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+          >
+            <ChevronRight />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

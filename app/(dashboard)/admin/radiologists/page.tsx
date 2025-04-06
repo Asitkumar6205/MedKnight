@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Trash, UserPlus, X } from "lucide-react";
+import { handleFileConversion } from "../../../utils/signatureConverter";
 
 // Updated schema with better file handling
 const radiologistSchema = z.object({
@@ -17,7 +18,7 @@ const radiologistSchema = z.object({
   mrn: z.string().min(2, "MRN must be at least 2 characters"),
   isDefault: z.boolean().optional(),
   // Changed to optional - we'll validate the file manually
-  signature: z.any().optional(),
+  signature: z.any(),
 });
 
 type RadiologistFormData = z.infer<typeof radiologistSchema>;
@@ -69,23 +70,44 @@ export default function RadiologistManagement() {
       setFileError("Signature file is required");
       return;
     }
-
+  
     if (signatureFile.size > 5 * 1024 * 1024) {
       setFileError("Signature must be less than 5MB");
       return;
     }
-
+  
     setFileError(null);
     setIsModalOpen(false);
     setShowSuccessAdded(false);
     setLoading(true);
     
     try {
+      // Convert signature image to SVG first
+      const conversionResult = await handleFileConversion(
+        signatureFile, 
+        (status) => console.log("Conversion status:", status)
+      );
+      
       // Create form data for file upload
       const formData = new FormData();
+      
+      // Add original signature file
       if (signatureFile) {
         formData.append("signature", signatureFile);
       }
+      
+      // Add SVG file if conversion was successful
+      if (conversionResult.svgBlob) {
+        // Create a File object from the Blob
+        const svgFile = new File(
+          [conversionResult.svgBlob], 
+          conversionResult.svgFileName || "signature.svg", 
+          { type: "image/svg+xml" }
+        );
+        formData.append("signatureSvg", svgFile);
+      }
+      
+      // Add form fields
       formData.append("name", data.name);
       formData.append("email", data.email);
       formData.append("phone", data.phone);
@@ -93,27 +115,33 @@ export default function RadiologistManagement() {
       formData.append("designation", data.designation);
       formData.append("mrn", data.mrn);
       formData.append("isDefault", data.isDefault ? "true" : "false");
-
+      
+      // Also add the SVG data as string if needed by your backend
+      if (conversionResult.svgBlob) {
+        const svgText = await conversionResult.svgBlob.text();
+        formData.append("svgData", svgText);
+      }
+  
       const response = await fetch("/api/radiologist/postuser", {
         method: "POST",
-        body: formData, // Use FormData instead of JSON.stringify
+        body: formData,
       });
-
+  
       const responseData = await response.json();
       console.log("API Response:", responseData);
-
+  
       if (!response.ok) {
         throw new Error(responseData.message || "Failed to add radiologist");
       }
-
+  
       // Fetch users after successful addition to update the table
       await fetchUsers();
-
+  
       setShowSuccessAdded(true);
       reset();
       setSignatureFile(null);
       setSelectedFileName(null);
-
+  
       setTimeout(() => {
         setShowSuccessAdded(false);
       }, 2000);
@@ -408,9 +436,9 @@ export default function RadiologistManagement() {
               <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
                 MRN 
               </th>
-              {/* <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
+              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
                 Signature
-              </th> */}
+              </th>
               <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
                 Action
               </th>
@@ -433,7 +461,7 @@ export default function RadiologistManagement() {
                 <td className="border px-4 py-2">{user.qualifications}</td>
                 <td className="border px-4 py-2">{user.designation}</td>
                 <td className="border px-4 py-2">{user.mrn}</td>
-                {/* <td className="border px-4 py-2">
+                <td className="border px-4 py-2">
                   {user.signatureUrl && (
                     <img 
                       src={user.signatureUrl} 
@@ -441,7 +469,7 @@ export default function RadiologistManagement() {
                       className="h-12 object-contain mx-auto"
                     />
                   )}
-                </td> */}
+                </td>
                 <td className="border px-4 py-2">
                   <button
                     className="text-red-500 hover:underline"

@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
 import DateRangeSelector from "../../_components/DateRangeSelector";
+import { useCompletedCase } from "@/app/context/CompletedCaseContext";
 
-interface Study {
+interface Case {
   id: string;
   patientName: string;
   patientId: string;
@@ -14,7 +15,9 @@ interface Study {
   studyDate: string;
   studyTime: string;
   modality: string;
+  priority: string;
   series: number;
+  activeCase: boolean; // Add activeCase field to the interface
 }
 
 interface DateRangeSelectorProps {
@@ -26,25 +29,38 @@ interface DateRangeSelectorProps {
 
 export default function ActiveCasesPage() {
   const [loading, setLoading] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [selectedStudyID, setSelectedStudyID] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
-  const [studies, setStudies] = useState<Study[]>([]);
+  const [studies, setStudies] = useState<Case[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState<string>("");
   const rowsPerPage = 5;
+  const { isCompletedCase } = useCompletedCase();
+  // Removed the useActiveCase import and usage
 
   const fetchStudies = async () => {
     try {
-      const response = await fetch("/api/getOrder");
+      const response = await fetch("/api/getCases");
+
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${await response.text()}`);
+      }
+
       const data = await response.json();
-      setStudies(data.cases);
+
+      // Check if we got cases data before setting the state
+      if (data.cases && Array.isArray(data.cases)) {
+        setStudies(data.cases);
+      } else {
+        console.error("Unexpected data format received:", data);
+        setError("Failed to fetch studies: Unexpected data format");
+      }
     } catch (error) {
-      console.error("Error fetching cases:", error);
+      console.error("Error fetching active cases:", error);
+      setError(
+        error instanceof Error ? error.message : "Failed to fetch studies"
+      );
     } finally {
       setLoading(false);
     }
@@ -56,56 +72,64 @@ export default function ActiveCasesPage() {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
-// Filter Orders Based on Search & Date Range
-const filteredStudies = studies.filter((study) => {
-  // For search filtering (case-insensitive)
-  const lowerQuery = searchQuery.toLowerCase();
-  const matchesSearch = searchQuery === "" ? true : (
-    study.patientName.toLowerCase().includes(lowerQuery) ||
-    study.patientId.toLowerCase().includes(lowerQuery) ||
-    study.studyDescription.toLowerCase().includes(lowerQuery) ||
-    study.studyDate.includes(searchQuery) ||
-    study.studyTime.includes(searchQuery) ||
-    study.modality.toLowerCase().includes(lowerQuery)
+  // Filter Orders Based on Search & Date Range
+  const filteredStudies = studies.filter((study) => {
+    // For search filtering (case-insensitive)
+    const lowerQuery = searchQuery.toLowerCase();
+    const matchesSearch =
+      searchQuery === ""
+        ? true
+        : study.patientName.toLowerCase().includes(lowerQuery) ||
+          study.patientId.toLowerCase().includes(lowerQuery) ||
+          study.studyDescription.toLowerCase().includes(lowerQuery) ||
+          study.studyDate.includes(searchQuery) ||
+          study.studyTime.includes(searchQuery) ||
+          study.modality.toLowerCase().includes(lowerQuery);
+
+    // If we're not filtering by date or search query is empty, skip date parsing
+    if ((!fromDate && !toDate) || !matchesSearch) {
+      return matchesSearch;
+    }
+
+    // Parse studyDate (DD/MM/YYYY) to Date object
+    try {
+      // Split the date parts
+      const [day, month, year] = study.studyDate
+        .split("/")
+        .map((part) => parseInt(part, 10));
+
+      // Create Date object (months are 0-indexed in JavaScript)
+      const studyDateObj = new Date(year, month - 1, day);
+
+      // Create Date objects from fromDate and toDate (which are in YYYY-MM-DD format)
+      const fromDateObj = fromDate ? new Date(fromDate) : null;
+      const toDateObj = toDate ? new Date(toDate) : null;
+
+      // Ensure beginning and end of day for proper comparison
+      if (fromDateObj) fromDateObj.setHours(0, 0, 0, 0);
+      if (toDateObj) toDateObj.setHours(23, 59, 59, 999);
+
+      // Check if date is in range
+      const afterFromDate = !fromDateObj || studyDateObj >= fromDateObj;
+      const beforeToDate = !toDateObj || studyDateObj <= toDateObj;
+
+      return afterFromDate && beforeToDate;
+    } catch (e) {
+      // If date parsing fails, exclude from results when date filtering is active
+      console.log("Date parsing error for study:", study.id, e);
+      return false;
+    }
+  });
+
+  // Modified: Use activeCase field from database instead of isActiveCase context
+  const activeFilteredStudies = filteredStudies.filter(
+    (study) => study.activeCase === true && !isCompletedCase(study.patientId)
   );
 
-  // If we're not filtering by date or search query is empty, skip date parsing
-  if ((!fromDate && !toDate) || !matchesSearch) {
-    return matchesSearch;
-  }
-  
-  // Parse studyDate (DD/MM/YYYY) to Date object
-  try {
-    // Split the date parts
-    const [day, month, year] = study.studyDate.split('/').map(part => parseInt(part, 10));
-    
-    // Create Date object (months are 0-indexed in JavaScript)
-    const studyDateObj = new Date(year, month - 1, day);
-    
-    // Create Date objects from fromDate and toDate (which are in YYYY-MM-DD format)
-    const fromDateObj = fromDate ? new Date(fromDate) : null;
-    const toDateObj = toDate ? new Date(toDate) : null;
-    
-    // Ensure beginning and end of day for proper comparison
-    if (fromDateObj) fromDateObj.setHours(0, 0, 0, 0);
-    if (toDateObj) toDateObj.setHours(23, 59, 59, 999);
-    
-    // Check if date is in range
-    const afterFromDate = !fromDateObj || studyDateObj >= fromDateObj;
-    const beforeToDate = !toDateObj || studyDateObj <= toDateObj;
-    
-    return afterFromDate && beforeToDate;
-  } catch (e) {
-    // If date parsing fails, exclude from results when date filtering is active
-    console.log("Date parsing error for study:", study.id, e);
-    return false;
-  }
-});
-
   // Calculate Pagination
-  const totalPages = Math.ceil(filteredStudies.length / rowsPerPage);
+  const totalPages = Math.ceil(activeFilteredStudies.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const displayedOrders = filteredStudies.slice(
+  const displayedOrders = activeFilteredStudies.slice(
     startIndex,
     startIndex + rowsPerPage
   );
@@ -121,20 +145,6 @@ const filteredStudies = studies.filter((study) => {
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
           <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      )}
-
-      {/* Success Notification */}
-      {showSuccess && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white py-1 px-4 rounded-sm shadow-lg text-center transition-opacity duration-500">
-          ✅ Deletion Successfull!
-        </div>
-      )}
-
-      {/* Error Notification */}
-      {errorMessage && (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white py-2 px-4 rounded-sm shadow-lg text-center transition-opacity duration-500">
-          ❌ {errorMessage}
         </div>
       )}
 
@@ -178,16 +188,6 @@ const filteredStudies = studies.filter((study) => {
                 Sort
               </span>
             </div>
-
-            {/* Button */}
-            {/* <button
-              style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
-              onClick={() => setShowConfirmModal(true)}
-              disabled={loading}
-              className="bg-red-500 text-white px-4 py-2 rounded-sm shadow-md hover:bg-red-600 disabled:opacity-50 whitespace-nowrap"
-            >
-              Clear All
-            </button> */}
           </div>
         </div>
       </div>
@@ -203,6 +203,7 @@ const filteredStudies = studies.filter((study) => {
               "Gender",
               "Modality",
               "Study Date",
+              "Priority",
               "Series",
               "Action",
             ].map((col) => (
@@ -218,128 +219,90 @@ const filteredStudies = studies.filter((study) => {
         </thead>
         <tbody>
           {displayedOrders.length > 0
-            ? displayedOrders.map((study, index) => {
-                const dicomPath = `C:/Users/asit_/Downloads/case${index + 1}`;
-                const weasisUrl = `weasis://${encodeURIComponent(
-                  `$dicom:get -l "${dicomPath}"`
-                )}`;
-                return (
-                  <tr
-                    key={study.id}
-                    className="hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
-                  >
-                    <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.patientId}
-                    </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.patientName}
-                    </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.studyDescription}
-                    </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.gender}
-                    </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.modality}
-                    </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.studyDate} {study.studyTime}
-                    </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.series}
-                    </td>
-                    <td className="border-t border-b border-r border-stone-300 px-2 py-4 items-center justify-center flex">
-                      <button
-                        onClick={() => {
-                          setShowDeleteConfirm(true);
-                          setSelectedStudyID(study.id);
-                        }}
-                        disabled={loading}
-                        className="text-white py-2 mr-2"
+            ? displayedOrders
+                .map((study) => {
+                  // Determine background color based on priority
+                  let bgColorClass = "bg-stone-100 hover:bg-stone-50"; // default
+                  if (study.priority?.toLowerCase() === "urgent") {
+                    bgColorClass = "bg-yellow-100";
+                  } else if (study.priority?.toLowerCase() === "stat") {
+                    bgColorClass = "bg-red-200";
+                  }
+
+                  return (
+                    <tr
+                      key={study.id}
+                      className={`hover:bg-opacity-80 ${bgColorClass} shadow-md text-purple-950`}
+                    >
+                      <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.patientId}
+                      </td>
+                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.patientName}
+                      </td>
+                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.studyDescription}
+                      </td>
+                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.gender}
+                      </td>
+                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.modality}
+                      </td>
+                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.studyDate} {study.studyTime}
+                      </td>
+                      <td
+                        className={`border-b border-t border-stone-300 px-2 py-4 text-center ${
+                          study.priority === "Urgent"
+                            ? "text-yellow-500"
+                            : study.priority === "Stat"
+                            ? "text-red-500"
+                            : "text-stone-700"
+                        }`}
                       >
-                        <Trash className="text-red-500 hover:text-red-600" />
-                      </button>
-                      <Link
-                        href={{
-                          pathname: "/admin/report",
-                          query: {
-                            id: study.id,
-                            patientId: study.patientId,
-                            name: study.patientName,
-                            description: study.studyDescription,
-                            gender: study.gender,
-                            modality: study.modality,
-                            studyDate: study.studyDate,
-                            time: study.studyTime,
-                            series: study.series,
-                          },
-                        }}
-                      >
-                        <ChevronRight
-                          className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
-                          onClick={() => {
-                            setLoading(true);
+                        {study.priority}
+                      </td>
+                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                        {study.series}
+                      </td>
+                      <td className="border-t border-b border-r border-stone-300 px-2 py-4 items-center justify-center flex">
+                        <Link
+                          href={{
+                            pathname: "/admin/report",
+                            query: {
+                              id: study.id,
+                              patientId: study.patientId,
+                              name: study.patientName,
+                              description: study.studyDescription,
+                              gender: study.gender,
+                              modality: study.modality,
+                              studyDate: study.studyDate,
+                              time: study.studyTime,
+                              series: study.series,
+                            },
                           }}
-                        />
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })
-            : null}
+                        >
+                          <ChevronRight
+                            className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                            onClick={() => {
+                              setLoading(true);
+                            }}
+                          />
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
+            : !loading && (
+                <tr>
+                  <td colSpan={9} className="text-center py-4 text-gray-500">
+                    No active studies found
+                  </td>
+                </tr>
+              )}
         </tbody>
       </table>
-
-      {/* Confirmation Modal */}
-      {showConfirmModal && !loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-purple-50 bg-opacity-50 p-6 rounded-sm shadow-lg w-96 text-center">
-            <p className="mb-4">
-              Are you sure you want to delete all studies? This action cannot be
-              undone.
-            </p>
-            <div className="flex justify-center gap-4">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="bg-stone-200 px-4 py-2 rounded-sm shadow-sm hover:bg-stone-300"
-              >
-                Cancel
-              </button>
-              <button
-                // onClick={handleDeleteAllStudies}
-                disabled={loading}
-                className="bg-red-500 text-white px-4 py-2 rounded-sm shadow-sm hover:bg-red-600 disabled:opacity-50"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && !loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 backdrop-blur-sm">
-          <div className="bg-purple-50 bg-opacity-50 text-black p-6 rounded-sm shadow-md">
-            <p className="mb-4">Are you sure you want to delete this study?</p>
-            <div className="flex space-x-4 justify-center">
-              <button
-                className="px-4 py-2 bg-stone-200 rounded-sm shadow-sm hover:bg-stone-300"
-                onClick={() => setShowDeleteConfirm(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="px-4 py-2 bg-red-500 text-white rounded-sm shadow-sm hover:bg-red-600"
-                // onClick={() => handleDeleteStudy(selectedStudyID)}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && ( // Hide pagination if there's only 1 page

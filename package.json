@@ -48,6 +48,7 @@
     "next-auth": "^4.24.11",
     "nodemailer": "^6.10.0",
     "pdf-lib": "^1.17.1",
+    "potrace": "^2.1.8",
     "prosemirror-state": "^1.4.3",
     "qrcode": "^1.5.4",
     "qrcode.react": "^4.2.0",
@@ -55,9 +56,12 @@
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.54.2",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.4.0",
+    "sharp": "^0.33.5",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.1.0",
     "zod": "^3.24.1"
   },
   "devDependencies": {
@@ -67,6 +71,7 @@
     "@types/node": "^20.17.17",
     "@types/nodemailer": "^6.4.17",
     "@types/pdfmake": "^0.2.11",
+    "@types/potrace": "^2.1.5",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",

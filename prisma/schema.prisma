@@ -59,24 +59,41 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-model Active {
-  id         String     @id @default(cuid())
-  patientId  String     @unique
-  doctor     String   
-  priority   Priority  
-  history    String  
-  activeCase Boolean    @default(false)
-  files      File[]     
-  studies    Study[]    // Many-to-many relationship without fields/references
-  patientName  String
-  studyDescription  String
-  gender     String
-  modality   String
-  series     String
-  studyDate  String
-  studyTime  String
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+enum Priority {
+  Routine
+  Urgent
+  Stat
+}
+
+model File {
+  id        String   @id @default(cuid())
+  filename  String   
+  path      String   
+  caseId    String   
+  case      Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  uploadedAt DateTime @default(now())
+  @@index([caseId])  
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  filename   String   
+  path       String   
+  caseId     String   @unique
+  case       Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  uploadedAt DateTime @default(now())
+  @@index([caseId])  
+}
+
+model Signature {
+  id              String       @id @default(cuid())
+  filename        String   
+  path            String   
+  svgPath         String
+  radiologistId   String       @unique
+  radiologist     Radiologist? @relation(fields: [radiologistId], references: [id], onDelete: Cascade)
+  uploadedAt      DateTime     @default(now())
+  @@index([radiologistId])  
 }
 
 model Study {
@@ -85,23 +102,30 @@ model Study {
   studyView String[] @default([]) 
   studySide String[] @default([]) 
   studyType String[] @default([]) 
-  actives   Active[]  // Many-to-many relationship without fields/references
+  cases     Case[]  // Many-to-many relationship without fields/references
 }
 
-model File {
-  id        String   @id @default(cuid())
-  filename  String   
-  path      String   
-  activeId  String   
-  active    Active   @relation(fields: [activeId], references: [id], onDelete: Cascade)
-  uploadedAt DateTime @default(now())
-  @@index([activeId])  
-}
-
-enum Priority {
-  Routine
-  Urgent
-  Stat
+model Case {
+  id              String     @id @default(cuid())
+  patientId       String     @unique
+  doctor          String   
+  priority        Priority  
+  history         String  
+  activeCase      Boolean    @default(false)
+  completedCase   Boolean    @default(false)
+  files           File[]     
+  studies         Study[]    // Many-to-many relationship without fields/references
+  report          Report?
+  patientName     String
+  studyDescription String
+  gender          String
+  modality        String
+  series          String
+  studyDate       String
+  studyTime       String
+  radiologist     String?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 }
 
 model Hospital {
@@ -126,14 +150,4 @@ model Radiologist {
   isDefault          Boolean    @default(false) 
   createdAt          DateTime   @default(now()) 
   updatedAt          DateTime   @updatedAt
-}
-
-model Signature {
-  id              String       @id @default(cuid())
-  filename        String   
-  path            String   
-  radiologistId   String       @unique
-  radiologist     Radiologist? @relation(fields: [radiologistId], references: [id], onDelete: Cascade)
-  uploadedAt      DateTime     @default(now())
-  @@index([radiologistId])  
 }

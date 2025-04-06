@@ -5,6 +5,8 @@ import { z } from "zod";
 import { writeFile } from "fs/promises";
 import path from "path";
 import { mkdir } from "fs/promises";
+import Jimp from "jimp";
+import potrace from "potrace";
 
 // Define schema validation for radiologist submission - without File validation
 const radiologistSchema = z.object({
@@ -16,6 +18,50 @@ const radiologistSchema = z.object({
   mrn: z.string().min(2, "MRN must be at least 2 characters"),
   isDefault: z.boolean().optional(),
 });
+
+// Function to convert image buffer to SVG
+async function convertImageToSVG(
+  imageBuffer: Buffer,
+  options = {
+    threshold: 128,
+    color: '#000000',
+    background: 'transparent',
+    turdSize: 2,
+    alphaMax: 1,
+    optCurve: true,
+    optTolerance: 0.2,
+  }
+): Promise<string | null> {
+  try {
+    // Load the image with Jimp
+    const image = await Jimp.read(imageBuffer);
+    
+    // Process the image to enhance signature quality
+    image
+      .grayscale()
+      .contrast(0.3)
+      .threshold({ max: 255, replace: 255, autoGreyscale: false })
+      .invert();
+    
+    // Get the processed image as buffer
+    const processedBuffer = await image.getBufferAsync(Jimp.MIME_PNG);
+    
+    // Convert to SVG using potrace
+    return new Promise((resolve, reject) => {
+      potrace.trace(processedBuffer, options, (err, svg) => {
+        if (err || !svg) {
+          console.error('Error tracing image:', err);
+          resolve(null);
+        } else {
+          resolve(svg);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error processing image:', error);
+    return null;
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -30,6 +76,10 @@ export async function POST(req: Request) {
     const mrn = formData.get("mrn") as string;
     const isDefault = formData.get("isDefault") === "true";
     const signature = formData.get("signature");
+    
+    // Check if SVG version was provided directly
+    const signatureSvg = formData.get("signatureSvg");
+    const svgData = formData.get("svgData") as string;
 
     // Validate data (excluding the signature file)
     const validationResult = radiologistSchema.safeParse({
@@ -79,7 +129,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Handle file upload
+    // Handle original signature file upload
     const bytes = await (signature as Blob).arrayBuffer();
     const buffer = Buffer.from(bytes);
 
@@ -91,8 +141,39 @@ export async function POST(req: Request) {
     const filePath = path.join(uploadDir, uniqueFileName);
     const publicPath = `/uploads/signatures/${uniqueFileName}`;
 
-    // Write file to disk
+    // Write original file to disk
     await writeFile(filePath, buffer);
+
+    // Handle SVG generation/saving
+    let svgFileName = null;
+    let svgPublicPath = null;
+    
+    // If SVG data was provided, use it
+    if (svgData) {
+      svgFileName = `${Date.now()}-signature.svg`;
+      svgPublicPath = `/uploads/signatures/${svgFileName}`;
+      const svgFilePath = path.join(uploadDir, svgFileName);
+      await writeFile(svgFilePath, svgData);
+    }
+    // If SVG file was provided, save it
+    else if (signatureSvg instanceof Blob) {
+      const svgBytes = await signatureSvg.arrayBuffer();
+      const svgBuffer = Buffer.from(svgBytes);
+      svgFileName = `${Date.now()}-${(signatureSvg as any).name || 'signature.svg'}`;
+      svgPublicPath = `/uploads/signatures/${svgFileName}`;
+      const svgFilePath = path.join(uploadDir, svgFileName);
+      await writeFile(svgFilePath, svgBuffer);
+    } 
+    // Otherwise, generate SVG from the original image
+    else {
+      const svg = await convertImageToSVG(buffer);
+      if (svg) {
+        svgFileName = `${Date.now()}-signature.svg`;
+        svgPublicPath = `/uploads/signatures/${svgFileName}`;
+        const svgFilePath = path.join(uploadDir, svgFileName);
+        await writeFile(svgFilePath, svg);
+      }
+    }
 
     // First create the radiologist
     const newRadiologist = await db.radiologist.create({
@@ -112,6 +193,7 @@ export async function POST(req: Request) {
       data: {
         filename: uniqueFileName,
         path: publicPath,
+        svgPath: svgPublicPath as string, // Add SVG path to the signature record
         radiologistId: newRadiologist.id,
       },
     });

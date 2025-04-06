@@ -7,6 +7,7 @@ import * as z from "zod";
 import { X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useActiveCase } from "@/app/context/ActiveCaseContext";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   doctor: z.string().min(1, "Doctor name is required"),
@@ -71,6 +72,8 @@ export default function PatientUploadForm() {
   const [structuredStudiesCheck, setStructuredStudiesCheck] = useState<
     Record<string, Record<string, Record<string, string[]>>>
   >({});
+
+  const router = useRouter();
 
   const { setActiveCase } = useActiveCase();
 
@@ -315,13 +318,13 @@ export default function PatientUploadForm() {
     if (isSubmitting) return;
     setLoading(true);
     setIsSubmitting(true);
-
+  
     try {
       const formData = new FormData();
-
+  
       if (patientId) {
         formData.append("patientId", patientId);
-        setActiveCase(patientId, true);
+        setActiveCase(patientId, true, true);
       }
       if (patientName) {
         formData.append("patientName", patientName);
@@ -350,19 +353,19 @@ export default function PatientUploadForm() {
       formData.append("doctor", data.doctor);
       formData.append("priority", data.priority || "Routine");
       formData.append("history", data.history);
-
+  
       // Transform selected options into structured format
       const structuredStudies: Record<
         string,
         Record<string, Record<string, string[]>>
       > = {};
-
+  
       selectedStudies.forEach((study) => {
         structuredStudies[study] = {};
-
+  
         Object.entries(studies[study] || {}).forEach(([field, values]) => {
           structuredStudies[study][field] = {};
-
+  
           (values as string[]).forEach((value) => {
             if (selectedOptions[study]?.includes(value)) {
               if (!structuredStudies[study][field][value]) {
@@ -373,9 +376,9 @@ export default function PatientUploadForm() {
           });
         });
       });
-
+  
       formData.append("selectedStudies", JSON.stringify(structuredStudies));
-
+  
       // Add files
       if (rFiles && rFiles.length > 0) {
         for (const file of rFiles) {
@@ -391,16 +394,16 @@ export default function PatientUploadForm() {
           }
         }
       }
-
+  
       // Send data to backend
-      const response = await fetch("/api/postOrder", {
+      const response = await fetch("/api/postCase", {
         method: "POST",
         body: formData,
         headers: {
           Accept: "application/json", // Add this to ensure proper response parsing
         },
       });
-
+  
       if (response.ok) {
         const result = await response.json();
         console.log("Form submitted successfully", result);
@@ -409,7 +412,12 @@ export default function PatientUploadForm() {
         setSelectedOptions({});
         setRFiles([]);
         setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 3000);
+        
+        // Show success message briefly before navigating back
+        setTimeout(() => {
+          setShowSuccess(false);
+          router.push("/admin/active-orders");
+        }, 1000); // Reduced timeout to 1 second for faster navigation
       } else {
         const errorData = await response.json();
         setError(errorData.error);

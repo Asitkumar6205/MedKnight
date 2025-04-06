@@ -38,8 +38,11 @@ export default function ActiveCasesPage() {
   const [studies, setStudies] = useState<Study[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedPatientID, setSelectedPatientID] = useState<string>("");
   const { isActiveCase } = useActiveCase();
   const rowsPerPage = 5;
+
+  const { setActiveCase } = useActiveCase();
 
   const fetchStudies = async () => {
     try {
@@ -70,24 +73,44 @@ export default function ActiveCasesPage() {
     setShowSuccess(false);
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
-      const response = await fetch("/api/deleteStudy", {
+      // First find the patient ID associated with this study before deleting
+      const studyToDelete = studies.find(study => study.ID === studyId);
+      const patientIdToUpdate = studyToDelete?.PatientID;
+      
+      const response = await fetch("/api/deleteCase", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ studyId }),
       });
-
+  
       const data = await response.json();
+      console.log(data);
+  
       if (response.ok) {
+        // Remove from local storage first
+        if (patientIdToUpdate) {
+          // Remove from active case tracking
+          setActiveCase(patientIdToUpdate, false, true);
+          
+          // Also explicitly remove from localStorage
+          const activeCasesStr = localStorage.getItem('activeCases');
+          if (activeCasesStr) {
+            const activeCases: string[] = JSON.parse(activeCasesStr);
+            const updatedActiveCases = activeCases.filter((id: string) => id !== patientIdToUpdate);
+            localStorage.setItem('activeCases', JSON.stringify(updatedActiveCases));
+          }
+        }
+        
         setShowDeleteConfirm(false);
         setShowSuccess(true);
-
+  
         // Update the study list without refreshing the page
         setStudies((prevStudies) =>
           prevStudies.filter((study) => study.ID !== studyId)
         );
-
+  
         setTimeout(() => {
           setShowSuccess(false);
         }, 2000);
@@ -96,27 +119,42 @@ export default function ActiveCasesPage() {
       }
     } catch (error) {
       console.error("Error deleting study:", error);
+      setErrorMessage("An error occurred while deleting the study.");
     } finally {
       setLoading(false);
     }
   };
-
+  
   const handleDeleteAllStudies = async () => {
     setShowSuccess(false);
     setLoading(true);
     setErrorMessage("");
-
+  
     try {
+      // Extract all patient IDs from studies before deleting
+      const patientIds: string[] = studies
+        .map(study => study.PatientID)
+        .filter((id): id is string => Boolean(id)); // Type guard to ensure non-null
+      
       const response = await fetch("/api/deleteAllStudies", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
-
+  
       const data = await response.json();
+      
       if (response.ok) {
+        // Set active case to false for all patient IDs
+        patientIds.forEach((patientId: string) => {
+          setActiveCase(patientId, false, true);
+        });
+        
+        // Also clear the entire activeCases array in localStorage
+        localStorage.setItem('activeCases', JSON.stringify([]));
+        
         setShowSuccess(true);
         setStudies([]); // Clear the studies list after deletion
-
+  
         setTimeout(() => {
           setShowSuccess(false);
         }, 2000);
@@ -128,10 +166,9 @@ export default function ActiveCasesPage() {
       setErrorMessage("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
-      setShowConfirmModal(false); // Ensure modal closes regardless of success or failure
+      setShowConfirmModal(false);
     }
   };
-
   const parseStudyDate = (
     studyDate: string
   ): { dateObj: Date | null; formattedDate: string | null } => {
@@ -330,23 +367,24 @@ export default function ActiveCasesPage() {
                   </td>
                   <td className="border-t border-b border-r border-stone-300 px-2 py-4 items-center justify-center flex">
                     {isActiveCase(study.PatientID) ? (
-                      <>
+                      <div className="flex -ml-1 gap-4">
                         <button
                           onClick={() => {
                             setShowDeleteConfirm(true);
                             setSelectedStudyID(study.ID);
+                            setSelectedPatientID(study.PatientID);
                           }}
                           disabled={loading}
-                          className="text-white py-2 mr-2"
+                          className="text-white py-2"
                         >
                           <Trash className="text-red-500 hover:text-red-600" />
                         </button>
                         <Check
                           size={36}
                           strokeWidth={2}
-                          className="my-[6px] text-green-500"
+                          className="my-[6px]  text-green-500"
                         />
-                      </>
+                      </div>
                     ) : (
                       <>
                         <button
@@ -388,7 +426,13 @@ export default function ActiveCasesPage() {
                   </td>
                 </tr>
               ))
-            : null}
+            : !loading && (
+              <tr>
+                <td colSpan={9} className="text-center py-4 text-gray-500">
+                  No active orders found
+                </td>
+              </tr>
+            )}
         </tbody>
       </table>
 

@@ -74,7 +74,7 @@ const PatientHeader: React.FC<PatientHeaderProps> = ({
 
       {/* QR Code */}
       <div className="col-span-1 flex items-center justify-center">
-        <QRCodeCanvas value="http://localhost:3000" size={80} />
+        <QRCodeCanvas value="http://localhost:3000" size={60} />
       </div>
     </div>
   );

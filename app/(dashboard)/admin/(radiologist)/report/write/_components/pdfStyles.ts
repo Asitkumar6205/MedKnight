@@ -87,7 +87,8 @@ export const pdfStyles = StyleSheet.create({
     marginRight: 20,
   },
   signatureImage: {
-    width: 120,
+    color: "black",
+    width: 100,
     height: 40,
     objectFit: "contain",
   },

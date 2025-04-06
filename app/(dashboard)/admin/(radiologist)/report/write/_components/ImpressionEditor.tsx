@@ -69,7 +69,7 @@ const ImpressionEditor: React.FC<ImpressionEditorProps> = ({
 
   return (
     <div>
-      <label className="text-lg font-bold text-gray-600">
+      <label className="text-lg font-bold text-stone-700">
         Impression
       </label>
       <div className="mt-1">

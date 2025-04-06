@@ -117,9 +117,9 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
             className="mb-4 hover:text-purple-500"
           >
             {isOpen ? (
-              <X className="max-lg:w-5 max-lg:h-5 lg:w-6 lg:h-6 hover:text-purple-500" />
+              <X className="lg:w-6 lg:h-6 max-lg:-ml-[2px] lg:-ml-[2px] hover:text-purple-500" />
             ) : (
-              <Menu className="lg-max:w-5 lg-max:h-5 lg:w-6 lg:h-6" />
+              <Menu className="lg-max:w-5 lg-max:h-5 lg:w-6 lg:h-6 " />
             )}
           </button>
 
@@ -129,7 +129,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
                 <li
                   key={item.name}
                   className={clsx(
-                    "mb-4 flex items-center space-x-3 space-y-1 cursor-pointer hover:text-purple-500",
+                    "mb-4 flex items-center space-x-3 space-y-1 cursor-pointer hover:text-purple-500", !isOpen && "justify-center" ,
                     activeComponent === item.name && "text-purple-500"
                   )}
                   onClick={() => {
