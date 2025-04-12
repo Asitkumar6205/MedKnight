@@ -70,43 +70,43 @@ export default function RadiologistManagement() {
       setFileError("Signature file is required");
       return;
     }
-  
+
     if (signatureFile.size > 5 * 1024 * 1024) {
       setFileError("Signature must be less than 5MB");
       return;
     }
-  
+
     setFileError(null);
     setIsModalOpen(false);
     setShowSuccessAdded(false);
     setLoading(true);
-    
+
     try {
       // Convert signature image to SVG first
       const conversionResult = await handleFileConversion(
-        signatureFile, 
+        signatureFile,
         (status) => console.log("Conversion status:", status)
       );
-      
+
       // Create form data for file upload
       const formData = new FormData();
-      
+
       // Add original signature file
       if (signatureFile) {
         formData.append("signature", signatureFile);
       }
-      
+
       // Add SVG file if conversion was successful
       if (conversionResult.svgBlob) {
         // Create a File object from the Blob
         const svgFile = new File(
-          [conversionResult.svgBlob], 
-          conversionResult.svgFileName || "signature.svg", 
+          [conversionResult.svgBlob],
+          conversionResult.svgFileName || "signature.svg",
           { type: "image/svg+xml" }
         );
         formData.append("signatureSvg", svgFile);
       }
-      
+
       // Add form fields
       formData.append("name", data.name);
       formData.append("email", data.email);
@@ -115,33 +115,33 @@ export default function RadiologistManagement() {
       formData.append("designation", data.designation);
       formData.append("mrn", data.mrn);
       formData.append("isDefault", data.isDefault ? "true" : "false");
-      
+
       // Also add the SVG data as string if needed by your backend
       if (conversionResult.svgBlob) {
         const svgText = await conversionResult.svgBlob.text();
         formData.append("svgData", svgText);
       }
-  
+
       const response = await fetch("/api/radiologist/postuser", {
         method: "POST",
         body: formData,
       });
-  
+
       const responseData = await response.json();
       console.log("API Response:", responseData);
-  
+
       if (!response.ok) {
         throw new Error(responseData.message || "Failed to add radiologist");
       }
-  
+
       // Fetch users after successful addition to update the table
       await fetchUsers();
-  
+
       setShowSuccessAdded(true);
       reset();
       setSignatureFile(null);
       setSelectedFileName(null);
-  
+
       setTimeout(() => {
         setShowSuccessAdded(false);
       }, 2000);
@@ -186,10 +186,10 @@ export default function RadiologistManagement() {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to delete radiologist");
       }
-      
+
       setShowSuccess(true);
       setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-      
+
       setTimeout(() => {
         setShowSuccess(false);
       }, 2000);
@@ -211,10 +211,10 @@ export default function RadiologistManagement() {
       const file = e.target.files[0];
       setSignatureFile(file);
       setSelectedFileName(file.name);
-      
+
       // Clear file error when a file is selected
       if (fileError) setFileError(null);
-      
+
       // Validate file size
       if (file.size > 5 * 1024 * 1024) {
         setFileError("Signature must be less than 5MB");
@@ -225,7 +225,7 @@ export default function RadiologistManagement() {
       setFileError("Signature file is required");
     }
   };
-  
+
   const resetForm = () => {
     reset();
     setSelectedFileName(null);
@@ -233,7 +233,7 @@ export default function RadiologistManagement() {
     setFileError(null);
     setIsModalOpen(false);
   };
-  
+
   return (
     <div className="p-4">
       {loading && (
@@ -298,7 +298,9 @@ export default function RadiologistManagement() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Email<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  Email<span className="text-red-500">*</span>
+                </label>
                 <input
                   {...register("email")}
                   className="w-full border rounded-md px-2 py-1"
@@ -309,7 +311,9 @@ export default function RadiologistManagement() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Phone No.<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  Phone No.<span className="text-red-500">*</span>
+                </label>
                 <input
                   {...register("phone")}
                   className="w-full border rounded-md px-2 py-1"
@@ -335,7 +339,9 @@ export default function RadiologistManagement() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Designation<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  Designation<span className="text-red-500">*</span>
+                </label>
                 <input
                   {...register("designation")}
                   className="w-full border rounded-md px-2 py-1"
@@ -348,7 +354,9 @@ export default function RadiologistManagement() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium">MRN<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  MRN<span className="text-red-500">*</span>
+                </label>
                 <input
                   {...register("mrn")}
                   className="w-full border rounded-md px-2 py-1"
@@ -412,7 +420,7 @@ export default function RadiologistManagement() {
 
       {/* Users Table */}
       <div className="mt-10 z-0">
-        <table className="w-full border-collapse border border-stone-300">
+        <table className="w-full border-collapse border-none border-stone-300">
           <thead style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}>
             <tr className="bg-stone-200">
               <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
@@ -434,11 +442,11 @@ export default function RadiologistManagement() {
                 Designation
               </th>
               <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
-                MRN 
+                MRN
               </th>
-              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
+              {/* <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
                 Signature
-              </th>
+              </th> */}
               <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
                 Action
               </th>
@@ -447,21 +455,33 @@ export default function RadiologistManagement() {
           <tbody>
             {users.map((user, index) => (
               <tr key={user.id} className="text-center">
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2 items-center whitespace-nowrap">
+                <td className="border-b border-stone-400 px-4 py-2">
+                  {index + 1}
+                </td>
+                <td className="border-b border-stone-400 px-4 py-2 items-center whitespace-nowrap">
                   <span>{user.name}</span>
-                  {user.isDefault && (
+                  {/* {user.isDefault && (
                     <span className="ml-2 text-xs bg-purple-600 text-white px-2 py-1 rounded whitespace-nowrap">
                       Default User
                     </span>
-                  )}
+                  )} */}
                 </td>
-                <td className="border px-4 py-2">{user.email}</td>
-                <td className="border px-4 py-2">{user.phone}</td>
-                <td className="border px-4 py-2">{user.qualifications}</td>
-                <td className="border px-4 py-2">{user.designation}</td>
-                <td className="border px-4 py-2">{user.mrn}</td>
-                <td className="border px-4 py-2">
+                <td className="border-b border-stone-400 px-4 py-2">
+                  {user.email}
+                </td>
+                <td className="border-b border-stone-400 px-4 py-2">
+                  {user.phone}
+                </td>
+                <td className="border-b border-stone-400 px-4 py-2">
+                  {user.qualifications}
+                </td>
+                <td className="border-b border-stone-400 px-4 py-2">
+                  {user.designation}
+                </td>
+                <td className="border-b border-stone-400 px-4 py-2">
+                  {user.mrn}
+                </td>
+                {/* <td className="border-b border-stone-400 px-4 py-2">
                   {user.signatureUrl && (
                     <img 
                       src={user.signatureUrl} 
@@ -469,16 +489,16 @@ export default function RadiologistManagement() {
                       className="h-12 object-contain mx-auto"
                     />
                   )}
-                </td>
-                <td className="border px-4 py-2">
+                </td> */}
+                <td className="border-b border-stone-400 px-4 py-2">
                   <button
-                    className="text-red-500 hover:underline"
+                    className="text-red-500 hover:underline mt-1"
                     onClick={() => {
                       setShowDeleteConfirm(true);
                       setSelectedUser(user.id);
                     }}
                   >
-                    <Trash/>
+                    <Trash strokeWidth={2} size={20} />
                   </button>
                 </td>
               </tr>
@@ -489,9 +509,7 @@ export default function RadiologistManagement() {
         {showDeleteConfirm && !loading && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 backdrop-blur-sm">
             <div className="bg-purple-50 bg-opacity-50 text-black p-6 rounded-sm shadow-md">
-              <p className="mb-4">
-                Are you sure you want to delete this user?
-              </p>
+              <p className="mb-4">Are you sure you want to delete this user?</p>
               <div className="flex space-x-4 justify-center">
                 <button
                   className="px-4 py-2 bg-stone-200 rounded-sm shadow-sm hover:bg-stone-400"

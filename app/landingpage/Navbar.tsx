@@ -1,4 +1,9 @@
-import { Sheet, SheetTrigger, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetTitle,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
@@ -17,9 +22,16 @@ export default function Navbar() {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="bg-stone-900 bg-opacity-50 text-white">
-            <SheetTitle className="sr-only"/>
-            <Link href={"/#home"} className="mr-6 hidden lg:flex" prefetch={false}>
+          <SheetContent
+            side="left"
+            className="bg-stone-900 bg-opacity-50 text-white"
+          >
+            <SheetTitle className="sr-only" />
+            <Link
+              href={"/#home"}
+              className="mr-6 hidden lg:flex"
+              prefetch={false}
+            >
               <MountainIcon className="h-6 w-6" />
               <span className="sr-only">Acme Inc</span>
             </Link>
@@ -119,12 +131,9 @@ export default function Navbar() {
           Testimonials
         </Link>
         <Button className="font-bold text-teal-950 bg-teal-500 hover:bg-teal-600">
-        <Link
-          href={"/#getintouch"}
-          prefetch={false}
-        >
-          Contact Us
-        </Link>
+          <Link href={"/#getintouch"} prefetch={false}>
+            Contact Us
+          </Link>
         </Button>
       </nav>
     </header>
@@ -168,9 +177,12 @@ function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
     // >
     //   <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
     // </svg>
-    <h2>
+    <h2 className="flex items-center ">
+      <img src="LOGO-MEDKNIGHT.png" height={60} width={60} alt="logo" />
       <span>Med</span>
-      <span className="bg-gradient-to-r from-teal-600 to-stone-700 bg-clip-text text-transparent">Knight</span>
+      <span className="bg-gradient-to-r from-purple-600 to-blue-700 bg-clip-text text-transparent">
+        Knight
+      </span>
     </h2>
   );
 }

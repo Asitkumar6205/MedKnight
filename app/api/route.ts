@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-import { getServerField } from "next/dist/server/lib/render-server";
 import { authOptions } from "../../lib/auth";
 import { NextResponse } from "next/server";
 

@@ -1,6 +1,9 @@
 {
-    "CT 3D": {},
+    "CT 3D": {
+        "price": 150
+    },
     "CT Abdomen & Pelvis": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -11,6 +14,7 @@
         ]
     },
     "CT Abdomen & Pelvis Lifesaver": {
+        "price": 400,
         "Select Type": [
             "Plain"
         ],
@@ -20,31 +24,58 @@
         ]
     },
     "CT Abdomen & Pelvis Triphasic": {
+        "price": 600,
         "Select Gender": [
             "Male",
             "Female"
         ]
     },
-    "CT Angiography Abdominal": {},
-    "CT Angiography Aortogram": {},
-    "CT Angiography Cerebral": {},
-    "CT Angiography Cerebral Venogram": {},
-    "CT Angiography Neck": {},
-    "CT Angiography Peripheral Arms": {},
-    "CT Angiography Peripheral Legs": {},
-    "CT Angiography Pulmonary": {},
-    "CT Angiography Renal": {},
-    "CT Angiography Thoracic": {},
+    "CT Angiography Abdominal": {
+        "price": 800
+    },
+    "CT Angiography Aortogram": {
+        "price": 800
+    },
+    "CT Angiography Cerebral": {
+        "price": 800
+    },
+    "CT Angiography Cerebral Venogram": {
+        "price": 800
+    },
+    "CT Angiography Neck": {
+        "price": 800
+    },
+    "CT Angiography Peripheral Arms": {
+        "price": 800
+    },
+    "CT Angiography Peripheral Legs": {
+        "price": 800
+    },
+    "CT Angiography Pulmonary": {
+        "price": 800
+    },
+    "CT Angiography Renal": {
+        "price": 800
+    },
+    "CT Angiography Thoracic": {
+        "price": 800
+    },
     "CT Brain": {
+        "price": 225,
         "Select Type": [
             "Plain",
             "Contrast"
         ],
         "Additional studies": []
     },
-    "CT Perfusion": {},
-    "MRI DWI": {},
+    "CT Perfusion": {
+        "price": 150
+    },
+    "MRI DWI": {
+        "price": 250
+    },
     "CT Brain & Face": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -52,17 +83,31 @@
         "Additional studies": []
     },
     "CT Brain Lifesaver": {
+        "price": 225,
         "Select Type": [
             "Plain"
         ]
     },
-    "CT Cardiac": {},
-    "CT CBCT": {},
-    "CT Cisternography": {},
-    "CT Comparative Study": {},
-    "CT Covid": {},
-    "CT Enterography": {},
+    "CT Cardiac": {
+        "price": 800
+    },
+    "CT CBCT": {
+        "price": 275
+    },
+    "CT Cisternography": {
+        "price": 400
+    },
+    "CT Comparative Study": {
+        "price": 150
+    },
+    "CT Covid": {
+        "price": 300
+    },
+    "CT Enterography": {
+        "price": 400
+    },
     "CT Extremities Ankle": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -74,6 +119,7 @@
         "Additional studies": []
     },
     "CT Extremities Arm": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -85,6 +131,7 @@
         "Additional studies": []
     },
     "CT Extremities Clavicle": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -96,6 +143,7 @@
         "Additional studies": []
     },
     "CT Extremities Elbow": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -107,6 +155,7 @@
         "Additional studies": []
     },
     "CT Extremities Foot": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -118,6 +167,7 @@
         "Additional studies": []
     },
     "CT Extremities Foot With Ankle": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -128,6 +178,7 @@
         ]
     },
     "CT Extremities Forearm": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -139,6 +190,7 @@
         "Additional studies": []
     },
     "CT Extremities Hand": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -150,6 +202,7 @@
         "Additional studies": []
     },
     "CT Extremities Heel": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -161,6 +214,7 @@
         "Additional studies": []
     },
     "CT Extremities Hip Joints": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -168,6 +222,7 @@
         "Additional studies": []
     },
     "CT Extremities Knee": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -179,6 +234,7 @@
         "Additional studies": []
     },
     "CT Extremities Leg": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -190,6 +246,7 @@
         "Additional studies": []
     },
     "CT Extremities PM Joint": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -197,6 +254,7 @@
         "Additional studies": []
     },
     "CT Extremities Shoulder": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -208,6 +266,7 @@
         "Additional studies": []
     },
     "CT Extremities Scapula": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -219,6 +278,7 @@
         "Additional studies": []
     },
     "CT Extremities SI Joint": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -226,6 +286,7 @@
         "Additional studies": []
     },
     "CT Extremities Thigh": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -237,6 +298,7 @@
         "Additional studies": []
     },
     "CT Extremities Thumb": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -248,6 +310,7 @@
         "Additional studies": []
     },
     "CT Extremities TM Joints": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -255,6 +318,7 @@
         "Additional studies": []
     },
     "CT Extremities Wrist": {
+        "price": 400,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -266,6 +330,7 @@
         "Additional studies": []
     },
     "CT Face": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -273,6 +338,7 @@
         "Additional studies": []
     },
     "CT KUB": {
+        "price": 300,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -283,6 +349,7 @@
         ]
     },
     "CT Lower Abdomen": {
+        "price": 300,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -293,24 +360,28 @@
         ]
     },
     "CT Maxillofacial": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Nasopharynx": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Neck": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Pelvis": {
+        "price": 300,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -321,92 +392,111 @@
         ]
     },
     "CT Pituitary": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Orbits": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Cervico Dorsal": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Sinogram": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT PNS": {
+        "price": 225,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "CT ROC Fungal": {},
+    "CT ROC Fungal": {
+        "price": 275
+    },
     "CT Sella": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Cervical": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Coccyx": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Dorsal": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine CV Junction": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Dorso Lumbar": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Lumbo Sacral": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Spine Sacrum": {
+        "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "CT Spine Whole Spine": {},
+    "CT Spine Whole Spine": {
+        "price": 800
+    },
     "CT Temporal Bone": {
+        "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "CT Thorax": {
+        "price": 300,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -414,9 +504,11 @@
         "Additional studies": []
     },
     "CT Thorax HRCT": {
+        "price": 300,
         "Additional studies": []
     },
     "CT Upper Abdomen": {
+        "price": 300,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -426,16 +518,24 @@
             "Female"
         ]
     },
-    "CT Venogram Peripheral Legs": {},
-    "CT Venogram Peripheral Arms": {},
+    "CT Venogram Peripheral Legs": {
+        "price": 800
+    },
+    "CT Venogram Peripheral Arms": {
+        "price": 800
+    },
     "CT Urography": {
+        "price": 400,
         "Select Gender": [
             "Male",
             "Female"
         ]
     },
-    "CT Whole Body": {},
+    "CT Whole Body": {
+        "price": 1200
+    },
     "MRI Abdomen & Pelvis": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -445,59 +545,113 @@
             "Female"
         ]
     },
-    "MRI Angiography Abdominal": {},
+    "MRI Angiography Abdominal": {
+        "price": 800
+    },
     "MRI Adrenal Region": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "MRI Angiography Aortogram": {},
-    "MRI Angiography Central Venogram": {},
-    "MRI Angiography Neck": {},
-    "MRI Angiography Peripheral Arms": {},
-    "MRI Angiography Peripheral Legs": {},
-    "MRI Angiography Pulmonary": {},
-    "MRI Angiography Renal": {},
-    "MRI Arthrogram": {},
+    "MRI Angiography Aortogram": {
+        "price": 800
+    },
+    "MRI Angiography Central Venogram": {
+        "price": 800
+    },
+    "MRI Angiography Neck": {
+        "price": 800
+    },
+    "MRI Angiography Peripheral Arms": {
+        "price": 800
+    },
+    "MRI Angiography Peripheral Legs": {
+        "price": 800
+    },
+    "MRI Angiography Pulmonary": {
+        "price": 800
+    },
+    "MRI Angiography Renal": {
+        "price": 800
+    },
+    "MRI Arthrogram": {
+        "price": 300
+    },
     "MRI Axilla": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "MRI Brachial Plexus": {},
+    "MRI Brachial Plexus": {
+        "price": 800
+    },
     "MRI Brain": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ],
         "Additional studies": []
     },
-    "MRI MRA": {},
-    "MRI MRV": {},
-    "MRI Spectro": {},
-    "MRI Perfusion": {},
-    "MRI Brain Epilepsy Protocol": {},
-    "MRI Brain Stroke Protocol": {},
+    "MRI MRA": {
+        "price": 300
+    },
+    "MRI MRV": {
+        "price": 300
+    },
+    "MRI Spectro": {
+        "price": 300
+    },
+    "MRI Perfusion": {
+        "price": 250
+    },
+    "MRI Brain Epilepsy Protocol": {
+        "price": 450
+    },
+    "MRI Brain Stroke Protocol": {
+        "price": 450
+    },
     "MRI Breast": {
+        "price": 800,
         "Additional studies": []
     },
-    "MRI Cardiac": {},
-    "MRI Cartigram": {},
-    "MRI Cisternography": {},
-    "MRI Comparative Study": {},
-    "MRI Cranial Nerves": {},
-    "MRI CSF Flow": {},
-    "MRI Defecography": {},
-    "MRI Enterography": {},
+    "MRI Cardiac": {
+        "price": 800
+    },
+    "MRI Cartigram": {
+        "price": 300
+    },
+    "MRI Cisternography": {
+        "price": 800
+    },
+    "MRI Comparative Study": {
+        "price": 250
+    },
+    "MRI Cranial Nerves": {
+        "price": 800
+    },
+    "MRI CSF Flow": {
+        "price": 800
+    },
+    "MRI Defecography": {
+        "price": 800
+    },
+    "MRI Enterography": {
+        "price": 800
+    },
     "MRI Face": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI KUB": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -508,31 +662,38 @@
         ]
     },
     "MRI IAC (Inner Ear)": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Fetal": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Fistulogram": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Maxillofacial": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "MRI MRCP": {},
+    "MRI MRCP": {
+        "price": 450
+    },
     "MRI MSK Ankle": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -544,6 +705,7 @@
         "Additional studies": []
     },
     "MRI MSK Arm": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -555,6 +717,7 @@
         "Additional studies": []
     },
     "MRI MSK Clavicle": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -566,6 +729,7 @@
         "Additional studies": []
     },
     "MRI MSK Elbow": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -577,6 +741,7 @@
         "Additional studies": []
     },
     "MRI MSK Foot With Ankle": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -587,6 +752,7 @@
         ]
     },
     "MRI MSK Hand": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -598,6 +764,7 @@
         "Additional studies": []
     },
     "MRI MSK Forearm": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -609,6 +776,7 @@
         "Additional studies": []
     },
     "MRI MSK Foot": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -620,6 +788,7 @@
         "Additional studies": []
     },
     "MRI MSK Heel": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -631,6 +800,7 @@
         "Additional studies": []
     },
     "MRI MSK Knee": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -642,6 +812,7 @@
         "Additional studies": []
     },
     "MRI MSK Leg": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -653,6 +824,7 @@
         "Additional studies": []
     },
     "MRI MSK Hip Joints": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -660,6 +832,7 @@
         "Additional studies": []
     },
     "MRI MSK PM Joint": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -667,6 +840,7 @@
         "Additional studies": []
     },
     "MRI MSK Shoulder": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -678,6 +852,7 @@
         "Additional studies": []
     },
     "MRI MSK SI Joint": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -685,6 +860,7 @@
         "Additional studies": []
     },
     "MRI MSK Thigh": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -696,6 +872,7 @@
         "Additional studies": []
     },
     "MRI MSK Scapula": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -707,6 +884,7 @@
         "Additional studies": []
     },
     "MRI MSK Thumb": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -718,6 +896,7 @@
         "Additional studies": []
     },
     "MRI MSK TM Joints": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -725,6 +904,7 @@
         "Additional studies": []
     },
     "MRI MSK Wrist": {
+        "price": 550,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -735,39 +915,49 @@
         ],
         "Additional studies": []
     },
-    "MRI Multiparametric Prostate": {},
+    "MRI Multiparametric Prostate": {
+        "price": 800
+    },
     "MRI Neck": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "MRI Neurography": {},
+    "MRI Neurography": {
+        "price": 800
+    },
     "MRI Orbits": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Penile": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Perineum": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Placenta": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Pelvis": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -778,56 +968,89 @@
         ]
     },
     "MRI PNS": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "MRI ROC Fungal": {},
+    "MRI ROC Fungal": {
+        "price": 450
+    },
     "MRI Screening Abdomen": {
+        "price": 300,
         "Select Gender": [
             "Male",
             "Female"
         ]
     },
-    "MRI Screening Brain": {},
-    "MRI Screening Hip Joints": {},
-    "MRI Screening PBH": {},
-    "MRI Screening Orbits": {},
-    "MRI Screening Shoulder": {},
-    "MRI Screening Spine Cervical": {},
-    "MRI Screening SI Joint": {},
-    "MRI Screening Spine Dorsal": {},
-    "MRI Screening Spine Lumbo Sacral": {},
-    "MRI Screening Whole Spine": {},
+    "MRI Screening Brain": {
+        "price": 300
+    },
+    "MRI Screening Hip Joints": {
+        "price": 300
+    },
+    "MRI Screening PBH": {
+        "price": 300
+    },
+    "MRI Screening Orbits": {
+        "price": 300
+    },
+    "MRI Screening Shoulder": {
+        "price": 300
+    },
+    "MRI Screening SI Joint": {
+        "price": 300
+    },
+    "MRI Screening Spine Cervical": {
+        "price": 300
+    },
+    "MRI Screening Spine Dorsal": {
+        "price": 300
+    },
+    "MRI Screening Spine Lumbo Sacral": {
+        "price": 300
+    },
+    "MRI Screening Whole Spine": {
+        "price": 300
+    },
     "MRI Scrotum": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Sinogram": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Sella (Pituitary)": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
-    "MRI Sleep Study": {},
+    "MRI Sleep Study": {
+        "price": 800
+    },
     "MRI Spine Cervico Dorsal": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ],
         "Additional studies": []
     },
-    "MRI Whole Spine Screening": {},
+    "MRI Whole Spine Screening": {
+        "price": 300
+    },
     "MRI Spine Cervical": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -835,6 +1058,7 @@
         "Additional studies": []
     },
     "MRI Spine Coccyx": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -842,20 +1066,25 @@
         "Additional studies": []
     },
     "MRI Spine CV Junction": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Spine Dorso Lumbar": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ],
         "Additional studies": []
     },
-    "MRI Spine Whole Spine": {},
+    "MRI Spine Whole Spine": {
+        "price": 1000
+    },
     "MRI Spine Lumbo Sacral": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -863,6 +1092,7 @@
         "Additional studies": []
     },
     "MRI Spine Dorsal": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -870,6 +1100,7 @@
         "Additional studies": []
     },
     "MRI Spine Sacro Coccygeal": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -877,24 +1108,28 @@
         "Additional studies": []
     },
     "MRI Temporal Bone": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Tongue": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Upper Abdomen": {
+        "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
         ]
     },
     "MRI Urography": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -904,9 +1139,14 @@
             "Female"
         ]
     },
-    "MRI Whole Body": {},
-    "MRI Upper Airway": {},
+    "MRI Whole Body": {
+        "price": 2250
+    },
+    "MRI Upper Airway": {
+        "price": 450
+    },
     "MRI Thorax": {
+        "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
@@ -975,12 +1215,23 @@
             "Right"
         ]
     },
-    "XRAY Comparative Study": {},
-    "XRAY Mammography Both": {},
-    "XRAY Mammography Single": {},
-    "XRAY OPG": {},
-    "XRAY Osteocheck": {},
+    "XRAY Comparative Study": {
+        "price": 50
+    },
+    "XRAY Mammography Both": {
+        "price": 500
+    },
+    "XRAY Mammography Single": {
+        "price": 250
+    },
+    "XRAY OPG": {
+        "price": 250
+    },
+    "XRAY Osteocheck": {
+        "price": 50
+    },
     "XRAY Radiograph Abdomen": {
+        "price": 50,
         "Select View": [
             "Erect",
             "Supine",
@@ -989,383 +1240,467 @@
         ]
     },
     "XRAY Radiograph Adenoids": {
+        "price": 50,
         "Select View": [
             "LAT"
         ]
     },
     "XRAY Radiograph Chest": {
-        "Select View": [
-            "PA",
-            "AP",
-            "LAT",
-            "Oblique",
-            "Portable"
-        ]
+      "price": 50,
+      "Select View": [
+        "PA",
+        "AP",
+        "LAT",
+        "Oblique",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Big Toe": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Arm": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Ankle": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Mortis",
-            "Weight Bearing AP",
-            "Weight Bearing LAT",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Mortis",
+        "Weight Bearing AP",
+        "Weight Bearing LAT",
+        "Portable"
+      ]
     },
-    "XRAY Radiograph Chest Lifesaver": {},
+    "XRAY Radiograph Chest Lifesaver": {
+      "price": 50
+    },
     "XRAY Radiograph Clavicle": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "PA",
-            "AP",
-            "Chepalic",
-            "Portable",
-            "Zanca"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "PA",
+        "AP",
+        "Chepalic",
+        "Portable",
+        "Zanca"
+      ]
     },
     "XRAY Radiograph Elbow": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Face": {
-        "Select View": [
-            "LAT",
-            "Water's",
-            "Caldwell"
-        ]
+      "price": 50,
+      "Select View": [
+        "LAT",
+        "Water's",
+        "Caldwell"
+      ]
     },
     "XRAY Radiograph Forearm": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Hand": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "PA",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "PA",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Heel": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "Calcaneal",
-            "LAT",
-            "Axial",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "Calcaneal",
+        "LAT",
+        "Axial",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Foot": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Hindfoot",
-            "Portable",
-            "Weight Bearing"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Hindfoot",
+        "Portable",
+        "Weight Bearing"
+      ]
     },
     "XRAY Radiograph Hip": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Frog Leg",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Frog Leg",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Knee": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP Standing",
-            "AP Supine",
-            "LAT",
-            "Axial (Skyline)",
-            "Oblique",
-            "Rosenberg PA",
-            "Trans LAT",
-            "Internal oblique",
-            "External oblique",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP Standing",
+        "AP Supine",
+        "LAT",
+        "Axial (Skyline)",
+        "Oblique",
+        "Rosenberg PA",
+        "Trans LAT",
+        "Internal oblique",
+        "External oblique",
+        "Portable"
+      ]
     },
     "XRAY Radiograph KUB": {
-        "Select View": [
-            "AP",
-            "Supine"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "Supine"
+      ]
     },
     "XRAY Radiograph Leg": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Mandible": {
-        "Select View": [
-            "AP",
-            "PA",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "PA",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Mastoids": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "LAT",
-            "Oblique",
-            "AP"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "LAT",
+        "Oblique",
+        "AP"
+      ]
     },
     "XRAY Radiograph Nasal Bone": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "LAT",
-            "Water's",
-            "Caldwell"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "LAT",
+        "Water's",
+        "Caldwell"
+      ]
     },
     "XRAY Radiograph Nasopharynx": {
-        "Select View": [
-            "LAT"
-        ]
+      "price": 50,
+      "Select View": [
+        "LAT"
+      ]
     },
     "XRAY Radiograph Neck": {
-        "Select View": [
-            "AP",
-            "LAT"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT"
+      ]
     },
     "XRAY Radiograph Orbit": {
-        "Select View": [
-            "PA",
-            "LAT"
-        ]
+      "price": 50,
+      "Select View": [
+        "PA",
+        "LAT"
+      ]
     },
     "XRAY Radiograph Pelvis": {
-        "Select View": [
-            "AP",
-            "Inlet view",
-            "Outlet view",
-            "Obstrector view"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "Inlet view",
+        "Outlet view",
+        "Obstrector view"
+      ]
     },
     "XRAY Radiograph PNS": {
-        "Select View": [
-            "Water's",
-            "Caldwell"
-        ]
+      "price": 50,
+      "Select View": [
+        "Water's",
+        "Caldwell"
+      ]
     },
     "XRAY Radiograph Scapula": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "Axial",
-            "AP",
-            "Oblique",
-            "Y view"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "Axial",
+        "AP",
+        "Oblique",
+        "Y view"
+      ]
     },
     "XRAY Radiograph Shoulder": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "Axial (Skyline)",
-            "LAT",
-            "Oblique",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "Axial (Skyline)",
+        "LAT",
+        "Oblique",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Sella": {
-        "Select View": [
-            "LAT",
-            "Cone Beam",
-            "Cone Down"
-        ]
+      "price": 50,
+      "Select View": [
+        "LAT",
+        "Cone Beam",
+        "Cone Down"
+      ]
     },
     "XRAY Radiograph Skull": {
-        "Select View": [
-            "AP",
-            "LAT"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT"
+      ]
     },
     "XRAY Radiograph Spine Cervical": {
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Flexion",
-            "Extension",
-            "Trans LAT",
-            "Portable"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Flexion",
+        "Extension",
+        "Trans LAT",
+        "Portable"
+      ]
     },
     "XRAY Radiograph Spine Dorsal": {
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Spine Sacrum": {
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Sternum": {
-        "Select View": [
-            "PA",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select View": [
+        "PA",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Thigh": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT"
+      ]
     },
     "XRAY Radiograph Spine Lumbar": {
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Flexion",
-            "Extension"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Flexion",
+        "Extension"
+      ]
     },
     "XRAY Radiograph Spine Coccyx": {
-        "Select View": [
-            "AP",
-            "LAT"
-        ]
+      "price": 50,
+      "Select View": [
+        "AP",
+        "LAT"
+      ]
     },
     "XRAY Radiograph Thumb": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "PA",
-            "LAT",
-            "Oblique"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "PA",
+        "LAT",
+        "Oblique"
+      ]
     },
     "XRAY Radiograph Wrist": {
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Select View": [
-            "AP",
-            "LAT",
-            "Oblique",
-            "Scapoid",
-            "Portable"
-        ]
+      "price": 50,
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "Select View": [
+        "AP",
+        "LAT",
+        "Oblique",
+        "Scapoid",
+        "Portable"
+      ]
     },
-    "XRAY Special Case Bone Age": {},
-    "XRAY Radiograph TM Joints": {},
-    "XRAY Special Case ASU": {},
-    "XRAY Special Case Barium": {},
-    "XRAY Special Case Ductography": {},
-    "XRAY Special Case Fistulogram": {},
-    "XRAY Special Case Gastrografin": {},
-    "XRAY Special Case HSG": {},
-    "XRAY Special Case IVP": {},
-    "XRAY Special Case IVU": {},
-    "XRAY Special Case MCU": {},
-    "XRAY Special Case RGU": {},
-    "XRAY Special Case Scanogram": {},
-    "XRAY Special Case Sialogram": {},
-    "XRAY Special Case T Tube Cholangiogram": {},
-    "XRAY Special Case Sinogram": {},
-    "XRAY Tuberculosis Screening": {},
-    "USG Soft Tissue": {},
-    "USG Thyroid": {}
-}
+    "XRAY Special Case Bone Age": {
+      "price": 250
+    },
+    "XRAY Radiograph TM Joints": {
+      "price": 50
+    },
+    "XRAY Special Case ASU": {
+      "price": 250
+    },
+    "XRAY Special Case Barium": {
+      "price": 250
+    },
+    "XRAY Special Case Ductography": {
+      "price": 250
+    },
+    "XRAY Special Case Fistulogram": {
+      "price": 250
+    },
+    "XRAY Special Case Gastrografin": {
+      "price": 250
+    },
+    "XRAY Special Case HSG": {
+      "price": 250
+    },
+    "XRAY Special Case IVP": {
+      "price": 250
+    },
+    "XRAY Special Case IVU": {
+      "price": 250
+    },
+    "XRAY Special Case MCU": {
+      "price": 250
+    },
+    "XRAY Special Case RGU": {
+      "price": 250
+    },
+    "XRAY Special Case Scanogram": {
+      "price": 250
+    },
+    "XRAY Special Case Sialogram": {
+      "price": 250
+    },
+    "XRAY Special Case T Tube Cholangiogram": {
+      "price": 250
+    },
+    "XRAY Special Case Sinogram": {
+      "price": 250
+    },
+    "XRAY Tuberculosis Screening": {
+      "price": 50
+    },
+    "USG Soft Tissue": {
+      "price": 50
+    },
+    "USG Thyroid": {
+      "price": 50
+    }
+}    
+
+
+
+
+
+
+

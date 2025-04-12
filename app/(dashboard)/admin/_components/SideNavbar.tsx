@@ -21,6 +21,7 @@ interface SideNavbarProps {
   activeComponent: string;
   setActiveComponent: (component: string) => void;
   Image?: string | null;
+  role: string; // Add role prop
 }
 
 const SideNavbar: React.FC<SideNavbarProps> = ({
@@ -29,6 +30,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
   activeComponent,
   setActiveComponent,
   Image,
+  role,
 }) => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -40,43 +42,56 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
     setLoading(false);
   }, [pathname]); // This will trigger when the URL path changes
 
-  const menuItems = [
+  // Define all menu items
+  const allMenuItems = [
     {
       name: "Active Orders",
       path: "/admin/active-orders",
       icon: <MonitorDot className="w-5 h-5" />,
+      roles: ["ADMIN", "HOSPITAL"],
     },
     {
       name: "Completed",
       path: "/admin/completed-orders",
       icon: <ClipboardCheck className="w-5 h-5" />,
+      roles: ["ADMIN", "HOSPITAL", "RADIOLOGIST"],
     },
     {
       name: "Users",
       path: "/admin/hospital-users",
       icon: <CircleUserRound className="w-5 h-5" />,
+      roles: ["ADMIN", "HOSPITAL"],
     },
     {
       name: "Payments",
       path: "/admin/payments",
       icon: <IndianRupee className="w-5 h-5" />,
+      roles: ["ADMIN", "HOSPITAL"],
     },
     {
       name: "Settings",
       path: "/admin/settings",
       icon: <Settings className="w-5 h-5" />,
+      roles: ["ADMIN", "HOSPITAL", "RADIOLOGIST"],
     },
     {
       name: "Active Studies",
       path: "/admin/active-studies",
       icon: <MonitorDot className="w-5 h-5" />,
+      roles: ["ADMIN", "RADIOLOGIST"],
     },
     {
       name: "Radiologists",
       path: "/admin/radiologists",
       icon: <CircleUserRound className="w-5 h-5" />,
+      roles: ["ADMIN", "RADIOLOGIST"],
     },
   ];
+
+  // Filter menu items based on the user's role
+  const menuItems = allMenuItems.filter(item => 
+    item.roles.includes(role)
+  );
 
   const handleNavigation = (path: string) => {
     if (pathname === path) return;

@@ -13,7 +13,7 @@ const formSchema = z.object({
   doctor: z.string().min(1, "Doctor name is required"),
   priority: z.enum(["Routine", "Urgent", "Stat"]).default("Routine"),
   history: z.string().min(1, "Clinical history is required"),
- 
+
   // Study details - simpler validation
   study: z.string().refine((val) => {
     try {
@@ -42,7 +42,8 @@ const formSchema = z.object({
 
 type StudyData = {
   [studyName: string]: {
-    [field: string]: string[];
+    price?: number;
+    [field: string]: string[] | number | undefined;
   };
 };
 
@@ -170,28 +171,33 @@ export default function PatientUploadForm() {
           const studyFields = studies[studyKey] || {}; // Ensure study fields exist
 
           Object.entries(studyFields).forEach(([fieldName, values]) => {
-            const selectedForField = updatedOptions[studyKey].filter((option) =>
-              (values as string[]).includes(option)
-            );
+            // Check if values is an array before filtering
+            if (Array.isArray(values)) {
+              const selectedForField = updatedOptions[studyKey].filter(
+                (option) => values.includes(option)
+              );
 
-            // ✅ Categorize selected options
-            if (["Study View", "View Type"].includes(fieldName)) {
-              studyViews = [...new Set([...studyViews, ...selectedForField])];
-            } else if (["Side", "Study Side"].includes(fieldName)) {
-              studySides = [...new Set([...studySides, ...selectedForField])];
-            } else {
-              studyTypes = [...new Set([...studyTypes, ...selectedForField])];
-            }
+              // ✅ Categorize selected options
+              if (["Study View", "View Type"].includes(fieldName)) {
+                studyViews = [...new Set([...studyViews, ...selectedForField])];
+              } else if (["Side", "Study Side"].includes(fieldName)) {
+                studySides = [...new Set([...studySides, ...selectedForField])];
+              } else {
+                studyTypes = [...new Set([...studyTypes, ...selectedForField])];
+              }
 
-            // ✅ Track selected fields & values
-            if (
-              ["Select Type", "Select Side", "Select View"].includes(fieldName)
-            ) {
-              selectedFieldsSet.add(fieldName);
-              selectedValuesSet = new Set([
-                ...selectedValuesSet,
-                ...selectedForField,
-              ]);
+              // ✅ Track selected fields & values
+              if (
+                ["Select Type", "Select Side", "Select View"].includes(
+                  fieldName
+                )
+              ) {
+                selectedFieldsSet.add(fieldName);
+                selectedValuesSet = new Set([
+                  ...selectedValuesSet,
+                  ...selectedForField,
+                ]);
+              }
             }
           });
         }
@@ -278,14 +284,22 @@ export default function PatientUploadForm() {
       Object.entries(studies[study] || {}).forEach(([field, values]) => {
         structuredStudies[study][field] = {};
 
-        (values as string[]).forEach((value) => {
-          if (selectedOptions[study]?.includes(value)) {
-            if (!structuredStudies[study][field][value]) {
-              structuredStudies[study][field][value] = [];
+        // Check if values is an array before calling forEach
+        if (Array.isArray(values)) {
+          values.forEach((value) => {
+            if (selectedOptions[study]?.includes(value)) {
+              if (!structuredStudies[study][field][value]) {
+                structuredStudies[study][field][value] = [];
+              }
+              structuredStudies[study][field][value].push(value);
             }
-            structuredStudies[study][field][value].push(value);
-          }
-        });
+          });
+        }
+        // If values is not an array (like 'price' which is a number), skip it
+        else if (field !== "price") {
+          // Handle non-array values if needed
+          console.log(`Field ${field} has non-array value:`, values);
+        }
       });
     });
 
@@ -318,10 +332,10 @@ export default function PatientUploadForm() {
     if (isSubmitting) return;
     setLoading(true);
     setIsSubmitting(true);
-  
+
     try {
       const formData = new FormData();
-  
+
       if (patientId) {
         formData.append("patientId", patientId);
         setActiveCase(patientId, true, true);
@@ -338,7 +352,7 @@ export default function PatientUploadForm() {
       if (modality) {
         formData.append("modality", modality);
       }
-      
+
       if (studyDate) {
         formData.append("studyDate", studyDate);
       }
@@ -348,37 +362,115 @@ export default function PatientUploadForm() {
       if (series) {
         formData.append("series", series);
       }
-      
+
       // Add text fields
       formData.append("doctor", data.doctor);
       formData.append("priority", data.priority || "Routine");
       formData.append("history", data.history);
-  
+
       // Transform selected options into structured format
       const structuredStudies: Record<
         string,
         Record<string, Record<string, string[]>>
       > = {};
-  
-      selectedStudies.forEach((study) => {
-        structuredStudies[study] = {};
-  
-        Object.entries(studies[study] || {}).forEach(([field, values]) => {
-          structuredStudies[study][field] = {};
-  
-          (values as string[]).forEach((value) => {
-            if (selectedOptions[study]?.includes(value)) {
-              if (!structuredStudies[study][field][value]) {
-                structuredStudies[study][field][value] = [];
+
+      // Collect prices for selected studies
+      const studyPrices: Record<string, number> = {};
+      let totalAmount = 0;
+
+      selectedStudies.forEach((studyName) => {
+        structuredStudies[studyName] = {};
+
+        // Extract price if available
+        const price = studies[studyName]?.price;
+        if (typeof price === "number") {
+          studyPrices[studyName] = price;
+
+          // Count the number of SELECTED options in each category, not all available options
+          const selectedViewCount =
+            Array.isArray(studies[studyName]?.["Select View"]) &&
+            Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Select View"].filter((view) =>
+                  selectedOptions[studyName].includes(view)
+                ).length
+              : Array.isArray(studies[studyName]?.["Study View"]) &&
+                Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Study View"].filter((view) =>
+                  selectedOptions[studyName].includes(view)
+                ).length
+              : Array.isArray(studies[studyName]?.["View Type"]) &&
+                Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["View Type"].filter((view) =>
+                  selectedOptions[studyName].includes(view)
+                ).length
+              : 0;
+
+          const selectedSideCount =
+            Array.isArray(studies[studyName]?.["Select Side"]) &&
+            Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Select Side"].filter((side) =>
+                  selectedOptions[studyName].includes(side)
+                ).length
+              : Array.isArray(studies[studyName]?.["Study Side"]) &&
+                Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Study Side"].filter((side) =>
+                  selectedOptions[studyName].includes(side)
+                ).length
+              : Array.isArray(studies[studyName]?.["Side"]) &&
+                Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Side"].filter((side) =>
+                  selectedOptions[studyName].includes(side)
+                ).length
+              : 0;
+
+          const selectedTypeCount =
+            Array.isArray(studies[studyName]?.["Select Type"]) &&
+            Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Select Type"].filter((type) =>
+                  selectedOptions[studyName].includes(type)
+                ).length
+              : Array.isArray(studies[studyName]?.["Study Type"]) &&
+                Array.isArray(selectedOptions[studyName])
+              ? studies[studyName]["Study Type"].filter((type) =>
+                  selectedOptions[studyName].includes(type)
+                ).length
+              : 0;
+
+          // Calculate total selected options count
+          const selectedOptionsCount =
+            selectedViewCount + selectedSideCount + selectedTypeCount;
+
+          // If there are no selected options, multiply by 1, otherwise by the count
+          const multiplier =
+            selectedOptionsCount > 0 ? selectedOptionsCount : 1;
+
+          // Add to total amount
+          totalAmount += price * multiplier;
+        }
+
+        // Continue with your existing code for structuring studies
+        Object.entries(studies[studyName] || {}).forEach(([field, values]) => {
+          structuredStudies[studyName][field] = {};
+
+          // Check if values is an array before calling forEach
+          if (Array.isArray(values)) {
+            values.forEach((value) => {
+              if (selectedOptions[studyName]?.includes(value)) {
+                if (!structuredStudies[studyName][field][value]) {
+                  structuredStudies[studyName][field][value] = [];
+                }
+                structuredStudies[studyName][field][value].push(value);
               }
-              structuredStudies[study][field][value].push(value);
-            }
-          });
+            });
+          }
         });
       });
-  
+
+      // Add prices data to formData
+      formData.append("studyPrices", JSON.stringify(studyPrices));
+      formData.append("totalAmount", totalAmount.toString());
       formData.append("selectedStudies", JSON.stringify(structuredStudies));
-  
+
       // Add files
       if (rFiles && rFiles.length > 0) {
         for (const file of rFiles) {
@@ -394,7 +486,7 @@ export default function PatientUploadForm() {
           }
         }
       }
-  
+
       // Send data to backend
       const response = await fetch("/api/postCase", {
         method: "POST",
@@ -403,7 +495,7 @@ export default function PatientUploadForm() {
           Accept: "application/json", // Add this to ensure proper response parsing
         },
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log("Form submitted successfully", result);
@@ -412,7 +504,7 @@ export default function PatientUploadForm() {
         setSelectedOptions({});
         setRFiles([]);
         setShowSuccess(true);
-        
+
         // Show success message briefly before navigating back
         setTimeout(() => {
           setShowSuccess(false);
@@ -495,7 +587,7 @@ export default function PatientUploadForm() {
             </h3>
             <div className="flex max-sm:flex-col flex-row items-start">
               <label className="text-stone-700 w-32 lg:w-36 flex-none p-1">
-                Report Priority{" "}
+                Report Priority
                 <span className="text-red-500 font-bold"> *</span>
               </label>
               <div className="flex flex-wrap gap-3 mt-1">
@@ -728,8 +820,13 @@ export default function PatientUploadForm() {
                       {`${index + 1}. ${study}`}
                     </h4>
                     <div className="flex flex-wrap gap-3">
-                      {Object.entries(studies[study] || {}).map(
-                        ([field, values]) => (
+                      {Object.entries(studies[study] || {})
+                        // Filter out 'price' and 'Additional studies' fields
+                        .filter(
+                          ([field]) =>
+                            field !== "price" && field !== "Additional studies"
+                        )
+                        .map(([field, values]) => (
                           <div
                             key={field}
                             className="bg-white p-2 rounded border border-purple-100 flex-grow"
@@ -738,7 +835,6 @@ export default function PatientUploadForm() {
                               {field}
                               {field != "Select Gender" && (
                                 <span className="text-red-500 font-bold">
-                                  {" "}
                                   *
                                 </span>
                               )}
@@ -780,8 +876,7 @@ export default function PatientUploadForm() {
                                 ))}
                             </div>
                           </div>
-                        )
-                      )}
+                        ))}
                     </div>
                     <div className="flex flex-row gap-4">
                       {errors?.study && (
@@ -795,7 +890,6 @@ export default function PatientUploadForm() {
             </div>
           </div>
         )}
-
         {/* Submit Button */}
         <div className="flex justify-center">
           <button

@@ -10,7 +10,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
 const FormSchema = z.object({
@@ -51,14 +51,26 @@ export default function SignIn() {
       });
 
       if (signInData?.error) {
-        if (signInData.error.includes("CredentialsSignin")) {
+        if (signInData.error.includes("pending_approval")) {
+          router.push('/auth/error?error=pending_approval');
+          return;
+        } else if (signInData.error.includes("account_suspended")) {
+          router.push('/auth/error?error=account_suspended');
+          return;
+        } else if (signInData.error.includes("CredentialsSignin")) {
           setError("Invalid email or password. Please try again.");
         } else {
           setError("An unexpected error occurred. Please try again later.");
         }
       } else {
         router.refresh();
-        router.push("/admin");
+        // Redirect based on user role
+        const userData = await fetch('/api/me').then(res => res.json());
+        if (userData?.user?.role === 'ADMIN') {
+          router.push('/admin');
+        } else {
+          router.push('/admin');
+        }
       }
     } catch (err) {
       console.error("Unexpected error:", err);
@@ -270,3 +282,5 @@ export default function SignIn() {
     </div>
   );
 }
+
+

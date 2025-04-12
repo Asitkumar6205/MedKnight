@@ -237,6 +237,7 @@ export default function RadiologyReportPage() {
       formData.append('radiologist', preparedRadiologist?.name || "")
       formData.append('file', pdfFile);
       formData.append('patientId', patientId || '');
+      formData.append('reportDT', currentDateTime.date + "-" + currentDateTime.time);
 
       // 4. Send the report to the server
       const response = await fetch('/api/saveReport', {

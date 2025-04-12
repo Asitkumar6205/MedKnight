@@ -10,14 +10,36 @@ interface Case {
   id: string;
   patientName: string;
   patientId: string;
+  doctor: string;
   gender: string;
   studyDescription: string;
   studyDate: string;
   studyTime: string;
+  radiologist: string;
   modality: string;
+  studies: Study[];
   priority: string;
+  history: string;
+  report: Report;
   series: number;
-  activeCase: boolean; // Add activeCase field to the interface
+  reportTime: string;
+  activeCase: boolean;
+  reviewCase: boolean;
+}
+
+interface Study {
+  id: string;
+  name: string;
+  studyType: string[];
+  studyView: string[];
+  studySide: string[];
+}
+
+interface Report {
+  id: string;
+  filename: string;
+  path: string;
+  uploadedAt: string;
 }
 
 interface DateRangeSelectorProps {
@@ -35,7 +57,7 @@ export default function ActiveCasesPage() {
   const [studies, setStudies] = useState<Case[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<string>("");
-  const rowsPerPage = 5;
+  const rowsPerPage = 6;
   const { isCompletedCase } = useCompletedCase();
   // Removed the useActiveCase import and usage
 
@@ -123,7 +145,11 @@ export default function ActiveCasesPage() {
 
   // Modified: Use activeCase field from database instead of isActiveCase context
   const activeFilteredStudies = filteredStudies.filter(
-    (study) => study.activeCase === true && !isCompletedCase(study.patientId)
+    (study) =>
+      (study.activeCase === true && !isCompletedCase(study.patientId)) ||
+      (study.activeCase === true &&
+        isCompletedCase(study.patientId) &&
+        study.reviewCase === true)
   );
 
   // Calculate Pagination
@@ -152,7 +178,7 @@ export default function ActiveCasesPage() {
 
       {/* Search Bar & Date Filters */}
       <div className="w-full">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-1">
           {/* Left side: Search input and Date range selector */}
           <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
             {/* Search input - wider than date pickers */}
@@ -193,18 +219,18 @@ export default function ActiveCasesPage() {
       </div>
 
       {/* Main Content */}
-      <table className="w-full border-separate border-spacing-y-3">
+      <table className="w-full border-separate border-spacing-y-2">
         <thead>
           <tr>
             {[
               "Study Id",
               "Patient Name",
-              "Study Description",
+              "Study",
               "Gender",
               "Modality",
               "Study Date",
               "Priority",
-              "Series",
+              "Radiologist",
               "Action",
             ].map((col) => (
               <th
@@ -219,84 +245,166 @@ export default function ActiveCasesPage() {
         </thead>
         <tbody>
           {displayedOrders.length > 0
-            ? displayedOrders
-                .map((study) => {
-                  // Determine background color based on priority
-                  let bgColorClass = "bg-stone-100 hover:bg-stone-50"; // default
-                  if (study.priority?.toLowerCase() === "urgent") {
-                    bgColorClass = "bg-yellow-100";
-                  } else if (study.priority?.toLowerCase() === "stat") {
-                    bgColorClass = "bg-red-200";
-                  }
+            ? displayedOrders.map((study) => {
+                // Determine background color based on priority
+                let bgColorClass = "bg-stone-100 hover:bg-stone-50"; // default
+                if (study.priority?.toLowerCase() === "urgent") {
+                  bgColorClass = "bg-yellow-100";
+                } else if (study.priority?.toLowerCase() === "stat") {
+                  bgColorClass = "bg-red-200";
+                }
 
-                  return (
-                    <tr
-                      key={study.id}
-                      className={`hover:bg-opacity-80 ${bgColorClass} shadow-md text-purple-950`}
+                return study.reviewCase ? (
+                  <tr
+                    key={study.id}
+                    className={`hover:bg-opacity-80 ${bgColorClass} shadow-md text-purple-950`}
+                  >
+                    <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.patientId}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.patientName}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.studies.length > 0 && (
+                        <div>
+                          {study.studies.map((studyItem, index) => (
+                            <span key={studyItem.id || index}>
+                              {studyItem.name}
+                              {(studyItem.studySide.length > 0 ||
+                                studyItem.studyView.length > 0 ||
+                                studyItem.studyType.length > 0) &&
+                                " - "}
+                              {studyItem.studySide.length > 0
+                                ? studyItem.studySide.join(", ")
+                                : studyItem.studyView.length > 0
+                                ? studyItem.studyView.join(", ")
+                                : studyItem.studyType.length > 0
+                                ? studyItem.studyType.join(", ")
+                                : ""}
+                              {index < study.studies.length - 1 && ", "}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.gender}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.modality}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.studyDate} {study.studyTime}
+                    </td>
+                    <td
+                      className={`border-b border-t border-stone-300 px-2 py-4 text-center ${
+                        study.priority === "Urgent"
+                          ? "text-yellow-500"
+                          : study.priority === "Stat"
+                          ? "text-red-500"
+                          : "text-stone-700"
+                      }`}
                     >
-                      <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.patientId}
-                      </td>
-                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.patientName}
-                      </td>
-                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.studyDescription}
-                      </td>
-                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.gender}
-                      </td>
-                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.modality}
-                      </td>
-                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.studyDate} {study.studyTime}
-                      </td>
-                      <td
-                        className={`border-b border-t border-stone-300 px-2 py-4 text-center ${
-                          study.priority === "Urgent"
-                            ? "text-yellow-500"
-                            : study.priority === "Stat"
-                            ? "text-red-500"
-                            : "text-stone-700"
-                        }`}
+                      {study.priority}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                      {study.radiologist}
+                    </td>
+                    <td className="border-t border-b border-r border-stone-300 px-2 py-4 items-center justify-center flex">
+                      <Link
+                        href={{
+                          pathname: "/admin/report",
+                          query: {
+                            id: study.id,
+                            patientId: study.patientId,
+                            name: study.patientName,
+                            description: study.studyDescription,
+                            gender: study.gender,
+                            modality: study.modality,
+                            studyDate: study.studyDate,
+                            time: study.studyTime,
+                            series: study.series,
+                          },
+                        }}
                       >
-                        {study.priority}
-                      </td>
-                      <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                        {study.series}
-                      </td>
-                      <td className="border-t border-b border-r border-stone-300 px-2 py-4 items-center justify-center flex">
-                        <Link
-                          href={{
-                            pathname: "/admin/report",
-                            query: {
-                              id: study.id,
-                              patientId: study.patientId,
-                              name: study.patientName,
-                              description: study.studyDescription,
-                              gender: study.gender,
-                              modality: study.modality,
-                              studyDate: study.studyDate,
-                              time: study.studyTime,
-                              series: study.series,
-                            },
+                        <ChevronRight
+                          className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                          onClick={() => {
+                            setLoading(true);
                           }}
-                        >
-                          <ChevronRight
-                            className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
-                            onClick={() => {
-                              setLoading(true);
-                            }}
-                          />
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })
+                        />
+                      </Link>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr
+                    key={study.id}
+                    className={`hover:bg-opacity-80 ${bgColorClass} shadow-md text-purple-950`}
+                  >
+                    <td className="border-l border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.patientId}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.patientName}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.studyDescription}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.gender}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.modality}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.studyDate} {study.studyTime}
+                    </td>
+                    <td
+                      className={`border-b border-t border-stone-300 px-2 py-3 text-center ${
+                        study.priority === "Urgent"
+                          ? "text-yellow-500"
+                          : study.priority === "Stat"
+                          ? "text-red-500"
+                          : "text-stone-700"
+                      }`}
+                    >
+                      {study.priority}
+                    </td>
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.series}
+                    </td>
+                    <td className="border-t border-b border-r border-stone-300 px-2 py-3 items-center justify-center flex">
+                      <Link
+                        href={{
+                          pathname: "/admin/report",
+                          query: {
+                            id: study.id,
+                            patientId: study.patientId,
+                            name: study.patientName,
+                            description: study.studyDescription,
+                            gender: study.gender,
+                            modality: study.modality,
+                            studyDate: study.studyDate,
+                            time: study.studyTime,
+                            series: study.series,
+                          },
+                        }}
+                      >
+                        <ChevronRight
+                          className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                          onClick={() => {
+                            setLoading(true);
+                          }}
+                        />
+                      </Link>
+                    </td>
+                  </tr>
+                );
+              })
             : !loading && (
                 <tr>
-                  <td colSpan={9} className="text-center py-4 text-gray-500">
+                  <td colSpan={9} className="text-center py-3 text-gray-500">
                     No active studies found
                   </td>
                 </tr>

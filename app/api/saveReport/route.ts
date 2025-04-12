@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     const radiologistName = formData.get("radiologist") as string;
     const file = formData.get("file") as File;
     const patientId = formData.get("patientId") as string;
+    const reportDT = formData.get("reportDT") as string;
 
     if (!file || !patientId) {
       return NextResponse.json(
@@ -85,7 +86,9 @@ export async function POST(request: NextRequest) {
       where: { id: existingCase.id },
       data: {
         completedCase: true,
-        radiologist: radiologistName
+        radiologist: radiologistName,
+        reportTime: reportDT,
+        reviewCase: false,
       },
     });
 

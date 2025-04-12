@@ -46,9 +46,24 @@ model User {
   email         String?   @unique
   emailVerified DateTime? @map("email_verified")
   image         String?
+  role          Role      @default(PENDING)
+  status        UserStatus @default(PENDING_APPROVAL)
   accounts      Account[]
   sessions      Session[]
   @@map("users")
+}
+
+enum Role {
+  ADMIN
+  RADIOLOGIST
+  HOSPITAL
+  PENDING
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_APPROVAL
 }
 
 model VerificationToken {
@@ -101,31 +116,71 @@ model Study {
   name      String   @unique
   studyView String[] @default([]) 
   studySide String[] @default([]) 
-  studyType String[] @default([]) 
+  studyType String[] @default([])
+  price     Int? 
   cases     Case[]  // Many-to-many relationship without fields/references
 }
 
 model Case {
-  id              String     @id @default(cuid())
-  patientId       String     @unique
-  doctor          String   
-  priority        Priority  
-  history         String  
-  activeCase      Boolean    @default(false)
-  completedCase   Boolean    @default(false)
-  files           File[]     
-  studies         Study[]    // Many-to-many relationship without fields/references
-  report          Report?
-  patientName     String
+  id               String     @id @default(cuid())
+  patientId        String     @unique
+  doctor           String   
+  doctorPhNo       String?    
+  technicianName   String?
+  reviewReason     String?
+  priority         Priority  
+  history          String  
+  activeCase       Boolean    @default(false)
+  completedCase    Boolean    @default(false)
+  reviewCase       Boolean    @default(false)
+  files            File[]     
+  studies          Study[]    
+  report           Report?
+  patientName      String
   studyDescription String
-  gender          String
-  modality        String
-  series          String
-  studyDate       String
-  studyTime       String
-  radiologist     String?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  gender           String
+  modality         String
+  series           String
+  studyDate        String
+  studyTime        String
+  reportTime       String?
+  radiologist      String?
+  priceItems       PriceItem[] // One-to-many relationship
+  totalAmount      Int?        // Add total amount field
+  paymentStatus    PaymentStatus @default(PENDING)
+  billingMonth     String?    // Format: "YYYY-MM"
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model PriceItem {
+  id         String   @id @default(cuid())
+  studyName  String   // The specific study (e.g., "CT Brain")
+  cost       Int      // Cost of this specific study
+  caseId     String   
+  case       Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  @@index([caseId])  
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIAL
+  REFUNDED
+  CANCELLED
+}
+
+// Optional: Monthly Bill model for aggregating cases
+model MonthlyBill {
+  id            String    @id @default(cuid())
+  month         String    // Format: "YYYY-MM"
+  totalAmount   Int
+  paidAmount    Int       @default(0)
+  paymentStatus PaymentStatus @default(PENDING)
+  cases         String[]  // Array of case IDs included in this bill
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 }
 
 model Hospital {

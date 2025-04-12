@@ -1,10 +1,12 @@
-import React from 'react'
-import CaseReview from '../_components/CaseReview'
+import React from "react";
+import CaseReview from "../_components/CaseReview";
 
 function page() {
   return (
-    <><CaseReview/></>
-  )
+    <div>
+      <CaseReview />
+    </div>
+  );
 }
 
-export default page
+export default page;

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
 import DateRangeSelector from "../_components/DateRangeSelector";
 import { useActiveCase } from "@/app/context/ActiveCaseContext";
+import { useCompletedCase } from "@/app/context/CompletedCaseContext";
 
 interface Study {
   ID: string;
@@ -39,10 +40,11 @@ export default function ActiveCasesPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPatientID, setSelectedPatientID] = useState<string>("");
+  const rowsPerPage = 6;
+  
   const { isActiveCase } = useActiveCase();
-  const rowsPerPage = 5;
-
   const { setActiveCase } = useActiveCase();
+  const { setCompletedCase } = useCompletedCase();
 
   const fetchStudies = async () => {
     try {
@@ -69,6 +71,7 @@ export default function ActiveCasesPage() {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
+  // Then update your handleDeleteStudy function:
   const handleDeleteStudy = async (studyId: string | null) => {
     setShowSuccess(false);
     setLoading(true);
@@ -93,6 +96,9 @@ export default function ActiveCasesPage() {
         if (patientIdToUpdate) {
           // Remove from active case tracking
           setActiveCase(patientIdToUpdate, false, true);
+          
+          // Reset completed case status - add this line
+          setCompletedCase(patientIdToUpdate, false, true);
           
           // Also explicitly remove from localStorage
           const activeCasesStr = localStorage.getItem('activeCases');
@@ -125,6 +131,7 @@ export default function ActiveCasesPage() {
     }
   };
   
+  // And update your handleDeleteAllStudies function:
   const handleDeleteAllStudies = async () => {
     setShowSuccess(false);
     setLoading(true);
@@ -147,10 +154,20 @@ export default function ActiveCasesPage() {
         // Set active case to false for all patient IDs
         patientIds.forEach((patientId: string) => {
           setActiveCase(patientId, false, true);
+          // Reset completed case status for each patient - add this line
+          setCompletedCase(patientId, false, true);
         });
         
         // Also clear the entire activeCases array in localStorage
         localStorage.setItem('activeCases', JSON.stringify([]));
+        
+        // Clear all completedCase entries from localStorage
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const key = localStorage.key(i);
+          if (key && key.startsWith('completedCase_')) {
+            localStorage.removeItem(key);
+          }
+        }
         
         setShowSuccess(true);
         setStudies([]); // Clear the studies list after deletion
@@ -169,6 +186,7 @@ export default function ActiveCasesPage() {
       setShowConfirmModal(false);
     }
   };
+
   const parseStudyDate = (
     studyDate: string
   ): { dateObj: Date | null; formattedDate: string | null } => {
@@ -258,7 +276,7 @@ export default function ActiveCasesPage() {
 
       {/* Search Bar & Date Filters */}
       <div className="w-full">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-1">
           {/* Left side: Search input and Date range selector */}
           <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
             {/* Search input - wider than date pickers */}
@@ -309,7 +327,7 @@ export default function ActiveCasesPage() {
       </div>
 
       {/* Main Content */}
-      <table className="w-full border-separate border-spacing-y-3">
+      <table className="w-full border-separate border-spacing-y-2">
         <thead>
           <tr>
             {[
@@ -343,29 +361,29 @@ export default function ActiveCasesPage() {
                       : "hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
                   }
                 >
-                  <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-l border-b border-t border-stone-300 pl-4 pr-2 py-3 text-center">
                     {study.PatientID}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                     {study.PatientName}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                     {study.StudyDescription}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                     {study.PatientSex}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                     {study.Modality}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                     {parseStudyDate(study.StudyDate).formattedDate}{" "}
                     {formatStudyTime(study.StudyTime)}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                     {study.Series}
                   </td>
-                  <td className="border-t border-b border-r border-stone-300 px-2 py-4 items-center justify-center flex">
+                  <td className="border-t border-b border-r border-stone-300 px-2 py-3 items-center justify-center flex">
                     {isActiveCase(study.PatientID) ? (
                       <div className="flex -ml-1 gap-4">
                         <button
@@ -428,7 +446,7 @@ export default function ActiveCasesPage() {
               ))
             : !loading && (
               <tr>
-                <td colSpan={9} className="text-center py-4 text-gray-500">
+                <td colSpan={9} className="text-center py-3 text-gray-500">
                   No active orders found
                 </td>
               </tr>

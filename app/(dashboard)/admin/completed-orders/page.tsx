@@ -1,5 +1,5 @@
 "use client";
-import { ChevronLeft, ChevronRight, File, FileCheck } from "lucide-react";
+import { ChevronLeft, ChevronRight, FileCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
 import DateRangeSelector from "../../../(dashboard)/admin/_components/DateRangeSelector";
@@ -9,6 +9,7 @@ interface Case {
   id: string;
   patientName: string;
   patientId: string;
+  doctor: string;
   gender: string;
   studyDescription: string;
   studyDate: string;
@@ -16,9 +17,12 @@ interface Case {
   radiologist: string;
   modality: string;
   studies: Study[];
-  priority: String;
+  priority: string;
+  history: string;
   report: Report;
   series: number;
+  reportTime: string;
+  reviewCase: boolean;
 }
 
 interface Study {
@@ -51,7 +55,7 @@ export default function ActiveCasesPage() {
   const [studies, setStudies] = useState<Case[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<string>("");
-  const rowsPerPage = 5;
+  const rowsPerPage = 6;
 
   const fetchStudies = async () => {
     try {
@@ -161,7 +165,7 @@ export default function ActiveCasesPage() {
 
       {/* Search Bar & Date Filters */}
       <div className="w-full">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-1">
           {/* Left side: Search input and Date range selector */}
           <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
             {/* Search input - wider than date pickers */}
@@ -202,7 +206,7 @@ export default function ActiveCasesPage() {
       </div>
 
       {/* Main Content */}
-      <table className="w-full border-separate border-spacing-y-3">
+      <table className="w-full border-separate border-spacing-y-2">
         <thead>
           <tr>
             {[
@@ -212,7 +216,7 @@ export default function ActiveCasesPage() {
               "Gender",
               "Study Date",
               "Radiologist",
-              "Priority",
+              "Status",
               "Action",
             ].map((col) => (
               <th
@@ -237,13 +241,13 @@ export default function ActiveCasesPage() {
                     key={study.id}
                     className="hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
                   >
-                    <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
+                    <td className="border-l border-b border-t border-stone-300 pl-4 pr-2 py-3 text-center">
                       {study.patientId}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                       {study.patientName}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                       {study.studies.length > 0 && (
                         <div>
                           {study.studies.map((studyItem, index) => (
@@ -266,60 +270,90 @@ export default function ActiveCasesPage() {
                         </div>
                       )}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                       {study.gender}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.studyDate} {study.studyTime}
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.studyDate}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
                       {study.radiologist}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
-                      {study.priority}
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      {study.reviewCase ? (
+                        <h2 className="text-sm bg-blue-100 py-1 px-2 rounded font-bold mt-2 text-blue-600 animate-pulse mb-2">
+                          Under Review
+                        </h2>
+                      ) : (
+                        <h2 className="text-sm bg-green-100 py-1 px-2 rounded font-bold mt-2 text-green-600 mb-2">
+                          Final
+                        </h2>
+                      )}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-4 text-center flex justify-center">
-                      <div className="items-center justify-center flex flex-col">
-                        <Link
-                          href={study.report?.path || ""}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-800 hover:underline"
-                        >
-                          <FileCheck strokeWidth={1} size={30}/>
-                        </Link>
-                        {/* <h3 className="text-xs -mb-4">Report</h3> */}
+                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                      <div className="flex items-center">
+                        <div>
+                          <Link
+                            href={study.report?.path || ""}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-purple-800 hover:underline"
+                          >
+                            <FileCheck strokeWidth={1} size={30} />
+                          </Link>
+                          {/* <h3 className="text-xs -mb-4">Report</h3> */}
+                        </div>
+                        <div>
+                          <Link
+                            href={{
+                              pathname: "/admin/completed-orders/case-review",
+                              query: {
+                                id: study.id,
+                                patientId: study.patientId,
+                                doctor: study.doctor,
+                                patientName: study.patientName,
+                                history: study.history,
+                                studies: study.studies
+                                  .map((study) => study.name)
+                                  .join(", "),
+                                gender: study.gender,
+                                modality: study.modality,
+                                studyType:
+                                  study.studies
+                                    .flatMap((study) => study.studyType)
+                                    .join(", ") || "",
+                                studySide:
+                                  study.studies
+                                    .flatMap((study) => study.studySide)
+                                    .join(", ") || "",
+                                studyView:
+                                  study.studies
+                                    .flatMap((study) => study.studyView)
+                                    .join(", ") || "",
+                                radiologist: study.radiologist,
+                                series: study.series,
+                                report: study.report.path,
+                                reportTime: study.reportTime || "",
+                                reviewCase: study.reviewCase,
+                              },
+                            }}
+                          >
+                            <ChevronRight
+                              className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                              onClick={() => {
+                                setLoading(true);
+                              }}
+                            />
+                          </Link>
+                        </div>
                       </div>
-                      <Link
-                        href={{
-                          pathname: "/admin/completed-orders/case-review",
-                          query: {
-                            id: study.id,
-                            patientId: study.patientId,
-                            name: study.patientName,
-                            description: study.studyDescription,
-                            gender: study.gender,
-                            modality: study.modality,
-                            studyDate: study.studyDate,
-                            time: study.studyTime,
-                            series: study.series,
-                          },
-                        }}
-                      >
-                        <ChevronRight
-                          className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
-                          onClick={() => {
-                            setLoading(true);
-                          }}
-                        />
-                      </Link>
                     </td>
                   </tr>
                 );
               })
             : !loading && (
                 <tr>
-                  <td colSpan={8} className="text-center py-4 text-gray-500">
+                  <td colSpan={8} className="text-center py-3 text-gray-500">
                     No completed studies found
                   </td>
                 </tr>

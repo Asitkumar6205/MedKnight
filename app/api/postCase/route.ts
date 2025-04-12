@@ -12,6 +12,8 @@ const caseSchema = z.object({
     z.string(),
     z.record(z.string(), z.record(z.string(), z.array(z.string())))
   ),
+  studyPrices: z.record(z.string(), z.number()),
+  totalAmount: z.number(),
 });
 
 type CaseSchema = z.infer<typeof caseSchema>;
@@ -44,8 +46,10 @@ export async function POST(req: Request) {
     const priority = formData.get("priority") || "Routine";
     const history = formData.get("history");
     const structuredStudiesString = formData.get("selectedStudies");
+    const studyPricesString = formData.get("studyPrices");
+    const totalAmountString = formData.get("totalAmount");
 
-    if (!patientId || !doctor || !history || !patientName || !studyDescription || !gender || !modality || !studyDate || !studyTime || !series || !structuredStudiesString) {
+    if (!patientId || !doctor || !history || !patientName || !studyDescription || !gender || !modality || !studyDate || !studyTime || !series || !structuredStudiesString || !studyPricesString || !totalAmountString) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
@@ -53,12 +57,16 @@ export async function POST(req: Request) {
     }
 
     const structuredStudies = JSON.parse(structuredStudiesString as string);
+    const studyPrices = JSON.parse(studyPricesString as string);
+    const totalAmount = parseFloat(totalAmountString as string);
 
     const validatedData: CaseSchema = caseSchema.parse({
       doctor: doctor.toString(),
       priority: priority as "Routine" | "Urgent" | "Stat",
       history: history.toString(),
-      structuredStudies: structuredStudies
+      structuredStudies: structuredStudies,
+      studyPrices: studyPrices,
+      totalAmount: totalAmount
     });
 
     console.log("Validated Data:", validatedData);
@@ -79,6 +87,7 @@ export async function POST(req: Request) {
         studyType: [],
         studyView: [],
         studySide: [],
+        price: studyPrices[name] || 0,
       }));
 
     if (missingStudies.length > 0) {
@@ -116,6 +125,7 @@ export async function POST(req: Request) {
           studyType: Array.from(studyType),
           studyView: Array.from(studyView),
           studySide: Array.from(studySide),
+          price: studyPrices[study.name] || study.price || 0,
         },
       });
     }
@@ -177,6 +187,7 @@ export async function POST(req: Request) {
         studyTime: studyTime,
         series: series,
         activeCase: true,
+        totalAmount: validatedData.totalAmount,
         studies: {
           connect: studyIds,
         },

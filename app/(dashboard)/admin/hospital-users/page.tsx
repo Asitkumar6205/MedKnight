@@ -234,7 +234,7 @@ export default function page() {
 
       {/* Users Table */}
       <div className="mt-10 z-0">
-        <table className="w-full border-collapse border border-stone-300">
+        <table className="w-full border-collapse border-none border-stone-300">
           <thead style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}>
             <tr className="bg-stone-200">
               <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
@@ -257,8 +257,8 @@ export default function page() {
           <tbody>
             {users.map((user, index) => (
               <tr key={index} className="text-center">
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2  items-center whitespace-nowrap">
+                <td className="border-b border-stone-400 px-4 py-2">{index + 1}</td>
+                <td className="border-b border-stone-400 px-4 py-2 items-center whitespace-nowrap">
                   <span>{user.name}</span>
                   {user.isDefault && (
                     <span className="ml-2 text-xs bg-purple-600 text-white px-2 py-1 rounded whitespace-nowrap">
@@ -266,17 +266,17 @@ export default function page() {
                     </span>
                   )}
                 </td>
-                <td className="border px-4 py-2">{user.email}</td>
-                <td className="border px-4 py-2">{user.phone}</td>
-                <td className="border px-4 py-2">
+                <td className="border-b border-stone-400 px-4 py-2">{user.email}</td>
+                <td className="border-b border-stone-400 px-4 py-2">{user.phone}</td>
+                <td className="border-b border-stone-400 px-4 py-2">
                   <button
-                    className="text-red-500 hover:underline"
+                    className="text-red-500 hover:underline mt-1"
                     onClick={() => {
                       setShowDeleteConfirm(true);
                       setSelectedUser(user.id);
                     }}
                   >
-                    <Trash/>
+                    <Trash strokeWidth={2} size={20}/>
                   </button>
                 </td>
               </tr>
