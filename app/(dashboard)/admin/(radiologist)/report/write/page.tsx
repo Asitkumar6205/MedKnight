@@ -106,12 +106,13 @@ function RadiologyReportPage() {
 
   useEffect(() => {
     fetchUsers();
-
-    QRCode.toDataURL(reportUrl, { width: 100 })
-      .then(setQrCode)
-      .catch((err) => console.error("QR Code generation error:", err));
+  
+    if (reportUrl) { // Add a check to ensure reportUrl is defined
+      QRCode.toDataURL(reportUrl, { width: 100 })
+        .then(setQrCode)
+        .catch((err) => console.error("QR Code generation error:", err));
+    }
   }, [reportUrl]);
-
   useEffect(() => {
     if (users.length > 0) {
       const defaultUser = users.find((user) => user.isDefault) || users[0];
