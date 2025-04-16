@@ -217,7 +217,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="w-11/12 mt-7">
+    <div className="w-full mt-7">
       <div className="mx-auto max-w-7xl px-4 sm:px-2 lg:px-8 ">
         <div className="overflow-hidden rounded-lg bg-white shadow">
           <div className="border-b border-gray-200 bg-white px-8 py-6">
