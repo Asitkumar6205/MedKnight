@@ -63,7 +63,7 @@ export default function page() {
 
       // Fetch users after successful addition to update the table
       await fetchUsers();
-      
+
       setShowSuccessAdded(true);
       reset();
 
@@ -96,7 +96,7 @@ export default function page() {
   useEffect(() => {
     fetchUsers();
   }, []);
-  
+
   useEffect(() => {
     if (!showDeleteConfirm) {
       console.log("Modal is now closed.");
@@ -104,7 +104,7 @@ export default function page() {
   }, [showDeleteConfirm]);
 
   const handleDelete = async (id: string) => {
-    setShowDeleteConfirm(false)
+    setShowDeleteConfirm(false);
     setShowSuccess(false);
     setLoading(true);
 
@@ -131,7 +131,7 @@ export default function page() {
     <div className="p-4 ">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -149,14 +149,14 @@ export default function page() {
       )}
 
       {/* Add User Button */}
-      <div className="flex justify-center mt-2 relative group">
+      <div className="flex justify-center -mt-1 relative group">
         <button
           onClick={() => setIsModalOpen(true)}
-          className=" bg-purple-600 text-purple-100 p-4 rounded-full shadow-lg hover:bg-purple-700"
+          className=" bg-stone-800 text-purple-100 p-4 rounded-full shadow-lg hover:bg-stone- mb-3"
         >
-          <UserPlus size={28} strokeWidth={3} />
+          <UserPlus size={28} strokeWidth={2} />
         </button>
-        <span className="absolute left-1/2 -translate-x-1/2 top-16 bg-stone-700 text-white z-10 px-4 py-[5px] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
+        <span className="absolute left-1/2 -translate-x-1/2 top-16 bg-stone-800 text-xs text-white z-10 px-4 py-[5px] rounded-sm opacity-0 group-hover:opacity-100 transition-opacity">
           Add New User
         </span>
       </div>
@@ -178,35 +178,41 @@ export default function page() {
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
               <div>
-                <label className="block text-sm font-medium">User Name<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  User Name<span className="text-red-400">*</span>
+                </label>
                 <input
                   {...register("name")}
                   className="w-full border rounded-md px-2 py-1"
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-sm">{errors.name.message}</p>
+                  <p className="text-red-400 text-sm">{errors.name.message}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Email<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  Email<span className="text-red-400">*</span>
+                </label>
                 <input
                   {...register("email")}
                   className="w-full border rounded-md px-2 py-1"
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                  <p className="text-red-400 text-sm">{errors.email.message}</p>
                 )}
               </div>
 
               <div>
-                <label className="block text-sm font-medium">Phone No.<span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium">
+                  Phone No.<span className="text-red-400">*</span>
+                </label>
                 <input
                   {...register("phone")}
                   className="w-full border rounded-md px-2 py-1"
                 />
                 {errors.phone && (
-                  <p className="text-red-500 text-sm">{errors.phone.message}</p>
+                  <p className="text-red-400 text-sm">{errors.phone.message}</p>
                 )}
               </div>
 
@@ -222,7 +228,7 @@ export default function page() {
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700"
+                  className="bg-stone-700 text-white px-4 py-2 rounded-md hover:bg-stone-800"
                 >
                   Submit
                 </button>
@@ -233,50 +239,59 @@ export default function page() {
       )}
 
       {/* Users Table */}
-      <div className="mt-10 z-0">
-        <table className="w-full border-collapse border-none border-stone-300">
-          <thead style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}>
-            <tr className="bg-stone-200">
-              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
-                Serial No.
-              </th>
-              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
-                User Name
-              </th>
-              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
-                Email
-              </th>
-              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
-                Phone No.
-              </th>
-              <th className="border-separate drop-shadow-lg bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap">
-                Action
-              </th>
+      <div className="mt-5 z-0">
+        <table className="w-full">
+          <thead>
+            <tr>
+              {["Serial No.", "User Name", "Email", "Phone No.", "Action"].map(
+                (col, index, arr) => (
+                  <th
+                    key={col}
+                    className={`
+              bg-stone-800 text-stone-100 text-xs px-4 py-3 text-center 
+              whitespace-nowrap uppercase tracking-wider font-normal
+              ${index === 0 ? "rounded-tl-md" : ""} 
+              ${index === arr.length - 1 ? "rounded-tr-md" : ""}
+            `}
+                  >
+                    {col}
+                  </th>
+                )
+              )}
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {users.map((user, index) => (
-              <tr key={index} className="text-center">
-                <td className="border-b border-stone-400 px-4 py-2">{index + 1}</td>
-                <td className="border-b border-stone-400 px-4 py-2 items-center whitespace-nowrap">
+              <tr
+                key={index}
+                className="hover:bg-stone-50 bg-white shadow-xs text-sm text-stone-700"
+              >
+                <td className="border-b border-stone-300 px-4 py-4 text-center">
+                  {index + 1}
+                </td>
+                <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
                   <span>{user.name}</span>
                   {user.isDefault && (
-                    <span className="ml-2 text-xs bg-purple-600 text-white px-2 py-1 rounded whitespace-nowrap">
+                    <span className="ml-2 text-xs bg-stone-200 px-2 py-1 rounded whitespace-nowrap">
                       Default User
                     </span>
                   )}
                 </td>
-                <td className="border-b border-stone-400 px-4 py-2">{user.email}</td>
-                <td className="border-b border-stone-400 px-4 py-2">{user.phone}</td>
-                <td className="border-b border-stone-400 px-4 py-2">
+                <td className="border-b border-stone-300 px-4 py-4 text-center">
+                  {user.email}
+                </td>
+                <td className="border-b border-stone-300 px-4 py-4 text-center">
+                  {user.phone}
+                </td>
+                <td className="border-b border-stone-300 px-4 py-4 text-center">
                   <button
-                    className="text-red-500 hover:underline mt-1"
+                    className="text-red-400 hover:text-red-500"
                     onClick={() => {
                       setShowDeleteConfirm(true);
                       setSelectedUser(user.id);
                     }}
                   >
-                    <Trash strokeWidth={2} size={20}/>
+                    <Trash strokeWidth={2} size={20} />
                   </button>
                 </td>
               </tr>
@@ -298,7 +313,7 @@ export default function page() {
                   Cancel
                 </button>
                 <button
-                  className="px-4 py-2 bg-red-500 text-white rounded-sm shadow-sm hover:bg-red-600"
+                  className="px-4 py-2 bg-red-400 text-white rounded-sm shadow-sm hover:bg-red-500"
                   onClick={() => handleDelete(selectedUser)}
                 >
                   Delete

@@ -36,6 +36,15 @@ model Session {
   @@map("sessions")
 }
 
+model PasswordReset {
+  id        String      @id @default(cuid())
+  userId    String      @unique
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String      @unique
+  expiresAt DateTime
+  createdAt DateTime    @default(now())
+}
+
 model User {
   id            String    @id @default(cuid())
   username      String?   @unique
@@ -48,6 +57,7 @@ model User {
   image         String?
   role          Role      @default(PENDING)
   status        UserStatus @default(PENDING_APPROVAL)
+  passwordReset PasswordReset?
   accounts      Account[]
   sessions      Session[]
   @@map("users")

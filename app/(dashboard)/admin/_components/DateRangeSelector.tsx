@@ -186,7 +186,7 @@ const PurpleDatePicker: React.FC<PurpleDatePickerProps> = ({
       years.push(
         <div
           key={`year-${year}`}
-          className={`flex items-center justify-center h-10 w-14 rounded cursor-pointer transition-all duration-200
+          className={`flex items-center text-xs justify-center h-8 w-12 rounded cursor-pointer transition-all duration-200
             ${
               isSelected
                 ? "bg-purple-600 text-white"
@@ -212,7 +212,7 @@ const PurpleDatePicker: React.FC<PurpleDatePickerProps> = ({
             <ChevronsUp className="w-4 h-4 text-purple-700" />
           </button>
 
-          <div className="font-medium text-purple-800">
+          <div className="text-sm text-purple-800">
             {yearListStartIndex} - {yearListStartIndex + 15}
           </div>
 
@@ -260,14 +260,14 @@ const PurpleDatePicker: React.FC<PurpleDatePickerProps> = ({
       )}
 
       <div
-        className="relative flex items-center border bg-white rounded p-2 cursor-pointer focus-within:ring-2 focus-within:ring-purple-300 transition-all"
+        className="relative flex items-center border bg-white rounded py-1 px-2 cursor-pointer focus-within:ring-2 focus-within:ring-purple-300 transition-all"
         onClick={() => setIsOpen(!isOpen)}
       >
         <Calendar className="w-4 h-4 text-purple-500 mr-2" />
         <input
           type="text"
           readOnly
-          className="w-full bg-transparent outline-none cursor-pointer placeholder-stone-400"
+          className="w-full bg-transparent outline-none cursor-pointer placeholder:text-sm placeholder-stone-400"
           placeholder={placeholder}
           value={selectedDate ? formatDateForDisplay(selectedDate) : ""}
         />
@@ -290,7 +290,7 @@ const PurpleDatePicker: React.FC<PurpleDatePickerProps> = ({
                 </button>
 
                 <button
-                  className="font-medium text-purple-800 hover:bg-purple-50 px-2 py-1 rounded transition-colors"
+                  className="font-medium text-purple-800 text-sm hover:bg-purple-50 px-2 py-1 rounded transition-colors"
                   onClick={() => setYearSelectMode(true)}
                   type="button"
                 >
@@ -319,10 +319,10 @@ const PurpleDatePicker: React.FC<PurpleDatePickerProps> = ({
               </div>
 
               {/* Calendar grid */}
-              <div className="grid grid-cols-7">{renderCalendarDays()}</div>
+              <div className="grid grid-cols-7 text-xs">{renderCalendarDays()}</div>
 
               {/* Quick actions */}
-              <div className="pt-2 border-t border-stone-200 flex justify-between">
+              <div className="pt-2 border-t border-stone-200 flex justify-between ">
                 <button
                   className="text-xs text-purple-600 hover:text-purple-800 font-medium"
                   onClick={() => {
@@ -363,7 +363,7 @@ const DateRangeSelector: React.FC<DateRangeSelectorProps> = ({
   setToDate,
 }) => {
   return (
-    <div className="flex flex-row max-sm:flex-col gap-4">
+    <div className="flex flex-row max-sm:flex-col gap-2">
       <div className="w-full md:w-auto">
         <PurpleDatePicker
           value={fromDate}

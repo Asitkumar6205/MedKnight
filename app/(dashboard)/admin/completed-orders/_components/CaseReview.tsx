@@ -104,7 +104,7 @@ function CaseReview() {
       reset();
       setTimeout(() => {
         setShowSuccessSent(false);
-        router.push("/admin/completed-orders")
+        router.push("/admin/completed-orders");
       }, 2000); // Assuming you have a function to close the modal/form
     } catch (error) {
       console.error("Error updating review information:", error);
@@ -137,7 +137,7 @@ function CaseReview() {
     <div className="p-4 h-auto min-h-screen bg-stone-100">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
       {showSuccessSent && (
@@ -145,22 +145,25 @@ function CaseReview() {
           ✅ User Added Successfully!
         </div>
       )}
-      <table className="text-stone-700 w-full border-b border-l border-r border-stone-300 shadow-lg">
+
+      <table className="text-stone-700 w-full rounded-t-md overflow-hidden">
         <thead
-          className="bg-purple-600 text-white shadow-lg px-2 py-2 text-center whitespace-nowrap"
-          style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+          className="
+          bg-stone-800 text-stone-100 text-xs text-center 
+          whitespace-nowrap uppercase tracking-wider
+          rounded-t-md"
         >
           <tr>
-            <th className="px-4 py-2">Patient ID</th>
-            <th className="px-4 py-2">Patient Name</th>
-            <th className="px-4 py-2">Clinical History</th>
-            <th className="px-4 py-2">Refering Doctor</th>
-            <th className="px-4 py-2">Radiologist</th>
-            <th className="px-4 py-2">Modality</th>
-            <th className="px-4 py-2">Series</th>
+            <th className="px-4 py-3 font-normal">Patient ID</th>
+            <th className="px-4 py-3 font-normal">Patient Name</th>
+            <th className="px-4 py-3 font-normal">Clinical History</th>
+            <th className="px-4 py-3 font-normal">Refering Doctor</th>
+            <th className="px-4 py-3 font-normal">Radiologist</th>
+            <th className="px-4 py-3 font-normal">Modality</th>
+            <th className="px-4 py-3 font-normal">Series</th>
           </tr>
         </thead>
-        <tbody className="bg-stone-100 ">
+        <tbody className="bg-white">
           <tr>
             <td className="px-4 py-2 text-center">{patientId}</td>
             <td className="px-4 py-2 text-center">{patientName}</td>
@@ -172,35 +175,46 @@ function CaseReview() {
           </tr>
         </tbody>
       </table>
-      <div className="my-4 p-6 border rounded shadow bg-white ">
-        <div className="flex justify-between ">
-          <h2 className="text-2xl font-bold text-stone-700 mb-2">
-            Send for Review
-          </h2>
+      <h2 className="text-2xl font-bold text-stone-700 mt-8 mb-2">
+        Send for Review
+      </h2>
+      <div className="my-2 p-6 border rounded shadow-xs bg-white ">
+        <div className="flex justify-between bg-white">
+          <h3 className="text-lg font-bold text-stone-700 justify-center flex">
+            Study
+          </h3>
           {reviewCase == "true" ? (
             <h2 className="text-sm bg-blue-100 py-2 px-8 rounded font-bold text-blue-600 animate-pulse mb-2">
               Under Review
             </h2>
           ) : (
-            <h2 className="text-sm bg-green-100 py-2 px-8 rounded font-bold text-green-600 mb-2">
+            <h2 className="text-sm bg-green-100 py-1 px-6 rounded font-bold text-green-400 mb-2">
               Final
             </h2>
           )}
         </div>
-
-        <h3 className="text-lg font-bold text-stone-700 justify-center flex">
-          Study
-        </h3>
-        <div className="mb-8 flex justify-center items-center p-2 border text-purple-700 border-purple-200 rounded font-bold bg-purple-50">
-          {studies}
-          {studyType || studySide || studyView
-            ? ` - ${studyType || studySide || studyView}`
-            : ""}
+        <div className="mb-8 mt-4 p-5 border-t border-b rounded">
+          {studies ? (
+            <ul className="px-2 gap-2 items-start justify-start flex flex-col">
+              {studies.split(",").map((study, index) => (
+                <li key={index} className="font-normal list-none border px-4 py-2 text-stone-700 border-stone-200 rounded bg-stone-50">
+                  {study.trim()}
+                  {(studyType || studySide || studyView) && index === 0 ? (
+                    <span className="text-stone-500 ml-1">
+                      - {studyType || studySide || studyView}
+                    </span>
+                  ) : null}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-center text-stone-500">No studies available</p>
+          )}
         </div>
-        <h1 className="font-bold text-stone-700">Report</h1>
+        <h1 className="font-bold text-lg text-stone-700">Report</h1>
         <div className="grid grid-cols-2 gap-2">
           <div className="pl-2 pt-5 mr-2 flex justify-start -ml-2">
-            <button className="border rounded flex justify-center items-center px-3 my-1 hover:bg-stone-100 text-stone-700">
+            <button className="border rounded text-sm flex justify-center items-center px-3 my-2  hover:bg-stone-100 text-stone-500">
               <span className="mr-1">
                 <Link
                   href={report || ""}
@@ -210,9 +224,9 @@ function CaseReview() {
                   View
                 </Link>
               </span>
-              <FileText size={20} strokeWidth={1} className="text-stone-700" />
+              <FileText size={15} strokeWidth={1} className="text-stone-700" />
             </button>
-            <span className="ml-2 pb-1 flex items-end italic underline text-stone-500">
+            <span className="ml-2 mb-1 pb-1 flex items-end text-xs italic underline text-stone-500">
               Reported On: {reportTime}
             </span>
           </div>
@@ -220,18 +234,20 @@ function CaseReview() {
             {/* Add User Button */}
             <div className="flex justify-center mt-2 ">
               <button
-                onClick={() => reviewCase !== "true" && setIsReviewModalOpen(true)}
+                onClick={() =>
+                  reviewCase !== "true" && setIsReviewModalOpen(true)
+                }
                 disabled={reviewCase == "true"}
                 className={`py-2 pl-6 px-8 rounded flex gap-2 items-center ${
-                  reviewCase == "true" 
-                    ? "bg-stone-100 text-stone-300 border cursor-not-allowed" 
-                    : "bg-purple-600 text-purple-100 hover:bg-purple-700"
+                  reviewCase == "true"
+                    ? "bg-stone-100 text-stone-300 border cursor-not-allowed"
+                    : "bg-stone-700 text-stone-100 hover:bg-stone-800"
                 }`}
               >
-                <span className="">
+                <span>
                   <Send size={20} strokeWidth={1} />
                 </span>
-                <span className="">Send for Review</span>
+                <span> Send for Review </span>
               </button>
             </div>
 
@@ -264,7 +280,6 @@ function CaseReview() {
                         {...register("name")}
                         className="w-full border rounded px-2 py-1"
                       >
-                        <option value="">Select a Technician</option>
                         {users.map((technician) => (
                           <option key={technician.id} value={technician.id}>
                             {technician.name}
@@ -312,7 +327,7 @@ function CaseReview() {
                       <input
                         type="checkbox"
                         {...register("isDefault")}
-                        className="mr-1 h-4 w-4 items-end"
+                        className="mr-1 items-end"
                       />
                       <label className="items-end text-sm">
                         Connect Ref Doctor
@@ -322,7 +337,7 @@ function CaseReview() {
                     <div className="flex justify-center">
                       <button
                         type="submit"
-                        className="bg-purple-600 text-white px-8 py-2 rounded hover:bg-purple-700"
+                        className="bg-stone-700 text-white px-8 py-2 rounded hover:bg-stone-800"
                       >
                         Send
                       </button>
@@ -381,7 +396,7 @@ function CaseReview() {
                     <div className="flex justify-center">
                       <button
                         type="submit"
-                        className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
+                        className="bg-stone-600 text-white px-4 py-2 rounded hover:bg-stone-700"
                       >
                         Connect
                       </button>

@@ -1,12 +1,14 @@
-import React from "react";
+import { Suspense } from "react";
 import CaseReview from "../_components/CaseReview";
 
-function page() {
+function Page() {
   return (
     <div>
-      <CaseReview />
+      <Suspense fallback={<div>Loading...</div>}>
+        <CaseReview />
+      </Suspense>
     </div>
   );
 }
 
-export default page;
+export default Page;

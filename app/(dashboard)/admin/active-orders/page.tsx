@@ -40,8 +40,8 @@ export default function ActiveCasesPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPatientID, setSelectedPatientID] = useState<string>("");
-  const rowsPerPage = 6;
-  
+  const rowsPerPage = 8;
+
   const { isActiveCase } = useActiveCase();
   const { setActiveCase } = useActiveCase();
   const { setCompletedCase } = useCompletedCase();
@@ -76,47 +76,52 @@ export default function ActiveCasesPage() {
     setShowSuccess(false);
     setLoading(true);
     setErrorMessage("");
-  
+
     try {
       // First find the patient ID associated with this study before deleting
-      const studyToDelete = studies.find(study => study.ID === studyId);
+      const studyToDelete = studies.find((study) => study.ID === studyId);
       const patientIdToUpdate = studyToDelete?.PatientID;
-      
+
       const response = await fetch("/api/deleteCase", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ studyId }),
       });
-  
+
       const data = await response.json();
       console.log(data);
-  
+
       if (response.ok) {
         // Remove from local storage first
         if (patientIdToUpdate) {
           // Remove from active case tracking
           setActiveCase(patientIdToUpdate, false, true);
-          
+
           // Reset completed case status - add this line
           setCompletedCase(patientIdToUpdate, false, true);
-          
+
           // Also explicitly remove from localStorage
-          const activeCasesStr = localStorage.getItem('activeCases');
+          const activeCasesStr = localStorage.getItem("activeCases");
           if (activeCasesStr) {
             const activeCases: string[] = JSON.parse(activeCasesStr);
-            const updatedActiveCases = activeCases.filter((id: string) => id !== patientIdToUpdate);
-            localStorage.setItem('activeCases', JSON.stringify(updatedActiveCases));
+            const updatedActiveCases = activeCases.filter(
+              (id: string) => id !== patientIdToUpdate
+            );
+            localStorage.setItem(
+              "activeCases",
+              JSON.stringify(updatedActiveCases)
+            );
           }
         }
-        
+
         setShowDeleteConfirm(false);
         setShowSuccess(true);
-  
+
         // Update the study list without refreshing the page
         setStudies((prevStudies) =>
           prevStudies.filter((study) => study.ID !== studyId)
         );
-  
+
         setTimeout(() => {
           setShowSuccess(false);
         }, 2000);
@@ -130,26 +135,26 @@ export default function ActiveCasesPage() {
       setLoading(false);
     }
   };
-  
+
   // And update your handleDeleteAllStudies function:
   const handleDeleteAllStudies = async () => {
     setShowSuccess(false);
     setLoading(true);
     setErrorMessage("");
-  
+
     try {
       // Extract all patient IDs from studies before deleting
       const patientIds: string[] = studies
-        .map(study => study.PatientID)
+        .map((study) => study.PatientID)
         .filter((id): id is string => Boolean(id)); // Type guard to ensure non-null
-      
+
       const response = await fetch("/api/deleteAllStudies", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       });
-  
+
       const data = await response.json();
-      
+
       if (response.ok) {
         // Set active case to false for all patient IDs
         patientIds.forEach((patientId: string) => {
@@ -157,21 +162,21 @@ export default function ActiveCasesPage() {
           // Reset completed case status for each patient - add this line
           setCompletedCase(patientId, false, true);
         });
-        
+
         // Also clear the entire activeCases array in localStorage
-        localStorage.setItem('activeCases', JSON.stringify([]));
-        
+        localStorage.setItem("activeCases", JSON.stringify([]));
+
         // Clear all completedCase entries from localStorage
         for (let i = localStorage.length - 1; i >= 0; i--) {
           const key = localStorage.key(i);
-          if (key && key.startsWith('completedCase_')) {
+          if (key && key.startsWith("completedCase_")) {
             localStorage.removeItem(key);
           }
         }
-        
+
         setShowSuccess(true);
         setStudies([]); // Clear the studies list after deletion
-  
+
         setTimeout(() => {
           setShowSuccess(false);
         }, 2000);
@@ -254,7 +259,7 @@ export default function ActiveCasesPage() {
     <div className="p-4 relative h-auto min-h-screen">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -278,13 +283,13 @@ export default function ActiveCasesPage() {
       <div className="w-full">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-1">
           {/* Left side: Search input and Date range selector */}
-          <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
+          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto items-end">
             {/* Search input - wider than date pickers */}
-            <div className="w-full sm:w-60 md:w-72 lg:w-80">
+            <div className="w-full sm:w-60 md:w-72 lg:w-96">
               <input
                 type="text"
                 placeholder="Search by Order Id, Patient, Modality ..."
-                className="w-full border bg-stone-50 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
+                className="w-full border placeholder:text-sm text-stone-700 bg-white py-1 px-2 ml-1 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -302,23 +307,22 @@ export default function ActiveCasesPage() {
           </div>
 
           {/* Right side: Sort icon and Clear All button */}
-          <div className="flex items-center gap-4 self-end md:self-auto mt-2 md:mt-0">
-            <div className="relative group p-1 hover:bg-purple-200 rounded-full">
+          <div className="flex items-end gap-4 self-end md:self-auto mt-2 md:mt-0">
+            <div className="relative group p-1 hover:bg-stone-200 rounded-full">
               {/* Sort Icon */}
-              <RxCaretSort className="h-6 w-6 text-purple-800" />
+              <RxCaretSort className="h-6 w-6 text-stone-800" />
 
               {/* Tooltip - Positioned just above the icon */}
-              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-stone-100 text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
                 Sort
               </span>
             </div>
 
             {/* Button */}
             <button
-              style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
               onClick={() => setShowConfirmModal(true)}
               disabled={loading}
-              className="bg-red-500 text-white px-4 py-2 rounded-sm shadow-md hover:bg-red-600 disabled:opacity-50 whitespace-nowrap"
+              className="bg-red-400 border text-stone-100 border-red-400 px-3 py-1 mr-1 rounded-sm shadow-md hover:bg-red-500 hover:text-stone-100 disabled:opacity-50 whitespace-nowrap"
             >
               Clear All
             </button>
@@ -327,7 +331,7 @@ export default function ActiveCasesPage() {
       </div>
 
       {/* Main Content */}
-      <table className="w-full border-separate border-spacing-y-2">
+      <table className="w-full mt-2">
         <thead>
           <tr>
             {[
@@ -339,124 +343,140 @@ export default function ActiveCasesPage() {
               "Study Date",
               "Series",
               "Action",
-            ].map((col) => (
+            ].map((col, index, arr) => (
               <th
                 key={col}
-                className="bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap "
-                style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+                className={`
+            bg-stone-800 text-stone-200 text-xs px-4 py-3 text-center 
+            whitespace-nowrap uppercase tracking-wider font-medium
+            ${index === 0 ? "rounded-tl-md" : ""} 
+            ${index === arr.length - 1 ? "rounded-tr-md" : ""}
+          `}
               >
                 {col}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="">
           {displayedOrders.length > 0
             ? displayedOrders.map((study) => (
                 <tr
                   key={study.ID}
                   className={
                     isActiveCase(study.PatientID)
-                      ? "bg-green-100 shadow-md text-purple-950"
-                      : "hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
+                      ? "bg-stone-50 shadow-xs text-stone-700 text-sm"
+                      : "hover:bg-stone-50 bg-white shadow-xs text-stone-700 text-sm"
                   }
                 >
-                  <td className="border-l border-b border-t border-stone-300 pl-4 pr-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
                     {study.PatientID}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {study.PatientName}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {study.StudyDescription}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {study.PatientSex}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {study.Modality}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {parseStudyDate(study.StudyDate).formattedDate}{" "}
                     {formatStudyTime(study.StudyTime)}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {study.Series}
                   </td>
-                  <td className="border-t border-b border-r border-stone-300 px-2 py-3 items-center justify-center flex">
-                    {isActiveCase(study.PatientID) ? (
-                      <div className="flex -ml-1 gap-4">
-                        <button
-                          onClick={() => {
-                            setShowDeleteConfirm(true);
-                            setSelectedStudyID(study.ID);
-                            setSelectedPatientID(study.PatientID);
-                          }}
-                          disabled={loading}
-                          className="text-white py-2"
-                        >
-                          <Trash className="text-red-500 hover:text-red-600" />
-                        </button>
-                        <Check
-                          size={36}
-                          strokeWidth={2}
-                          className="my-[6px]  text-green-500"
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => {
-                            setShowDeleteConfirm(true);
-                            setSelectedStudyID(study.ID);
-                          }}
-                          disabled={loading}
-                          className="text-white py-2 mr-2"
-                        >
-                          <Trash className="text-red-500 hover:text-red-600" />
-                        </button>
-                        <Link
-                          href={{
-                            pathname: "/admin/create-order",
-                            query: {
-                              id: study.ID,
-                              patientId: study.PatientID,
-                              name: study.PatientName,
-                              description: study.StudyDescription,
-                              gender: study.PatientSex,
-                              modality: study.Modality,
-                              studyDate: parseStudyDate(study.StudyDate)
-                                .formattedDate,
-                              time: formatStudyTime(study.StudyTime),
-                              series: study.Series,
-                            },
-                          }}
-                        >
-                          <ChevronRight
-                            className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
+                    <div className="flex items-center justify-center">
+                      {isActiveCase(study.PatientID) ? (
+                        <div className="flex items-center gap-2">
+                          <button
                             onClick={() => {
-                              setLoading(true);
+                              setShowDeleteConfirm(true);
+                              setSelectedStudyID(study.ID);
+                              setSelectedPatientID(study.PatientID);
                             }}
-                          />
-                        </Link>
-                      </>
-                    )}
+                            disabled={loading}
+                            className="flex items-center justify-center h-8 w-8"
+                          >
+                            <Trash
+                              size={20}
+                              className="text-red-400 hover:text-red-500"
+                            />
+                          </button>
+                          <div className="flex items-center justify-center h-8 w-8">
+                            <Check
+                              size={24}
+                              strokeWidth={2}
+                              className="text-green-500"
+                            />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => {
+                              setShowDeleteConfirm(true);
+                              setSelectedStudyID(study.ID);
+                            }}
+                            disabled={loading}
+                            className="flex items-center justify-center h-8 w-8"
+                          >
+                            <Trash
+                              size={20}
+                              className="text-red-400 hover:text-red-500"
+                            />
+                          </button>
+                          <Link
+                            href={{
+                              pathname: "/admin/create-order",
+                              query: {
+                                id: study.ID,
+                                patientId: study.PatientID,
+                                name: study.PatientName,
+                                description: study.StudyDescription,
+                                gender: study.PatientSex,
+                                modality: study.Modality,
+                                studyDate: parseStudyDate(study.StudyDate)
+                                  .formattedDate,
+                                time: formatStudyTime(study.StudyTime),
+                                series: study.Series,
+                              },
+                            }}
+                            className="flex items-center justify-center h-8 w-8"
+                          >
+                            <ChevronRight
+                              size={24}
+                              className="text-stone-600 hover:text-stone-800"
+                              onClick={() => {
+                                setLoading(true);
+                              }}
+                            />
+                          </Link>
+                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))
             : !loading && (
-              <tr>
-                <td colSpan={9} className="text-center py-3 text-gray-500">
-                  No active orders found
-                </td>
-              </tr>
-            )}
+                <tr>
+                  <td colSpan={8} className="text-center py-4 text-gray-500">
+                    No active orders found
+                  </td>
+                </tr>
+              )}
         </tbody>
       </table>
 
       {/* Confirmation Modal */}
       {showConfirmModal && !loading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
+        <div className="fixed text-sm inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
           <div className="bg-purple-50 bg-opacity-50 p-6 rounded-sm shadow-lg w-96 text-center">
             <p className="mb-4">
               Are you sure you want to delete all studies? This action cannot be
@@ -472,7 +492,7 @@ export default function ActiveCasesPage() {
               <button
                 onClick={handleDeleteAllStudies}
                 disabled={loading}
-                className="bg-red-500 text-white px-4 py-2 rounded-sm shadow-sm hover:bg-red-600 disabled:opacity-50"
+                className="bg-red-400 text-white px-4 py-2 rounded-sm shadow-sm hover:bg-red-400 disabled:opacity-50"
               >
                 Delete
               </button>
@@ -494,7 +514,7 @@ export default function ActiveCasesPage() {
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-red-500 text-white rounded-sm shadow-sm hover:bg-red-600"
+                className="px-4 py-2 bg-red-400 text-white rounded-sm shadow-sm hover:bg-red-500"
                 onClick={() => handleDeleteStudy(selectedStudyID)}
               >
                 Delete
@@ -512,7 +532,7 @@ export default function ActiveCasesPage() {
             className={`p-1 rounded-full ${
               currentPage === 1
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-purple-200 text-purple-800"
+                : "hover:bg-stone-200 text-stone-800"
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -539,8 +559,8 @@ export default function ActiveCasesPage() {
                 key={page}
                 className={`px-2 py-[2px] rounded-full text-sm ${
                   currentPage === page
-                    ? "bg-purple-500 text-white"
-                    : "bg-purple-100 hover:bg-purple-200"
+                    ? "bg-stone-700 text-white"
+                    : "bg-stone-100 hover:bg-stone-200"
                 }`}
                 onClick={() => setCurrentPage(page)}
               >
@@ -554,7 +574,7 @@ export default function ActiveCasesPage() {
             className={`p-1 rounded-full ${
               currentPage === totalPages
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-purple-200 text-purple-800"
+                : "hover:bg-stone-200 text-stone-800"
             }`}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))

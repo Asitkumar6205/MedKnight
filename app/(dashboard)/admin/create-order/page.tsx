@@ -1,8 +1,9 @@
 "use client";
-import CaseUpload from './_components/CaseUpload'
+import { Suspense } from "react";
+import CaseUpload from "./_components/CaseUpload";
 import { useSearchParams } from "next/navigation";
 
-function Page() {
+function CreateOrder() {
   const searchParams = useSearchParams();
 
   const patientId = searchParams?.get("patientId");
@@ -16,35 +17,44 @@ function Page() {
 
   return (
     <div className="p-4 h-auto min-h-screen bg-stone-100">
-      <table className="text-stone-700 w-full border-b border-l border-r border-stone-300 shadow-lg">
-        <thead
-          className="bg-purple-600 text-white shadow-lg px-2 py-2 text-center whitespace-nowrap"
-          style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
-        >
-          <tr>
-            <th className="px-4 py-2">Patient ID</th>
-            <th className="px-4 py-2">Patient Name</th>
-            <th className="px-4 py-2">Study Description</th>
-            <th className="px-4 py-2">Gender</th>
-            <th className="px-4 py-2">Modality</th>
-            <th className="px-4 py-2">Study Date</th>
-            <th className="px-4 py-2">Series</th>
-          </tr>
-        </thead>
-        <tbody className="bg-stone-100 hover:bg-stone-200">
-          <tr>
-            <td className="px-4 py-2 text-center">{patientId}</td>
-            <td className="px-4 py-2 text-center">{patientName}</td>
-            <td className="px-4 py-2 text-center">{studyDescription}</td>
-            <td className="px-4 py-2 text-center">{gender}</td>
-            <td className="px-4 py-2 text-center">{modality}</td>
-            <td className="px-4 py-2 text-center">{studyDate} {studyTime}</td>
-            <td className="px-4 py-2 text-center">{series}</td>
-          </tr>
-        </tbody>
-      </table>
-      <CaseUpload/>
+      <table className="text-stone-700 w-full rounded-t-md overflow-hidden">
+        <thead className="
+          bg-stone-800 text-stone-100 text-xs text-center 
+          whitespace-nowrap uppercase tracking-wider
+          rounded-t-md">
+            <tr>
+              <th className="px-4 py-3 font-normal first:rounded-tl-md">Patient ID</th>
+              <th className="px-4 py-3 font-normal">Patient Name</th>
+              <th className="px-4 py-3 font-normal">Study Description</th>
+              <th className="px-4 py-3 font-normal">Gender</th>
+              <th className="px-4 py-3 font-normal">Modality</th>
+              <th className="px-4 py-3 font-normal">Study Date</th>
+              <th className="px-4 py-3 font-normal last:rounded-tr-md">Series</th>
+            </tr>
+          </thead>
+          <tbody className="">
+            <tr className="bg-white">
+              <td className="px-4 py-2 text-center">{patientId}</td>
+              <td className="px-4 py-2 text-center">{patientName}</td>
+              <td className="px-4 py-2 text-center">{studyDescription}</td>
+              <td className="px-4 py-2 text-center">{gender}</td>
+              <td className="px-4 py-2 text-center">{modality}</td>
+              <td className="px-4 py-2 text-center">{studyDate} {studyTime}</td>
+              <td className="px-4 py-2 text-center">{series}</td>
+            </tr>
+          </tbody>
+        </table>
+      <CaseUpload />
     </div>
+  );
+}
+
+// Main page component that wraps the client component with Suspense
+function Page() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading report data...</div>}>
+      <CreateOrder />
+    </Suspense>
   );
 }
 

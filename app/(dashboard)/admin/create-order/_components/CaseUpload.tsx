@@ -526,10 +526,10 @@ export default function PatientUploadForm() {
   };
 
   return (
-    <div className="w-full mx-auto border border-stone-200 shadow-lg p-4 max-sm:p-4 relative">
+    <div className="w-full mx-auto max-sm:p-4 relative mt-8 rounded-br-md rounded-bl-md">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -547,7 +547,7 @@ export default function PatientUploadForm() {
       )}
 
       <h2 className="text-2xl font-semibold text-stone-800 mb-2">
-        Upload Case
+        Draft Case
       </h2>
 
       <form
@@ -555,9 +555,9 @@ export default function PatientUploadForm() {
         className="space-y-6 max-sm:space-y-4"
       >
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 -mb-2">
           {/* 1. Referring Doctor/Physician */}
-          <div className="bg-white rounded shadow-sm p-4">
+          <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-3">
               1. Referring Doctor
             </h3>
@@ -581,7 +581,7 @@ export default function PatientUploadForm() {
           </div>
 
           {/* 2. Reporting Preferences */}
-          <div className="bg-white rounded shadow-sm p-4">
+          <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-3">
               2. Reporting Preferences
             </h3>
@@ -600,7 +600,7 @@ export default function PatientUploadForm() {
                       type="radio"
                       value={priority}
                       {...register("priority")}
-                      className="accent-purple-600"
+                      className="accent-stone-700"
                       defaultChecked={priority === "Routine"}
                     />
                     <span className="text-stone-700">{priority}</span>
@@ -611,9 +611,9 @@ export default function PatientUploadForm() {
           </div>
 
           {/* 3. Clinical History/Report with File Upload */}
-          <div className="bg-white rounded shadow-sm p-4">
+          <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-3">
-              3. Clinical History{" "}
+              3. Clinical History
               <span className="text-red-500 font-bold"> *</span>
             </h3>
             <textarea
@@ -727,7 +727,7 @@ export default function PatientUploadForm() {
           </div>
 
           {/* 4. Select Study */}
-          <div className="bg-white rounded shadow-sm p-4">
+          <div className="bg-white rounded p-4 ">
             <h3 className="font-medium text-stone-700 mb-3">
               4. Select Study <span className="text-red-500 font-bold"> *</span>
             </h3>
@@ -761,7 +761,7 @@ export default function PatientUploadForm() {
                     filteredStudies.map((study) => (
                       <div
                         key={study}
-                        className="p-2 cursor-pointer border-b text-md hover:bg-purple-100 text-stone-700"
+                        className="p-2 cursor-pointer border-b text-md hover:bg-stone-100 text-stone-700"
                         onClick={() => handleSelectStudy(study)}
                       >
                         {study}
@@ -786,7 +786,7 @@ export default function PatientUploadForm() {
               {selectedStudies.map((study) => (
                 <span
                   key={study}
-                  className="bg-purple-500 text-white px-3 py-1 rounded-sm flex items-center text-sm"
+                  className="bg-stone-700 text-white px-3 py-1 rounded-sm flex items-center text-sm"
                 >
                   {study}
                   <button
@@ -806,7 +806,7 @@ export default function PatientUploadForm() {
         {selectedStudies.filter(
           (study) => Object.keys(studies[study] || {}).length > 0
         ).length > 0 && (
-          <div className="bg-white rounded shadow-md p-4">
+          <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-2">Study Details</h3>
             <div className="space-y-4">
               {selectedStudies
@@ -814,9 +814,9 @@ export default function PatientUploadForm() {
                 .map((study, index) => (
                   <div
                     key={study}
-                    className="bg-purple-50 rounded p-3 shadow-sm"
+                    className="bg-stone-50 rounded p-3 shadow-sm"
                   >
-                    <h4 className="text-md font-semibold text-purple-800 mb-2">
+                    <h4 className="text-md font-semibold text-stone-800 mb-2">
                       {`${index + 1}. ${study}`}
                     </h4>
                     <div className="flex flex-wrap gap-3">
@@ -829,9 +829,9 @@ export default function PatientUploadForm() {
                         .map(([field, values]) => (
                           <div
                             key={field}
-                            className="bg-white p-2 rounded border border-purple-100 flex-grow"
+                            className="bg-white p-2 rounded border border-stone-100 flex-grow"
                           >
-                            <h5 className="text-sm text-purple-600 font-medium mb-1">
+                            <h5 className="text-sm text-stone-600 font-medium mb-1">
                               {field}
                               {field != "Select Gender" && (
                                 <span className="text-red-500 font-bold">
@@ -857,7 +857,7 @@ export default function PatientUploadForm() {
                                           ? `${study}-gender`
                                           : undefined
                                       }
-                                      className="accent-purple-500 mr-1"
+                                      className="accent-stone-700 mr-1"
                                       checked={
                                         selectedOptions[study]?.includes(
                                           value
@@ -894,7 +894,7 @@ export default function PatientUploadForm() {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="px-8 py-2 -mt-2 bg-purple-500 rounded text-white hover:bg-purple-600 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-300 disabled:opacity-70"
+            className="px-8 py-2 bg-stone-700 rounded text-white hover:bg-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-300 disabled:opacity-70"
             disabled={isSubmitting}
           >
             {isSubmitting ? (

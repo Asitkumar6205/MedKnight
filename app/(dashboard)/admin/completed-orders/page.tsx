@@ -157,7 +157,7 @@ export default function ActiveCasesPage() {
     <div className="p-4 relative h-auto min-h-screen">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -169,11 +169,11 @@ export default function ActiveCasesPage() {
           {/* Left side: Search input and Date range selector */}
           <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
             {/* Search input - wider than date pickers */}
-            <div className="w-full sm:w-60 md:w-72 lg:w-80">
+            <div className="w-full sm:w-60 md:w-72 lg:w-96">
               <input
                 type="text"
                 placeholder="Search by Order Id, Patient, Modality ..."
-                className="w-full border bg-stone-50 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
+                className="w-full border placeholder:text-sm text-stone-700 bg-white py-1 px-2 ml-1 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -192,12 +192,12 @@ export default function ActiveCasesPage() {
 
           {/* Right side: Sort icon and Clear All button */}
           <div className="flex items-center gap-4 self-end md:self-auto mt-2 md:mt-0">
-            <div className="relative group p-1 hover:bg-purple-200 rounded-full">
+            <div className="relative group p-1 hover:bg-stone-200 rounded-full">
               {/* Sort Icon */}
-              <RxCaretSort className="h-6 w-6 text-purple-800" />
+              <RxCaretSort className="h-6 w-6 text-stone-800" />
 
               {/* Tooltip - Positioned just above the icon */}
-              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
+              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-stone-100 text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
                 Sort
               </span>
             </div>
@@ -206,7 +206,7 @@ export default function ActiveCasesPage() {
       </div>
 
       {/* Main Content */}
-      <table className="w-full border-separate border-spacing-y-2">
+      <table className="w-full mt-2">
         <thead>
           <tr>
             {[
@@ -218,18 +218,22 @@ export default function ActiveCasesPage() {
               "Radiologist",
               "Status",
               "Action",
-            ].map((col) => (
+            ].map((col, index, arr) => (
               <th
                 key={col}
-                className="bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap "
-                style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+                className={`
+            bg-stone-800 text-stone-100 text-xs px-4 py-3 text-center 
+            whitespace-nowrap uppercase tracking-wider font-medium
+            ${index === 0 ? "rounded-tl-md" : ""} 
+            ${index === arr.length - 1 ? "rounded-tr-md" : ""}
+          `}
               >
                 {col}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="">
           {displayedOrders.length > 0
             ? displayedOrders.map((study, index) => {
                 const dicomPath = `C:/Users/asit_/Downloads/case${index + 1}`;
@@ -239,15 +243,15 @@ export default function ActiveCasesPage() {
                 return (
                   <tr
                     key={study.id}
-                    className="hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
+                    className="hover:bg-stone-50 bg-white shadow-xs text-sm text-stone-700"
                   >
-                    <td className="border-l border-b border-t border-stone-300 pl-4 pr-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
                       {study.patientId}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
                       {study.patientName}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
                       {study.studies.length > 0 && (
                         <div>
                           {study.studies.map((studyItem, index) => (
@@ -270,38 +274,37 @@ export default function ActiveCasesPage() {
                         </div>
                       )}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
                       {study.gender}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
                       {study.studyDate}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
                       {study.radiologist}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
                       {study.reviewCase ? (
-                        <h2 className="text-sm bg-blue-100 py-1 px-2 rounded font-bold mt-2 text-blue-600 animate-pulse mb-2">
+                        <h2 className="text-sm bg-blue-100 py-1 px-2 rounded font-bold mt-2 text-blue-400 animate-pulse mb-2">
                           Under Review
                         </h2>
                       ) : (
-                        <h2 className="text-sm bg-green-100 py-1 px-2 rounded font-bold mt-2 text-green-600 mb-2">
+                        <h2 className="text-sm bg-green-100 py-1 px-2 rounded font-bold mt-2 text-green-400 mb-2">
                           Final
                         </h2>
                       )}
                     </td>
-                    <td className="border-b border-t border-stone-300 px-2 py-3 text-center">
-                      <div className="flex items-center">
+                    <td className="border-b border-stone-300 px-2 py-4 text-center">
+                      <div className="flex items-center justify-center">
                         <div>
                           <Link
                             href={study.report?.path || ""}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-purple-800 hover:underline"
+                            className="text-purple-400 hover:text-purple-600"
                           >
-                            <FileCheck strokeWidth={1} size={30} />
+                            <FileCheck strokeWidth={1} size={24} />
                           </Link>
-                          {/* <h3 className="text-xs -mb-4">Report</h3> */}
                         </div>
                         <div>
                           <Link
@@ -339,7 +342,7 @@ export default function ActiveCasesPage() {
                             }}
                           >
                             <ChevronRight
-                              className="bg-purple-500 text-white m-2 p-1 h-8 w-8 rounded-full"
+                              className="text-stone-600 hover:text-stone-800 m-2 p-1 h-8 w-8 rounded-full"
                               onClick={() => {
                                 setLoading(true);
                               }}
@@ -353,7 +356,7 @@ export default function ActiveCasesPage() {
               })
             : !loading && (
                 <tr>
-                  <td colSpan={8} className="text-center py-3 text-gray-500">
+                  <td colSpan={8} className="text-center py-4 text-gray-500">
                     No completed studies found
                   </td>
                 </tr>

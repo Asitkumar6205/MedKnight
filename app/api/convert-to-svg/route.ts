@@ -1,5 +1,5 @@
 // File: /api/convert-to-svg/route.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import potrace from 'potrace';
@@ -55,16 +55,12 @@ async function convertImageToSVG(
   }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
-
+export async function POST(req: NextRequest) {
   try {
-    const { userId, imageType = 'signature' } = req.body;
+    const { userId, imageType = 'signature' } = await req.json();
     
     if (!userId) {
-      return res.status(400).json({ message: 'User ID is required' });
+      return NextResponse.json({ message: 'User ID is required' }, { status: 400 });
     }
     
     // For demo purposes, assume you have the file path:
@@ -74,14 +70,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       await fs.access(signatureFilePath);
     } catch (error) {
-      return res.status(404).json({ message: 'Signature file not found' });
+      return NextResponse.json({ message: 'Signature file not found' }, { status: 404 });
     }
 
     // Convert image to SVG
     const result = await convertImageToSVG(signatureFilePath);
     
     if (!result.success) {
-      return res.status(500).json({ message: 'Failed to convert signature', error: result.error });
+      return NextResponse.json(
+        { message: 'Failed to convert signature', error: result.error }, 
+        { status: 500 }
+      );
     }
 
     // Save SVG data to database or file system
@@ -93,12 +92,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // TODO: Update user record with SVG signature path in your database
     // Example: await prisma.radiologist.update({ where: { id: userId }, data: { signatureSvg: `/uploads/signatures/${svgFileName}` } });
 
-    return res.status(200).json({ 
+    return NextResponse.json({ 
       message: 'Signature converted successfully',
       svgPath: `/uploads/signatures/${svgFileName}`,
       svgData: result.svgData
     });
   } catch (error: any) {
-    return res.status(500).json({ message: 'Error processing signature', error: error.message });
+    return NextResponse.json(
+      { message: 'Error processing signature', error: error.message }, 
+      { status: 500 }
+    );
   }
 }

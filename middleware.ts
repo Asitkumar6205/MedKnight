@@ -1,78 +1,4 @@
 // middleware.ts
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-// import { getToken } from "next-auth/jwt";
-
-// export async function middleware(request: NextRequest) {
-//   const { pathname } = request.nextUrl;
-//   const token = await getToken({ req: request });
-
-//   // Not authenticated for any protected route
-//   if (pathname.startsWith("/admin") && !token) {
-//     const url = new URL("/signin", request.url);
-//     url.searchParams.set("callbackUrl", encodeURI(request.url));
-//     return NextResponse.redirect(url);
-//   }
-
-//   // Check if user is active for any protected route
-//   if (pathname.startsWith("/admin") && token && token.status !== "ACTIVE") {
-//     if (token.status === "PENDING_APPROVAL") {
-//       return NextResponse.redirect(
-//         new URL("/auth/error?error=pending_approval", request.url)
-//       );
-//     } else {
-//       return NextResponse.redirect(
-//         new URL("/auth/error?error=account_suspended", request.url)
-//       );
-//     }
-//   }
-
-//   // Role-based access control for admin routes
-//   if (pathname.startsWith("/admin") && pathname !== "/admin") {
-//     // RADIOLOGIST specific routes
-//     if (token?.role === "RADIOLOGIST") {
-//       const allowedPaths = [
-//         "/admin/completed-orders",
-//         "/admin/settings",
-//         "/admin/active-studies",
-//         "/admin/radiologists",
-//         "/admin/report",
-//         "/admin/report/write",
-//       ];
-
-//       // Check if current path is allowed for RADIOLOGIST
-//       if (!allowedPaths.some((path) => pathname.startsWith(path))) {
-//         return NextResponse.redirect(new URL("/unauthorized", request.url));
-//       }
-//     }
-
-//     // HOSPITAL specific routes
-//     else if (token?.role === "HOSPITAL") {
-//       const allowedPaths = [
-//         "/admin/active-orders",
-//         "/admin/completed-orders",
-//         "/admin/create-order",
-//         "/admin/hospital-users",
-//         "/admin/payments",
-//         "/admin/settings",
-//       ];
-
-//       // Check if current path is allowed for HOSPITAL
-//       if (!allowedPaths.some((path) => pathname.startsWith(path))) {
-//         return NextResponse.redirect(new URL("/unauthorized", request.url));
-//       }
-//     }
-
-//     // For any other role (not ADMIN, RADIOLOGIST, or HOSPITAL)
-//     else if (token?.role !== "ADMIN") {
-//       return NextResponse.redirect(new URL("/unauthorized", request.url));
-//     }
-//   }
-
-//   return NextResponse.next();
-// }
-
-// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
@@ -87,6 +13,7 @@ export async function middleware(request: NextRequest) {
     const publicApiRoutes = [
       "/api/auth", // NextAuth routes
       "/api/verify-email", // Email verification endpoint
+      "/api/user", // User registration endpoint
     ];
 
     // Check if the route is public
@@ -102,6 +29,7 @@ export async function middleware(request: NextRequest) {
       );
     }
 
+    // Rest of the middleware remains the same...
     // Check if user account is active
     if (token.status !== "ACTIVE") {
       return new NextResponse(
@@ -142,7 +70,6 @@ export async function middleware(request: NextRequest) {
         "/api/getCases",
         "/api/radiologist/getuser",
         "/api/saveReport",
-        "/api/studies",
         "/api/getCompletedCases",
         "/api/caseReview",
         "/api/updateActiveCase",
@@ -152,6 +79,7 @@ export async function middleware(request: NextRequest) {
         "/api/me",
         "/api/user",
         "/api/getCases",
+        "/api/studies",
         "/api/hospital/getuser",
         "/api/postCase",
         "/api/hospital/postuser",
@@ -218,9 +146,8 @@ export async function middleware(request: NextRequest) {
 
   // Original frontend route protection
   if (pathname.startsWith("/admin") && !token) {
-    const url = new URL("/signin", request.url);
-    url.searchParams.set("callbackUrl", encodeURI(request.url));
-    return NextResponse.redirect(url);
+    // Redirect to access-denied page instead of signin
+    return NextResponse.redirect(new URL("/access-denied", request.url));
   }
 
   // Check if user is active for any protected route

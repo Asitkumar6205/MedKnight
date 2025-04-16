@@ -7,11 +7,11 @@ import {
   X,
   Settings,
   LogOut,
-  Upload,
   ClipboardCheck,
   MonitorDot,
   CircleUserRound,
   IndianRupee,
+  LayoutDashboard,
 } from "lucide-react";
 import clsx from "clsx";
 
@@ -45,7 +45,13 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
   // Define all menu items
   const allMenuItems = [
     {
-      name: "Active Orders",
+      name: "Dashboard",
+      path: "/admin",
+      icon: <LayoutDashboard className="w-5 h-5" />,
+      roles: ["ADMIN", "HOSPITAL", "RADIOLOGIST"],
+    },
+    {
+      name: "Orders",
       path: "/admin/active-orders",
       icon: <MonitorDot className="w-5 h-5" />,
       roles: ["ADMIN", "HOSPITAL"],
@@ -89,9 +95,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
   ];
 
   // Filter menu items based on the user's role
-  const menuItems = allMenuItems.filter(item => 
-    item.roles.includes(role)
-  );
+  const menuItems = allMenuItems.filter((item) => item.roles.includes(role));
 
   const handleNavigation = (path: string) => {
     if (pathname === path) return;
@@ -121,7 +125,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
     >
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
@@ -129,10 +133,10 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
         <>
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="mb-4 hover:text-purple-500"
+            className="mb-4 text-stone-400 hover:text-stone-100"
           >
             {isOpen ? (
-              <X className="lg:w-6 lg:h-6 max-lg:-ml-[2px] lg:-ml-[2px] hover:text-purple-500" />
+              <X className="lg:w-6 lg:h-6 max-lg:-ml-[2px] lg:-ml-[2px] hover:text-stone-100" />
             ) : (
               <Menu className="lg-max:w-5 lg-max:h-5 lg:w-6 lg:h-6 " />
             )}
@@ -144,8 +148,11 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
                 <li
                   key={item.name}
                   className={clsx(
-                    "mb-4 flex items-center space-x-3 space-y-1 cursor-pointer hover:text-purple-500", !isOpen && "justify-center" ,
-                    activeComponent === item.name && "text-purple-500"
+                    "mb-4 flex items-center space-x-3 space-y-1 cursor-pointer",
+                    !isOpen && "justify-center",
+                    activeComponent === item.name
+                      ? "text-stone-100"
+                      : "text-stone-400 hover:text-stone-100"
                   )}
                   onClick={() => {
                     handleNavigation(item.path);
@@ -171,7 +178,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
             </div>
             <div className="flex space-x-3 items-center">
               <div
-                className="flex gap-1 items-center cursor-pointer hover:text-stone-300"
+                className="flex gap-1 items-center cursor-pointer text-stone-400 hover:text-stone-100"
                 onClick={() => setShowLogoutConfirm(true)}
               >
                 {isOpen && <LogOut className="w-5 h-5" />}
@@ -184,7 +191,7 @@ const SideNavbar: React.FC<SideNavbarProps> = ({
 
       {showLogoutConfirm && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-purple-50 bg-opacity-50 text-black p-6 rounded-sm shadow-md">
+          <div className="bg-stone-50 bg-opacity-50 text-black p-6 rounded-sm shadow-md">
             <p className="mb-4">Are you sure you want to logout?</p>
             <div className="flex space-x-4 justify-center">
               <button

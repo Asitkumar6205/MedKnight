@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect, Suspense } from "react";
 import QRCode from "qrcode";
 import { pdf } from "@react-pdf/renderer";
 import { PDFDownloadLink } from "@react-pdf/renderer";
@@ -47,7 +46,7 @@ interface Radiologist {
   signatureSvgUrl?: string | null;
 }
 
-export default function RadiologyReportPage() {
+function RadiologyReportPage() {
   const router = useRouter();
   const [qrCode, setQrCode] = useState<string | null>(null);
   const [currentDateTime, setCurrentDateTime] = useState({
@@ -331,3 +330,13 @@ export default function RadiologyReportPage() {
     </div>
   );
 }
+
+function Page() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading report data...</div>}>
+      <RadiologyReportPage />
+    </Suspense>
+  );
+}
+
+export default Page;

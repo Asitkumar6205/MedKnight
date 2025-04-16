@@ -138,30 +138,30 @@ export default function PaymentsPage() {
     <div className="p-4 relative h-auto min-h-screen">
       {loading && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
 
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-semibold">Payments</h1>
-        <div className="bg-purple-100 p-2 rounded-md">
-          <span className="font-bold text-purple-800">
-            Total: ₹{totalAmount.toFixed(2)}
+        <div className="text-sm px-3 py-1 rounded">
+          <span className="text-indigo-500">
+            <span className="text-stone-700">Total:</span> ₹{totalAmount.toFixed(2)}
           </span>
         </div>
       </div>
 
       {/* Search Bar & Date Filters */}
       <div className="w-full">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-2">
           {/* Left side: Search input and Date range selector */}
           <div className="flex flex-col sm:flex-row items-start gap-4 w-full md:w-auto">
             {/* Search input - wider than date pickers */}
-            <div className="w-full sm:w-60 md:w-72 lg:w-80">
+            <div className="w-full sm:w-60 md:w-72 lg:w-96">
               <input
                 type="text"
-                placeholder="Search by Patient ID, Name, Study..."
-                className="w-full border bg-stone-50 p-2 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
+                placeholder="Search by Order Id, Patient, Modality ..."
+                className="w-full border placeholder:text-sm text-stone-700 bg-white py-1 px-2 ml-1 rounded focus:outline-none focus:ring-2 focus:ring-purple-300 transition-all"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -179,60 +179,57 @@ export default function PaymentsPage() {
           </div>
 
           {/* Right side: Sort icon, Filter, and Export buttons */}
-          <div className="flex items-center gap-4 self-end md:self-auto mt-2 md:mt-0">
+          <div className="flex gap-2 items-center self-end md:self-auto mr-1 mt-2 md:mt-0">
             <div className="relative group p-1 hover:bg-purple-200 rounded-full">
               {/* Sort Icon */}
-              <RxCaretSort className="h-6 w-6 text-purple-800" />
+              <RxCaretSort className="h-6 w-6 text-stone-700" />
               <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
                 Sort
               </span>
             </div>
-            <div className="relative group p-1 hover:bg-purple-200 rounded-full">
-              {/* Filter Icon */}
-              <Filter className="h-6 w-6 text-purple-800" />
-              <span className="absolute left-1/2 -translate-x-1/2 -top-8 bg-stone-950 text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity">
-                Filter
-              </span>
-            </div>
-            <button className="flex items-center gap-1 bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 transition-all">
-              <Download size={16} />
-              Export
+            <button className=" text-stone-500 hover:text-stone-800 py-1 transition-all">
+              <Download size={20} />
+
             </button>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <table className="w-full border-separate border-spacing-y-3">
+      <table className="w-full">
         <thead>
           <tr>
             {[
-              "Reported Date",
+              "Date",
               "Patient ID",
               "Patient Name",
               "Study",
-              "Total Cost",
               "No. of Reports",
               "No. of Views",
-            ].map((col) => (
+              "Total Cost",
+            ].map((col, index, arr) => (
               <th
                 key={col}
-                className="bg-purple-600 text-white shadow-lg border-stone-300 px-2 py-2 text-center whitespace-nowrap"
-                style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+                className={`
+            bg-stone-800 text-stone-100 text-xs px-4 py-3 text-center 
+            whitespace-nowrap uppercase tracking-wider font-medium
+            ${index === 0 ? "rounded-tl-md" : ""} 
+            ${index === arr.length - 1 ? "rounded-tr-md" : ""}
+          `}
               >
                 {col}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody>
+        <tbody className="">
           {displayedPayments.length > 0
             ? displayedPayments.map((payment) => (
                 <tr
                   key={payment.id}
-                  className="hover:bg-stone-50 bg-stone-100 shadow-md text-purple-950"
+                  className="hover:bg-stone-50 bg-white shadow-xs text-sm text-stone-700"
                 >
-                  <td className="border-l border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
                     {payment.reportTime
                       ? new Date(
                           payment.reportTime.replace("-", " ")
@@ -243,13 +240,13 @@ export default function PaymentsPage() {
                         })
                       : ""}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {payment.patientId}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {payment.patientName}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {payment.studies.length > 0 && (
                       <div>
                         {payment.studies.map((studyItem, index) => (
@@ -272,13 +269,10 @@ export default function PaymentsPage() {
                       </div>
                     )}
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center font-semibold">
-                    ₹{payment.totalAmount}
-                  </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {/* {payment.numberOfReports} */}1
                   </td>
-                  <td className="border-b border-t border-stone-300 px-2 py-4 text-center">
+                  <td className="border-b border-stone-300 px-2 py-4 text-center">
                     {payment.studies
                       .map((study) => {
                         const totalLength =
@@ -288,6 +282,9 @@ export default function PaymentsPage() {
                         return totalLength > 0 ? totalLength : 1;
                       })
                       .join(",")}
+                  </td>
+                  <td className="border-b border-stone-300 px-2 py-4 text-center text-indigo-500">
+                    ₹{payment.totalAmount}
                   </td>
                 </tr>
               ))

@@ -56,7 +56,7 @@ export const authOptions: NextAuthOptions = {
           pass: process.env.EMAIL_SERVER_PASSWORD || "",
         },
       },
-      from: process.env.EMAIL_FROM || "noreply@example.com",
+      from: process.env.EMAIL_FROM || "no-reply@medknight.in",
     }),
     Credentials({
       credentials: {

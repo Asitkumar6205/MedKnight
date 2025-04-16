@@ -1,11 +1,42 @@
-import Jimp from 'jimp/browser/lib/jimp';
-import potrace from 'potrace';
+// utils/signatureConverter.ts
+// Import Jimp conditionally based on environment
+let Jimp: any;
+let potrace: any;
+
+// Only import these libraries on the client side
+if (typeof window !== 'undefined') {
+  // We're in the browser
+  import('jimp/browser/lib/jimp').then(module => {
+    Jimp = module.default;
+  });
+  import('potrace').then(module => {
+    potrace = module.default;
+  });
+}
 
 /**
  * Converts an image file to SVG format on the client side
  * Ensures the signature is black with transparent background
  */
 export const convertSignatureToSVG = async (file: File): Promise<string | null> => {
+  // Check if we're in the browser
+  if (typeof window === 'undefined') {
+    console.error('Cannot run signature conversion on the server');
+    return null;
+  }
+  
+  // Make sure Jimp and potrace are loaded
+  if (!Jimp || !potrace) {
+    await Promise.all([
+      import('jimp/browser/lib/jimp').then(module => {
+        Jimp = module.default;
+      }),
+      import('potrace').then(module => {
+        potrace = module.default;
+      })
+    ]);
+  }
+
   return new Promise((resolve) => {
     // Create a FileReader to read the file
     const reader = new FileReader();
@@ -24,7 +55,6 @@ export const convertSignatureToSVG = async (file: File): Promise<string | null> 
         const image = await Jimp.read(buffer);
         
         // Process the image to enhance signature quality
-        // IMPORTANT: We don't invert the image here since we want the signature to be black
         image
           .grayscale()
           .contrast(0.5)
@@ -46,7 +76,7 @@ export const convertSignatureToSVG = async (file: File): Promise<string | null> 
         };
         
         // Trace the image to SVG
-        potrace.trace(processedBuffer, potraceOptions, (err, svg) => {
+        potrace.trace(processedBuffer, potraceOptions, (err: any, svg: string) => {
           if (err || !svg) {
             console.error('Error tracing image:', err);
             resolve(null);
@@ -75,6 +105,12 @@ export const handleFileConversion = async (
   signatureFile: File,
   setConversionStatus?: (status: string) => void
 ): Promise<{ originalFile: File; svgBlob: Blob | null; svgFileName: string | null }> => {
+  // Check if we're in the browser
+  if (typeof window === 'undefined') {
+    console.error('Cannot run file conversion on the server');
+    return { originalFile: signatureFile, svgBlob: null, svgFileName: null };
+  }
+  
   if (setConversionStatus) setConversionStatus('Converting signature to SVG...');
   
   try {

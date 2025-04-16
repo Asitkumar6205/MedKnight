@@ -17,7 +17,7 @@ async function sendApprovalEmail(email: string, approved: boolean) {
     },
   };
   
-  const from = process.env.EMAIL_FROM || 'noreply@example.com';
+  const from = process.env.EMAIL_FROM || 'no-reply@medknight.in';
   const { host } = new URL(baseUrl);
   
   const transport = createTransport(emailServer);

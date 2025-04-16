@@ -76,12 +76,12 @@ export default function OrderData({
     <div className="">
       {loadingReport && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
       {loading ? (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
-          <div className="w-12 h-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       ) : filteredCases.length === 0 ? (
         <div className="bg-white rounded shadow-sm p-4 text-center">
@@ -99,10 +99,10 @@ export default function OrderData({
                   className={`px-3 py-1 rounded text-xs font-bold
                         ${
                           caseItem.priority === "Urgent"
-                            ? "bg-yellow-100 text-yellow-800"
+                            ? "bg-yellow-100 text-yellow-500"
                             : caseItem.priority === "Stat"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-green-100 text-green-800"
+                            ? "bg-red-100 text-red-500"
+                            : "bg-green-100 text-green-500"
                         }`}
                 >
                   {caseItem.priority} Priority
@@ -196,7 +196,7 @@ export default function OrderData({
                     {caseItem.files.map((file) => (
                       <li
                         key={file.id}
-                        className="mt-1 max-w-[200px] flex items-center justify-center text-sm bg-purple-100 text-purple-800 px-3 py-1 rounded relative"
+                        className="mt-1 max-w-[200px] flex items-center justify-center text-sm bg-stone-100 text-stone-700 px-3 py-1 rounded relative"
                         title={file.filename}
                       >
                         <div className="flex items-center justify-center truncate">
@@ -242,8 +242,7 @@ export default function OrderData({
                   href={weasisUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-8 py-2 font-bold bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors duration-300 text-center flex items-center"
-                  style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+                  className="px-8 py-2 font-bold bg-orange-500 text-stone-100 rounded hover:bg-orange-600 transition-colors duration-300 text-center flex items-center"
                 >
                   View Study
                   <span className="ml-1">
@@ -268,8 +267,7 @@ export default function OrderData({
                     },
                   }}
                   onClick={handleStartReporting}
-                  className="px-8 py-2 font-bold  bg-purple-500 text-white rounded hover:bg-purple-600 transition-colors duration-300 text-center flex items-center"
-                  style={{ textShadow: "2px 2px 4px rgba(0, 0, 0, 0.4)" }}
+                  className="px-8 py-2 font-bold bg-stone-700 text-stone-100 rounded hover:bg-stone-800 transition-colors duration-300 text-center flex items-center"
                 >
                   Start Reporting
                   <PencilLine className="ml-1 w-5 h-5" />
