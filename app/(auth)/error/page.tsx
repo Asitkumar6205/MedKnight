@@ -3,8 +3,9 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { Suspense } from 'react';
 
-export default function AuthError() {
+function AuthError() {
   const searchParams = useSearchParams();
   const error = searchParams?.get('error');
 
@@ -45,3 +46,15 @@ export default function AuthError() {
     </div>
   );
 }
+
+
+
+function Page() {
+  return (
+    <Suspense fallback={<div className="p-4">Loading report data...</div>}>
+      <AuthError />
+    </Suspense>
+  );
+}
+
+export default Page;
