@@ -40,7 +40,7 @@ function Getintouch(): React.ReactElement {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
-
+  
     try {
       const response = await fetch('/api/send-email', {
         method: 'POST',
@@ -53,7 +53,7 @@ function Getintouch(): React.ReactElement {
           formData
         }),
       });
-
+  
       if (response.ok) {
         setSubmitStatus({ success: true, message: "Your message has been sent successfully!" });
         // Reset form after successful submission
@@ -66,8 +66,19 @@ function Getintouch(): React.ReactElement {
       } else {
         setSubmitStatus({ success: false, message: "Failed to send message. Please try again later." });
       }
+      
+      // Set a timeout to clear the status message after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
+      
     } catch (error) {
       setSubmitStatus({ success: false, message: "An error occurred. Please try again later." });
+      
+      // Also set timeout for error messages
+      setTimeout(() => {
+        setSubmitStatus(null);
+      }, 5000);
     } finally {
       setIsSubmitting(false);
     }
