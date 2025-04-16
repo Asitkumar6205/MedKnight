@@ -14,6 +14,7 @@ export async function middleware(request: NextRequest) {
       "/api/auth", // NextAuth routes
       "/api/verify-email", // Email verification endpoint
       "/api/user", // User registration endpoint
+      "/api/send-email"
     ];
 
     // Check if the route is public

@@ -2,11 +2,77 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import React from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FaPhoneAlt } from "react-icons/fa";
 import { MdOutlineMailOutline } from "react-icons/md";
 
-function Getintouch() {
+interface FormData {
+  fullName: string;
+  email: string;
+  organization: string;
+  message: string;
+}
+
+interface SubmitStatus {
+  success: boolean;
+  message: string;
+}
+
+function Getintouch(): React.ReactElement {
+  const [formData, setFormData] = useState<FormData>({
+    fullName: "",
+    email: "",
+    organization: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus | null>(null);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          to: "contact@medknight.in",
+          subject: "New Contact Form Submission",
+          formData
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus({ success: true, message: "Your message has been sent successfully!" });
+        // Reset form after successful submission
+        setFormData({
+          fullName: "",
+          email: "",
+          organization: "",
+          message: ""
+        });
+      } else {
+        setSubmitStatus({ success: false, message: "Failed to send message. Please try again later." });
+      }
+    } catch (error) {
+      setSubmitStatus({ success: false, message: "An error occurred. Please try again later." });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div
       id="getintouch"
@@ -21,7 +87,7 @@ function Getintouch() {
             </h3>
             <h3 className="py-2 text-stone-700">
               Partner with MedKnight for faster, smarter, and more accurate
-              diagnostics. Let’s discuss how our AI-powered teleradiology
+              diagnostics. Let's discuss how our AI-powered teleradiology
               solutions can transform your patient care.
             </h3>
           </div>
@@ -51,44 +117,69 @@ function Getintouch() {
             </h2>
           </div>
         </div>
-        <div className="flex flex-col bg-stone-100 p-3 gap-4 rounded-lg">
+        <form onSubmit={handleSubmit} className="flex flex-col bg-stone-100 p-3 gap-4 rounded-lg">
+          {submitStatus && (
+            <div className={`p-3 rounded ${submitStatus.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+              {submitStatus.message}
+            </div>
+          )}
           <div>
-            <Label className="text-stone-600 font-bold">Full Name</Label>
+            <Label htmlFor="fullName" className="text-stone-600 font-bold">Full Name</Label>
             <Input
+              id="fullName"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
               placeholder="Enter Your Name"
               className="bg-white"
               required
             />
           </div>
           <div>
-            <Label className="text-stone-600 font-bold">Email</Label>
+            <Label htmlFor="email" className="text-stone-600 font-bold">Email</Label>
             <Input
+              id="email"
+              name="email"
               type="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Enter Your Email"
               className="bg-white"
               required
             />
           </div>
           <div>
-            <Label className="text-stone-600 font-bold">Organization</Label>
+            <Label htmlFor="organization" className="text-stone-600 font-bold">Organization</Label>
             <Input
+              id="organization"
+              name="organization"
+              value={formData.organization}
+              onChange={handleChange}
               placeholder="Enter Your Organization"
               className="bg-white"
               required
             />
           </div>
           <div>
-            <Label className="text-stone-600 font-bold">Message</Label>
+            <Label htmlFor="message" className="text-stone-600 font-bold">Message</Label>
             <Textarea
+              id="message"
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
               placeholder="Type Your Message"
               className="bg-white h-24 resize-none"
               required
             />
           </div>
-          <Button className="bg-purple-400 h-[40px] min-sm:pl-9 min-sm:pr-9 font-bold hover:bg-teal-600">
-            Send Message
+          <Button 
+            type="submit" 
+            disabled={isSubmitting}
+            className="bg-purple-400 h-10 font-bold hover:bg-purple-500 disabled:opacity-50"
+          >
+            {isSubmitting ? "Sending..." : "Send Message"}
           </Button>
-        </div>
+        </form>
       </div>
     </div>
   );
