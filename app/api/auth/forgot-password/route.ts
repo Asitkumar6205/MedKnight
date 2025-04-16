@@ -78,7 +78,7 @@ export async function POST(req: Request) {
     }
 
     // Get base URL for reset link
-    const baseUrl = process.env.NEXTAUTH_URL || "http://localhost:3000";
+    const baseUrl = process.env.NEXTAUTH_URL || "https://medknight.in";
     const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
 
     try {

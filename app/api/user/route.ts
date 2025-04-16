@@ -19,7 +19,7 @@ const signInSchema = z.object({
 });
 
 async function sendVerificationEmail(email: string, token: string, userData: { username: string, password: string }) {
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://medknight.in';
   // Store user data in the token query params (encrypted as JSON)
   const userDataParam = Buffer.from(JSON.stringify(userData)).toString('base64');
   

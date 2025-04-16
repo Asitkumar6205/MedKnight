@@ -7,7 +7,7 @@ import { createTransport } from "nodemailer";
 
 // Helper function to send approval email
 async function sendApprovalEmail(email: string, approved: boolean) {
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const baseUrl = process.env.NEXTAUTH_URL || 'https://medknight.in';
   const emailServer = process.env.EMAIL_SERVER || {
     host: process.env.EMAIL_SERVER_HOST || '',
     port: Number(process.env.EMAIL_SERVER_PORT || 587),

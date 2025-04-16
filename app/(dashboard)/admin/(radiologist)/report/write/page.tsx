@@ -79,7 +79,7 @@ function RadiologyReportPage() {
     studyNames,
   };
 
-  const reportUrl = `http://localhost:3000`;
+  const reportUrl = process.env.NEXTAUTH_URL;
 
   useEffect(() => {
     const updateDateTime = () => {

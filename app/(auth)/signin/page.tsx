@@ -121,7 +121,7 @@ function SignInContent() {
     const callbackUrl = searchParams?.get("callbackUrl");
     
     // Check if the callbackUrl is exactly http://localhost:3000
-    if (callbackUrl === "http://localhost:3000") {
+    if (callbackUrl === process.env.NEXTAUTH_URL) {
       // Remove the callbackUrl parameter by redirecting to /signin without it
       router.replace("/signin");
     }
