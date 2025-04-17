@@ -18,7 +18,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import {
-  Calendar,
   Clock,
   DollarSign,
   Activity,

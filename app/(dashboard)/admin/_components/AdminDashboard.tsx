@@ -85,6 +85,7 @@ export default function AdminDashboard() {
   const handleApproveUser = async (userId: string, role: string) => {
     setIsLoading({ ...isLoading, [userId]: true });
     try {
+      // First, approve the user
       const response = await fetch("/api/admin/users", {
         method: "PATCH",
         headers: {
@@ -96,11 +97,30 @@ export default function AdminDashboard() {
           role,
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to approve user");
       }
-
+  
+      // Then, send approval notification email
+      const emailResponse = await fetch("/api/send-approval-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          userEmail: selectedUser?.email,
+          userName: selectedUser?.name || selectedUser?.username || "User",
+          role,
+        }),
+      });
+  
+      if (!emailResponse.ok) {
+        console.error("Email notification failed to send");
+        // You might want to show a warning that the user was approved but email failed
+      }
+  
       // Refresh the user list
       fetchUsers();
       setShowModal(false);
@@ -112,34 +132,33 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleRejectUser = async (userId: string) => {
-    setIsLoading({ ...isLoading, [userId]: true });
-    try {
-      const response = await fetch("/api/admin/users", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          status: "SUSPENDED",
-        }),
-      });
+const handleRejectUser = async (userId: string) => {
+  setIsLoading({ ...isLoading, [userId]: true });
+  try {
+    const response = await fetch("/api/user", {
+      method: "DELETE", // Changed from PATCH to DELETE
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error("Failed to reject user");
-      }
-
-      // Refresh the user list
-      fetchUsers();
-      setShowModal(false);
-    } catch (err) {
-      setError("Failed to reject user");
-      console.error(err);
-    } finally {
-      setIsLoading({ ...isLoading, [userId]: false });
+    if (!response.ok) {
+      throw new Error("Failed to reject user");
     }
-  };
+
+    // Refresh the user list
+    fetchUsers();
+    setShowModal(false);
+  } catch (err) {
+    setError("Failed to reject user");
+    console.error(err);
+  } finally {
+    setIsLoading({ ...isLoading, [userId]: false });
+  }
+};
 
   const openModal = (user: User, type: "approve" | "reject") => {
     setSelectedUser(user);

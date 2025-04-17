@@ -81,10 +81,10 @@ function SignInContent() {
 
       if (signInData?.error) {
         if (signInData.error.includes("pending_approval")) {
-          router.push("/auth/error?error=pending_approval");
+          router.push("/pending-approval"); // Changed from pending_approval to pending-approval
           return;
         } else if (signInData.error.includes("account_suspended")) {
-          router.push("/auth/error?error=account_suspended");
+          router.push("/account-suspended"); // Changed from account_suspended to account-suspended
           return;
         } else if (signInData.error.includes("CredentialsSignin")) {
           setError("Invalid email or password. Please try again.");
@@ -370,21 +370,4 @@ export default function SignIn() {
 }
 
 
-{
-  /* <button
-  className="w-full flex items-center justify-center gap-2 border py-2 rounded-lg text-stone-700 hover:bg-stone-100"
-  onClick={SignInWithGoogle}
->
-  {googleLoading ? (
-    <Loader2 className="animate-spin text-stone-500" size={24} />
-  ) : (
-    <FcGoogle size={20} />
-  )}
-  Sign In with Google
-</button>
-<div className="flex items-center my-6">
-  <div className="flex-grow h-px bg-stone-300"></div>
-  <span className="px-2 text-stone-500 text-sm">Or</span>
-  <div className="flex-grow h-px bg-stone-300"></div>
-</div> */
-}
+

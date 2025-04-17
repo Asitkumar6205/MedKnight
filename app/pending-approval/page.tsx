@@ -5,7 +5,7 @@ export default function PendingApprovalPage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-slate-100">
       <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <h1 className="mb-6 text-center text-2xl font-bold">Email Verified Successfully</h1>
+        <h1 className="mb-6 text-center text-2xl font-bold">Pending Approval</h1>
         <div className="mb-4 rounded-md bg-blue-50 p-4 text-sm">
           <div className="flex">
             <div className="ml-3">

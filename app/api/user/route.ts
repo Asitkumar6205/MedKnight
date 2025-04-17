@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import bcrypt from "bcryptjs";
 import * as z from "zod";
 import { createTransport } from "nodemailer";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 
 const signInSchema = z.object({
   username: z.string().min(1, "Username is required").max(100),
@@ -150,3 +152,47 @@ export async function POST(req: Request) {
     );
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    // Check if user is authenticated and is an admin
+    const session = await getServerSession(authOptions);
+    
+    if (!session || session.user.role !== "ADMIN") {
+      return NextResponse.json(
+        { message: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
+    const body = await req.json();
+    const { userId } = body;
+
+    if (!userId) {
+      return NextResponse.json(
+        { message: "User ID is required" },
+        { status: 400 }
+      );
+    }
+
+    // Delete the user from the database
+    await db.user.delete({
+      where: {
+        id: userId,
+      },
+    });
+
+    return NextResponse.json(
+      { message: "User rejected and deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error rejecting user:", error);
+    return NextResponse.json(
+      { message: "Something went wrong" },
+      { status: 500 }
+    );
+  }
+}
+
+

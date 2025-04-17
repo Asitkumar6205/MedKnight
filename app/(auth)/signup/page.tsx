@@ -91,16 +91,6 @@ const FormSchema = z
           Sign Up
         </h2>
 
-        <button className="w-full flex items-center justify-center gap-2 border py-2 rounded-lg text-stone-700 hover:bg-stone-100">
-          <FcGoogle size={20} /> Sign Up with Google
-        </button>
-
-        <div className="flex items-center my-6">
-          <div className="flex-grow h-px bg-stone-300"></div>
-          <span className="px-2 text-stone-500 text-sm">Or</span>
-          <div className="flex-grow h-px bg-stone-300"></div>
-        </div>
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-stone-700">Username</label>
