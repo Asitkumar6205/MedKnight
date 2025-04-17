@@ -136,7 +136,7 @@ const handleRejectUser = async (userId: string) => {
   setIsLoading({ ...isLoading, [userId]: true });
   try {
     const response = await fetch("/api/user", {
-      method: "DELETE", // Changed from PATCH to DELETE
+      method: "DELETE", 
       headers: {
         "Content-Type": "application/json",
       },
