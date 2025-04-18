@@ -109,7 +109,7 @@ function Getintouch(): React.ReactElement {
               <h2 className="text-stone-700">Phone Support</h2>
               <h2 className="text-stone-700">24/7 Available</h2>
               <h2 className="text-purple-800">
-                +91 62054-XXXXX, +91 87847-XXXXX
+                +91 6205400732, +91 8789573665
               </h2>
             </div>
           </div>

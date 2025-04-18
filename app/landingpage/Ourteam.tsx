@@ -20,7 +20,7 @@ function Ourteam() {
           <div className="flex flex-col text-center items-center">
             <FaUserDoctor className="p-6 rounded-full h-20 w-20 bg-purple-900 text-purple-400 mb-2 bg-opacity-50" />
             <h2 className="text-stone-100 text-xl font-bold pb-1">
-              Dr. Sarah Mitchell
+              Dr. ..... ........
             </h2>
             <h3 className="text-purple-400 pb-3 text-sm">
               Lead Neuroradiologist | AI-Enabled Neurological Diagnostics
@@ -56,7 +56,7 @@ function Ourteam() {
           <div className="flex flex-col text-center items-center">
             <FaUserDoctor className="p-6 rounded-full h-20 w-20 bg-purple-900 text-purple-400 mb-2 bg-opacity-50" />
             <h2 className="text-stone-100 text-xl font-bold pb-1">
-              Dr. James Wilson
+              Dr. ..... ......
             </h2>
             <h3 className="text-purple-400 pb-3 text-sm">
               Musculoskeletal Imaging Expert | Orthopedic & Sports Injuries
@@ -91,7 +91,7 @@ function Ourteam() {
           <div className="flex flex-col text-center items-center">
             <FaUserDoctor className="p-6 rounded-full h-20 w-20 bg-purple-900 text-purple-400 mb-2 bg-opacity-50" />
             <h2 className="text-stone-100 text-xl font-bold pb-1">
-              Dr. Emily Chen
+              Dr. ..... ....
             </h2>
             <h3 className="text-purple-400 pb-3 text-sm">
               Emergency Radiology Consultant | Rapid-Care Diagnostics
@@ -124,38 +124,46 @@ function Ourteam() {
         </div>
       </div>
       <div className="flex flex-row max-sm:flex-col justify-between rounded-lg gap-4 max-lg:mx-4 mx-14 p-8 bg-stone-800">
-        <div className="bg-none">
-          <h2 className="text-5xl font-bold text-center text-purple-400">50+</h2>
+        {/* <div className="bg-none">
+          <h2 className="text-5xl font-bold text-center text-purple-400">
+            XX+
+          </h2>
           <h3 className="text-lg text-center text-stone-100">
             Expert Radiologists
           </h3>
-        </div>
+        </div> */}
         <div className="bg-none">
-          <h2 className="text-5xl font-bold text-center text-purple-400">24/7</h2>
+          <h2 className="text-5xl font-bold text-center text-purple-400">
+            24/7
+          </h2>
           <h3 className="text-lg text-center text-stone-100">
             Real-Time Reporting
           </h3>
         </div>
         <div className="bg-none">
-          <h2 className="text-5xl font-bold text-center text-purple-400">15+</h2>
+          <h2 className="text-5xl font-bold text-center text-purple-400">
+            15+
+          </h2>
           <h3 className="text-lg text-center text-stone-100">
             Specializations
           </h3>
         </div>
         <div className="bg-none">
-          <h2 className="text-5xl font-bold text-center text-purple-400">99%</h2>
+          <h2 className="text-5xl font-bold text-center text-purple-400">
+            99%
+          </h2>
           <h3 className="text-lg text-center text-stone-100">
-          Diagnostic Accuracy
+            Diagnostic Accuracy
           </h3>
         </div>
       </div>
-      <div className="flex justify-center items-center">
-        <Button className="my-8 bg-purple-400 text-stone-700 text-md h-[52px] lg:px-9 font-bold hover:bg-purple-500">
+      <div className="flex justify-center items-center mt-8">
+        <button className="mb-8 bg-purple-400 rounded flex justify-center items-center gap-2 text-stone-700 text-md h-[52px] px-9 font-bold hover:bg-purple-400">
           Work with Our Experts
           <span>
             <FaArrowRight />
           </span>
-        </Button>
+        </button>
       </div>
     </div>
   );

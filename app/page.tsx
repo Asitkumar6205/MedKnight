@@ -8,7 +8,7 @@ import Services from "./landingpage/Services";
 import Workflow from "./landingpage/Workflow";
 import Technology from "./landingpage/Technology";
 import Ourteam from "./landingpage/Ourteam";
-import Testimonials from "./landingpage/Testimonials";
+// import Testimonials from "./landingpage/Testimonials";
 import Impact from "./landingpage/Impact";
 import Getintouch from "./landingpage/Getintouch";
 import Footer from "./landingpage/Footer";
@@ -85,8 +85,8 @@ export default function Home() {
       <Workflow />
       <Technology />
       <Ourteam />
-      <Testimonials />
-      <Impact />
+      {/* <Testimonials /> */}
+      {/* <Impact /> */}
       <Getintouch />
       <Footer />
     </div>

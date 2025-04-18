@@ -19,7 +19,7 @@ function Footer() {
               </Link>
             </h2>
             <h3 className="text-stone-500 font-medium">
-              Around-the-clock Diagnostics, Anytime, Anywhere.
+              Fast, Accurate, 24/7 Diagnostic Reporting
             </h3>
           </div>
           <ul className="flex gap-2">
@@ -33,7 +33,13 @@ function Footer() {
               <FaXTwitter className="cursor-pointer h-8 w-8 hover:text-purple-500 text-black" />
             </li>
             <li>
-              <FaLinkedin className="cursor-pointer h-8 w-8 hover:text-purple-500 text-cyan-700" />
+              <Link
+                href={"https://www.linkedin.com/company/medknight/about/"}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <FaLinkedin className="cursor-pointer h-8 w-8 hover:text-purple-500 text-cyan-700 re" />
+              </Link>
             </li>
           </ul>
         </div>
@@ -57,20 +63,26 @@ function Footer() {
               </Link>
             </li>
             <li>
-              <Link href={"./"} className="text-stone-500 hover:text-purple-500">
+              <Link
+                href={"/#technology"}
+                className="text-stone-500 hover:text-purple-500"
+              >
                 Technology
               </Link>
             </li>
             <li>
-              <Link href={"./"} className="text-stone-500 hover:text-purple-500">
+              <Link
+                href={"/#ourteam"}
+                className="text-stone-500 hover:text-purple-500"
+              >
                 Our Team
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link href={"./"} className="text-stone-500 hover:text-purple-500">
                 Testimonials
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div className="bg-none p-8 rounded-lg shadow-md">
@@ -79,22 +91,34 @@ function Footer() {
           </h2>
           <ul>
             <li>
-              <Link href={"./"} className="text-stone-500 hover:text-purple-500">
+              <Link
+                href={"/#services"}
+                className="text-stone-500 hover:text-purple-500"
+              >
                 X-Ray Reporting
               </Link>
             </li>
             <li>
-              <Link href={"./"} className="text-stone-500 hover:text-purple-500">
+              <Link
+                href={"/#services"}
+                className="text-stone-500 hover:text-purple-500"
+              >
                 CT Scan Analysis
               </Link>
             </li>
             <li>
-              <Link href={"./"} className="text-stone-500 hover:text-purple-500">
+              <Link
+                href={"/#services"}
+                className="text-stone-500 hover:text-purple-500"
+              >
                 MRI Interpretation
               </Link>
             </li>
             <li>
-              <Link href={"./"} className="text-stone-500 hover:text-purple-500">
+              <Link
+                href={"/#services"}
+                className="text-stone-500 hover:text-purple-500"
+              >
                 Ultrasound Reports
               </Link>
             </li>
@@ -104,15 +128,18 @@ function Footer() {
           <h2 className="text-stone-100 text-lg font-bold mb-2">Contact Us</h2>
           <ul className="flex flex-col gap-2">
             <li>
-              <div className="flex flex-row gap-4 items-end">
+              <div className="flex flex-row gap-4 items-center">
                 <FaPhoneAlt className="h-8 w-8 p-2 flex-none text-stone-100 bg-purple-400 rounded-lg" />
-                <h2 className="text-stone-400 whitespace-nowrap">+91 62054-XXXXX</h2>
+                <h2 className="text-stone-400 text-sm">
+                  <span className="whitespace-nowrap">+91-6205400732</span>,{" "}
+                  <span className="whitespace-nowrap">+91-8789573665</span>
+                </h2>
               </div>
             </li>
             <li>
-              <div className="flex flex-row gap-4 items-end">
+              <div className="flex flex-row gap-4 items-center">
                 <MdOutlineMailOutline className="h-8 w-8 p-1 text-stone-100 bg-purple-400 rounded-lg flex-none" />
-                <h2 className="text-stone-400">contact@medknight.in</h2>
+                <h2 className="text-stone-400 text-sm">contact@medknight.in</h2>
               </div>
             </li>
           </ul>
@@ -126,9 +153,24 @@ function Footer() {
           © 2025 MedKnight Healthcare. All rights reserved.
         </div>
         <div className="flex flex-row gap-4">
-          <Link href={"#"} className="text-stone-500 max-sm:text-xs hover:text-purple-500">Privacy Policy</Link>
-          <Link href={"#"} className="text-stone-500 max-sm:text-xs hover:text-purple-500">Terms of Service</Link>
-          <Link href={"#"} className="text-stone-500 max-sm:text-xs hover:text-purple-500">Cookie Policy</Link>
+          <Link
+            href={"#"}
+            className="text-stone-500 max-sm:text-xs hover:text-purple-500"
+          >
+            Privacy Policy
+          </Link>
+          <Link
+            href={"#"}
+            className="text-stone-500 max-sm:text-xs hover:text-purple-500"
+          >
+            Terms of Service
+          </Link>
+          <Link
+            href={"#"}
+            className="text-stone-500 max-sm:text-xs hover:text-purple-500"
+          >
+            Cookie Policy
+          </Link>
         </div>
       </div>
     </div>

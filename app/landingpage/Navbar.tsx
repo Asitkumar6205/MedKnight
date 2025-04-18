@@ -72,12 +72,19 @@ export default function Navbar() {
                 Our Team
               </Link>
               <Link
+                href={"#"}
+                className="flex w-full items-center py-2 text-lg font-semibold hover:text-purple-400"
+                prefetch={false}
+              >
+                Careers
+              </Link>
+              {/* <Link
                 href={"/#testimonials"}
                 className="flex w-full items-center py-2 text-lg font-semibold hover:text-purple-400"
                 prefetch={false}
               >
                 Testimonials
-              </Link>
+              </Link> */}
             </div>
           </SheetContent>
         </Sheet>
@@ -124,12 +131,19 @@ export default function Navbar() {
           Our Team
         </Link>
         <Link
+          href={"#"}
+          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-none px-4 py-2 text-sm font-extrabold transition-colors text-white hover:text-purple-400 "
+          prefetch={false}
+        >
+          Careers
+        </Link>
+        {/* <Link
           href={"/#testimonials"}
           className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-none px-4 py-2 text-sm font-extrabold transition-colors text-white hover:text-purple-400 "
           prefetch={false}
         >
           Testimonials
-        </Link>
+        </Link> */}
         <Button className="font-bold text-stone-700 bg-purple-400 hover:bg-purple-500 lg:mr-10">
           <Link href={"/#getintouch"} prefetch={false}>
             Contact Us
