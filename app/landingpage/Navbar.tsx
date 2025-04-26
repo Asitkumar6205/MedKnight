@@ -179,7 +179,7 @@ function MountainIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <h2 className="flex items-center ">
       <img src="LOGO-MEDKNIGHT.png" height={60} width={60} alt="logo" />
-      <span className="bg-gradient-to-r from-stone-50 to-stone-400 bg-clip-text text-transparent">Med</span>
+      <span className="bg-gradient-to-r from-stone-200 to-stone-400 bg-clip-text text-transparent">Med</span>
       <span className="bg-gradient-to-r from-purple-500 to-stone-600 bg-clip-text text-transparent">
         Knight
       </span>

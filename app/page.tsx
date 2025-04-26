@@ -36,10 +36,10 @@ export default function Home() {
     <div id="home">
       <Navbar />
       <div className="flex flex-col pt-24 lg:px-16">
-        <h1 className="lg:mx-40 max-md:mx-6 md:mx-6  max-sm:mx-4 max-w-3xl font-extrabold text-4xl md:text-6xl mb-6 bg-gradient-to-r from-purple-400 to-stone-100 bg-clip-text text-transparent">
+        <h1 className="lg:mx-40 max-md:mx-6 md:mx-6  max-sm:mx-4 max-w-3xl font-extrabold text-4xl md:text-6xl mb-6 bg-gradient-to-r from-purple-400 to-stone-200 bg-clip-text text-transparent">
           AI-Powered Radiology, 24/7 - Because Every Second Counts.
         </h1>
-        <h2 className="lg:mx-40 max-sm:mx-4 max-md:mx-6 md:mx-6  max-w-3xl font-extra-bold lg:text-2xl md:text-2xl mb-8 bg-gradient-to-r from-stone-100 to-stone-500 bg-clip-text text-transparent">
+        <h2 className="lg:mx-40 max-sm:mx-4 max-md:mx-6 md:mx-6  max-w-3xl font-extra-bold lg:text-2xl md:text-2xl mb-8 bg-gradient-to-r from-stone-200 to-stone-400 bg-clip-text text-transparent">
           Delivering accurate, emergency-prioritized teleradiology reports with
           the power of AI and expert radiologists - available anytime, anywhere.
         </h2>
@@ -62,21 +62,21 @@ export default function Home() {
         <div className="bg-stone-800 p-8 rounded-lg">
           <PiLightningBold className="h-7 w-7 text-purple-500 mb-2" />
           <h2 className="text-stone-100 text-lg font-bold">Quick Turnaround</h2>
-          <h3 className="bg-gradient-to-r from-stone-400 to-stone-100 bg-clip-text text-transparent">
+          <h3 className="bg-gradient-to-r from-stone-400 to-stone-200 bg-clip-text text-transparent">
           Lightning-fast, AI-assisted reporting for all imaging modalities - optimized for emergency and routine diagnostics.
           </h3>
         </div>
         <div className="bg-stone-800 p-8 rounded-lg">
           <FaRegClock className="h-7 w-7 text-purple-500 mb-2" />
           <h2 className="text-stone-100 text-lg font-bold">24/7 Availability</h2>
-          <h3 className="bg-gradient-to-r from-stone-400 to-stone-100 bg-clip-text text-transparent">
+          <h3 className="bg-gradient-to-r from-stone-400 to-stone-200 bg-clip-text text-transparent">
             Round-the-clock expert radiologist support - ensuring no critical case goes unreported, ever.
           </h3>
         </div>
         <div className="bg-stone-800 p-8 rounded-lg">
         <BrainCircuit className="h-7 w-7 text-purple-500 mb-2" />
           <h2 className="text-stone-100 text-lg font-bold"> Expert + AI Precision</h2>
-          <h3 className="bg-gradient-to-r from-stone-400 to-stone-100 bg-clip-text text-transparent">
+          <h3 className="bg-gradient-to-r from-stone-400 to-stone-200 bg-clip-text text-transparent">
           Dual-layer diagnostics combining expert radiologists and cutting-edge AI for faster, more accurate and reliable reports.
           </h3>
         </div>

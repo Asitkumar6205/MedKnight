@@ -57,10 +57,9 @@ const modalityData = [
 ];
 
 const priorityData = [
+  { name: "Stat", value: 15 },
   { name: "Urgent", value: 15 },
-  { name: "High", value: 25 },
-  { name: "Medium", value: 40 },
-  { name: "Low", value: 20 },
+  { name: "Routine", value: 25 },
 ];
 
 const turnaroundTimeData = [
@@ -350,7 +349,7 @@ export default function UserDashboard() {
             <PieChartIcon size={16} />
           </button>
         </div>
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer width="100%" height={210}>
           <PieChart>
             <Pie
               data={modalityData}

@@ -32,7 +32,7 @@ export default function PaymentsPage() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<string>("");
-  const rowsPerPage = 5;
+  const rowsPerPage = 8;
 
   const fetchStudies = async () => {
     try {
