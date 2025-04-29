@@ -15,6 +15,7 @@ export async function POST(request: NextRequest) {
     const patientId = formData.get("patientId") as string;
     const reportDT = formData.get("reportDT") as string;
 
+    // Validate required fields
     if (!file || !patientId) {
       return NextResponse.json(
         { error: "Missing file or patientId" },
@@ -39,7 +40,8 @@ export async function POST(request: NextRequest) {
     try {
       await mkdir(uploadDir, { recursive: true });
     } catch (err) {
-      console.log("Directory already exists or cannot be created");
+      console.error("Directory error:", err);
+      // Continue execution even if directory exists
     }
 
     // Create a unique filename
@@ -60,49 +62,58 @@ export async function POST(request: NextRequest) {
 
     let report;
     
-    if (existingReport) {
-      // Update existing report
-      report = await prisma.report.update({
-        where: { id: existingReport.id },
+    try {
+      if (existingReport) {
+        // Update existing report
+        report = await prisma.report.update({
+          where: { id: existingReport.id },
+          data: {
+            filename: fileName,
+            path: publicPath,
+            uploadedAt: new Date(),
+          },
+        });
+      } else {
+        // Create new report
+        report = await prisma.report.create({
+          data: {
+            filename: fileName,
+            path: publicPath,
+            caseId: existingCase.id,
+            uploadedAt: new Date(), // Ensure this field is set
+          },
+        });
+      }
+
+      // Update the case to mark it as completed
+      const updatedCase = await prisma.case.update({
+        where: { id: existingCase.id },
         data: {
-          filename: fileName,
-          path: publicPath,
-          uploadedAt: new Date(),
+          completedCase: true,
+          radiologist: radiologistName || null, // Handle empty string
+          reportTime: reportDT || null, // Handle empty string
+          reviewCase: false,
         },
       });
-    } else {
-      // Create new report
-      report = await prisma.report.create({
-        data: {
-          filename: fileName,
-          path: publicPath,
-          caseId: existingCase.id,
-        },
+
+      return NextResponse.json({
+        success: true,
+        message: "Report saved successfully",
+        report,
+        case: updatedCase,
       });
+    } catch (prismaError) {
+      console.error("Prisma error:", prismaError);
+      return NextResponse.json(
+        { error: `Database operation failed: ${prismaError}` },
+        { status: 500 }
+      );
     }
-
-    // Update the case to mark it as completed
-    const updatedCase = await prisma.case.update({
-      where: { id: existingCase.id },
-      data: {
-        completedCase: true,
-        radiologist: radiologistName,
-        reportTime: reportDT,
-        reviewCase: false,
-      },
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: "Report saved successfully",
-      report,
-      case: updatedCase,
-    });
   } catch (error) {
     console.error("Error saving report:", error);
     return NextResponse.json(
-      { error: "Failed to save report" },
-      { status: 500 }
+      { error: `Failed to save report: ${error || 'Unknown error'}` },
+        { status: 500 }
     );
   }
 }

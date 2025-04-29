@@ -205,10 +205,10 @@ function RadiologyReportPage() {
       alert("Please write report before completing the report.");
       return;
     }
-
+  
     if (isSubmitting) return;
     setIsSubmitting(true);
-
+  
     try {
       // 1. Generate the PDF blob
       const pdfBlob = await pdf(
@@ -220,30 +220,35 @@ function RadiologyReportPage() {
           currentDateTime={currentDateTime}
         />
       ).toBlob();
-
+  
       // 2. Create a File object from the blob
       const pdfFile = new File(
         [pdfBlob], 
         `Radiology_Report_${patientId}.pdf`, 
         { type: 'application/pdf' }
       );
-
+  
       // 3. Create a FormData object to send the radiologist, file and case ID
       const formData = new FormData();
-      formData.append('radiologist', preparedRadiologist?.name || "")
+      formData.append('radiologist', preparedRadiologist?.name || "");
       formData.append('file', pdfFile);
       formData.append('patientId', patientId || '');
       formData.append('reportDT', currentDateTime.date + "-" + currentDateTime.time);
-
+  
       // 4. Send the report to the server
       const response = await fetch('/api/saveReport', {
         method: 'POST',
         body: formData,
       });
-
+  
+      // Log the response for debugging
+      console.log("Response status:", response.status);
+      
+      const result = await response.json();
+      console.log("Response data:", result);
+      
       if (response.ok) {
-        const result = await response.json();
-        setCompletedCase(patientId as string, true, true)
+        setCompletedCase(patientId as string, true, true);
         console.log("Report saved successfully:", result);
         // Show success message
         if (toast) {
@@ -254,15 +259,14 @@ function RadiologyReportPage() {
         // Navigate back to case list or dashboard
         router.push('/admin/active-studies');
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to save report');
+        throw new Error(result.error || 'Failed to save report');
       }
     } catch (error) {
       console.error("Error completing report:", error);
       if (toast) {
-        toast.error("Failed to complete report. Please try again.");
+        toast.error(`Failed to complete report: ${error || 'Unknown error'}`);
       } else {
-        alert("Failed to complete report. Please try again.");
+        alert(`Failed to complete report: ${error || 'Unknown error'}`);
       }
     } finally {
       setIsSubmitting(false);
