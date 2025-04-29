@@ -1,11 +1,18 @@
 // app/api/saveReport/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { mkdir } from "fs/promises";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const prisma = new PrismaClient();
+
+// Initialize S3 client
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION || 'ap-south-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+  },
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,7 +22,6 @@ export async function POST(request: NextRequest) {
     const patientId = formData.get("patientId") as string;
     const reportDT = formData.get("reportDT") as string;
 
-    // Validate required fields
     if (!file || !patientId) {
       return NextResponse.json(
         { error: "Missing file or patientId" },
@@ -35,25 +41,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create reports directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), "public", "reports");
-    try {
-      await mkdir(uploadDir, { recursive: true });
-    } catch (err) {
-      console.error("Directory error:", err);
-      // Continue execution even if directory exists
-    }
-
     // Create a unique filename
     const fileName = `report_${patientId}_${Date.now()}.pdf`;
-    const filePath = path.join(uploadDir, fileName);
     
-    // Convert the file to a Buffer and save it
+    // Convert the file to a Buffer
     const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(filePath, buffer);
+    
+    // Upload to S3
+    try {
+      await s3Client.send(new PutObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME || 'your-bucket-name',
+        Key: `reports/${fileName}`,
+        Body: buffer,
+        ContentType: 'application/pdf',
+      }));
+    } catch (s3Error) {
+      console.error("S3 upload error:", s3Error);
+      return NextResponse.json(
+        { error: `Failed to upload file to S3: ${s3Error}` },
+        { status: 500 }
+      );
+    }
 
-    // Create a public path for the file
-    const publicPath = `/reports/${fileName}`;
+    // Generate the public URL for the file
+    const publicPath = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/reports/${fileName}`;
+    // Alternative if using CloudFront or custom domain:
+    // const publicPath = `${process.env.CLOUD_STORAGE_URL}/reports/${fileName}`;
 
     // Check if there's an existing report for this case
     const existingReport = await prisma.report.findFirst({
@@ -80,7 +93,7 @@ export async function POST(request: NextRequest) {
             filename: fileName,
             path: publicPath,
             caseId: existingCase.id,
-            uploadedAt: new Date(), // Ensure this field is set
+            uploadedAt: new Date(),
           },
         });
       }
@@ -90,8 +103,8 @@ export async function POST(request: NextRequest) {
         where: { id: existingCase.id },
         data: {
           completedCase: true,
-          radiologist: radiologistName || null, // Handle empty string
-          reportTime: reportDT || null, // Handle empty string
+          radiologist: radiologistName || null,
+          reportTime: reportDT || null,
           reviewCase: false,
         },
       });
@@ -113,7 +126,7 @@ export async function POST(request: NextRequest) {
     console.error("Error saving report:", error);
     return NextResponse.json(
       { error: `Failed to save report: ${error || 'Unknown error'}` },
-        { status: 500 }
+      { status: 500 }
     );
   }
 }
