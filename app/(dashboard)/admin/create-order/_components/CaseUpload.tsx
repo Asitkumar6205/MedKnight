@@ -43,6 +43,7 @@ const formSchema = z.object({
 type StudyData = {
   [studyName: string]: {
     price?: number;
+    // format?: string;
     [field: string]: string[] | number | undefined;
   };
 };

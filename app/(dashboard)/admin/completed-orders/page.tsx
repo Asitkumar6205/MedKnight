@@ -372,7 +372,7 @@ export default function ActiveCasesPage() {
             className={`p-1 rounded-full ${
               currentPage === 1
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-purple-200 text-purple-800"
+                : "hover:bg-stone-200 text-stone-800"
             }`}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -399,8 +399,8 @@ export default function ActiveCasesPage() {
                 key={page}
                 className={`px-2 py-[2px] rounded-full text-sm ${
                   currentPage === page
-                    ? "bg-purple-500 text-white"
-                    : "bg-purple-100 hover:bg-purple-200"
+                    ? "bg-stone-700 text-white"
+                    : "bg-stone-100 hover:bg-stone-200"
                 }`}
                 onClick={() => setCurrentPage(page)}
               >
@@ -414,7 +414,7 @@ export default function ActiveCasesPage() {
             className={`p-1 rounded-full ${
               currentPage === totalPages
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-purple-200 text-purple-800"
+                : "hover:bg-stone-200 text-stone-800"
             }`}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))

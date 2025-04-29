@@ -10,13 +10,12 @@ import { toast } from "react-hot-toast"; // Add toast for notifications if you h
 
 // Import components
 import PatientHeader from "./_components/PatientHeader";
-import ObservationsEditor from "./_components/ObservationsEditor";
-import ImpressionEditor from "./_components/ImpressionEditor";
 import {
   RadiologyReportPDF,
   prepareRadiologistWithSvg,
 } from "./_components/RadiologyReportPdf";
 import { useCompletedCase } from "@/app/context/CompletedCaseContext";
+import ObservationsEditor from "./_components/ObservationsEditor";
 
 interface PatientData {
   patientName: string | null | undefined;
@@ -204,7 +203,7 @@ function RadiologyReportPage() {
   };
 
   const handleCompleteReport = async () => {
-    if (!observations || !impression) {
+    if (!observations) {
       alert("Please complete both Observations and Impression sections before completing the report.");
       return;
     }
@@ -288,7 +287,6 @@ function RadiologyReportPage() {
             </h2>
           </div>
           <ObservationsEditor setObservations={setObservations} />
-          <ImpressionEditor setImpression={setImpression} />
         </div>
 
         <div className="flex space-x-2 pb-1 pt-2 justify-center items-center">
@@ -320,7 +318,7 @@ function RadiologyReportPage() {
           )}
           <button 
             onClick={handleCompleteReport}
-            disabled={isSubmitting || !observations || !impression}
+            disabled={isSubmitting || !observations}
             className="flex items-center bg-purple-500 px-8 py-2 hover:bg-purple-600 text-md font-bold text-white rounded disabled:bg-purple-300"
           >
             {isSubmitting ? "Saving..." : "Complete Report"}

@@ -1152,63 +1152,96 @@
             "Contrast"
         ]
     },
-    "NM Comparative Study": {},
-    "NM Gamma Camera DMSA Scan": {},
-    "NM Gamma Camera DSMA Scan": {},
-    "NM Gamma Camera Bone Scan": {},
-    "NM Gamma Camera DTPA Scan": {},
-    "NM Gamma Camera HIDA Scan": {},
-    "NM Gamma Camera Lung Perfusion Scan": {},
-    "NM Gamma Camera Lung Ventilation Scan": {},
-    "NM Gamma Camera Myocardial Perfusion Scan": {},
-    "NM Gamma Camera Renal Scan": {},
-    "NM Gamma Camera Thyroid Scan": {},
-    "NM Gamma Camera Ventilation Perfusion Scan": {},
-    "NM Gamma Camera Whole Body Iodine Scan": {},
-    "NM PET CT PSMA": {},
-    "NM PET CT Whole Body": {},
-    "NM PET Whole Body": {},
-    "NM PET CT Brain": {},
-    "NM PET CT Cardiac": {},
-    "USG Abdomen": {},
+    "NM Comparative Study": {
+    },
+    "NM Gamma Camera DMSA Scan": {
+    },
+    "NM Gamma Camera DSMA Scan": {
+    },
+    "NM Gamma Camera Bone Scan": {
+    },
+    "NM Gamma Camera DTPA Scan": {
+    },
+    "NM Gamma Camera HIDA Scan": {
+    },
+    "NM Gamma Camera Lung Perfusion Scan": {
+    },
+    "NM Gamma Camera Lung Ventilation Scan": {
+    },
+    "NM Gamma Camera Myocardial Perfusion Scan": {
+    },
+    "NM Gamma Camera Renal Scan": {
+    },
+    "NM Gamma Camera Thyroid Scan": {
+    },
+    "NM Gamma Camera Ventilation Perfusion Scan": {
+    },
+    "NM Gamma Camera Whole Body Iodine Scan": {
+    },
+    "NM PET CT PSMA": {
+    },
+    "NM PET CT Whole Body": {
+    },
+    "NM PET Whole Body": {
+    },
+    "NM PET CT Brain": {
+    },
+    "NM PET CT Cardiac": {
+    },
+    "USG Abdomen": {
+    },
     "USG Abdomen & Pelvis": {
         "Select Gender": [
             "Male",
             "Female"
         ]
     },
-    "USG Anomaly Twins": {},
-    "USG BPP Doppler Twins": {},
-    "USG Breast": {},
+    "USG Anomaly Twins": {
+    },
+    "USG BPP Doppler Twins": {
+    },
+    "USG Breast": {
+    },
     "USG Artery Doppler": {
         "Select Side": [
             "Left",
             "Right"
         ]
     },
-    "USG Carotid Doppler": {},
-    "USG Fetal Echo": {},
-    "USG Cranuim": {},
-    "USG Early Obstetrics Twins": {},
-    "USG Growth": {},
-    "USG Hemithorax": {},
+    "USG Carotid Doppler": {
+    },
+    "USG Fetal Echo": {
+    },
+    "USG Cranuim": {
+    },
+    "USG Early Obstetrics Twins": {
+    },
+    "USG Growth": {
+    },
+    "USG Hemithorax": {
+    },
     "USG KUB": {
         "Select Gender": [
             "Male",
             "Female"
         ]
     },
-    "USG Obstetrics Twins": {},
-    "USG NT/NB Twins": {},
+    "USG Obstetrics Twins": {
+    },
+    "USG NT/NB Twins": {
+    },
     "USG Pelvis": {
         "Select Gender": [
             "Male",
             "Female"
         ]
     },
-    "USG Renal Doppler": {},
-    "USG Scrotal": {},
-    "USG Term Scan Twins": {},
+    "USG Renal Doppler": {
+    },
+    "USG Scrotal": {
+    },
+    "USG Term Scan Twins": {
+    },
     "USG Venous Doppler": {
         "Select Side": [
             "Left",
@@ -1246,461 +1279,454 @@
         ]
     },
     "XRAY Radiograph Chest": {
-      "price": 50,
-      "Select View": [
-        "PA",
-        "AP",
-        "LAT",
-        "Oblique",
-        "Portable"
-      ]
+        "price": 50,
+        "Select View": [
+            "PA",
+            "AP",
+            "LAT",
+            "Oblique",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Big Toe": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Arm": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Ankle": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Mortis",
-        "Weight Bearing AP",
-        "Weight Bearing LAT",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Mortis",
+            "Weight Bearing AP",
+            "Weight Bearing LAT",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Chest Lifesaver": {
-      "price": 50
+        "price": 50
     },
     "XRAY Radiograph Clavicle": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "PA",
-        "AP",
-        "Chepalic",
-        "Portable",
-        "Zanca"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "PA",
+            "AP",
+            "Chepalic",
+            "Portable",
+            "Zanca"
+        ]
     },
     "XRAY Radiograph Elbow": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Face": {
-      "price": 50,
-      "Select View": [
-        "LAT",
-        "Water's",
-        "Caldwell"
-      ]
+        "price": 50,
+        "Select View": [
+            "LAT",
+            "Water's",
+            "Caldwell"
+        ]
     },
     "XRAY Radiograph Forearm": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Hand": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "PA",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "PA",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Heel": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "Calcaneal",
-        "LAT",
-        "Axial",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "Calcaneal",
+            "LAT",
+            "Axial",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Foot": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Hindfoot",
-        "Portable",
-        "Weight Bearing"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Hindfoot",
+            "Portable",
+            "Weight Bearing"
+        ]
     },
     "XRAY Radiograph Hip": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Frog Leg",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Frog Leg",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Knee": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP Standing",
-        "AP Supine",
-        "LAT",
-        "Axial (Skyline)",
-        "Oblique",
-        "Rosenberg PA",
-        "Trans LAT",
-        "Internal oblique",
-        "External oblique",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP Standing",
+            "AP Supine",
+            "LAT",
+            "Axial (Skyline)",
+            "Oblique",
+            "Rosenberg PA",
+            "Trans LAT",
+            "Internal oblique",
+            "External oblique",
+            "Portable"
+        ]
     },
     "XRAY Radiograph KUB": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "Supine"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "Supine"
+        ]
     },
     "XRAY Radiograph Leg": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Mandible": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "PA",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "PA",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Mastoids": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "LAT",
-        "Oblique",
-        "AP"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "LAT",
+            "Oblique",
+            "AP"
+        ]
     },
     "XRAY Radiograph Nasal Bone": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "LAT",
-        "Water's",
-        "Caldwell"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "LAT",
+            "Water's",
+            "Caldwell"
+        ]
     },
     "XRAY Radiograph Nasopharynx": {
-      "price": 50,
-      "Select View": [
-        "LAT"
-      ]
+        "price": 50,
+        "Select View": [
+            "LAT"
+        ]
     },
     "XRAY Radiograph Neck": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
     },
     "XRAY Radiograph Orbit": {
-      "price": 50,
-      "Select View": [
-        "PA",
-        "LAT"
-      ]
+        "price": 50,
+        "Select View": [
+            "PA",
+            "LAT"
+        ]
     },
     "XRAY Radiograph Pelvis": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "Inlet view",
-        "Outlet view",
-        "Obstrector view"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "Inlet view",
+            "Outlet view",
+            "Obstrector view"
+        ]
     },
     "XRAY Radiograph PNS": {
-      "price": 50,
-      "Select View": [
-        "Water's",
-        "Caldwell"
-      ]
+        "price": 50,
+        "Select View": [
+            "Water's",
+            "Caldwell"
+        ]
     },
     "XRAY Radiograph Scapula": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "Axial",
-        "AP",
-        "Oblique",
-        "Y view"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "Axial",
+            "AP",
+            "Oblique",
+            "Y view"
+        ]
     },
     "XRAY Radiograph Shoulder": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "Axial (Skyline)",
-        "LAT",
-        "Oblique",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "Axial (Skyline)",
+            "LAT",
+            "Oblique",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Sella": {
-      "price": 50,
-      "Select View": [
-        "LAT",
-        "Cone Beam",
-        "Cone Down"
-      ]
+        "price": 50,
+        "Select View": [
+            "LAT",
+            "Cone Beam",
+            "Cone Down"
+        ]
     },
     "XRAY Radiograph Skull": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
     },
     "XRAY Radiograph Spine Cervical": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Flexion",
-        "Extension",
-        "Trans LAT",
-        "Portable"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Flexion",
+            "Extension",
+            "Trans LAT",
+            "Portable"
+        ]
     },
     "XRAY Radiograph Spine Dorsal": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Spine Sacrum": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Sternum": {
-      "price": 50,
-      "Select View": [
-        "PA",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select View": [
+            "PA",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Thigh": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
     },
     "XRAY Radiograph Spine Lumbar": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Flexion",
-        "Extension"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Flexion",
+            "Extension"
+        ]
     },
     "XRAY Radiograph Spine Coccyx": {
-      "price": 50,
-      "Select View": [
-        "AP",
-        "LAT"
-      ]
+        "price": 50,
+        "Select View": [
+            "AP",
+            "LAT"
+        ]
     },
     "XRAY Radiograph Thumb": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "PA",
-        "LAT",
-        "Oblique"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "PA",
+            "LAT",
+            "Oblique"
+        ]
     },
     "XRAY Radiograph Wrist": {
-      "price": 50,
-      "Select Side": [
-        "Left",
-        "Right"
-      ],
-      "Select View": [
-        "AP",
-        "LAT",
-        "Oblique",
-        "Scapoid",
-        "Portable"
-      ]
+        "price": 50,
+        "Select Side": [
+            "Left",
+            "Right"
+        ],
+        "Select View": [
+            "AP",
+            "LAT",
+            "Oblique",
+            "Scapoid",
+            "Portable"
+        ]
     },
     "XRAY Special Case Bone Age": {
-      "price": 250
+        "price": 250
     },
     "XRAY Radiograph TM Joints": {
-      "price": 50
+        "price": 50
     },
     "XRAY Special Case ASU": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Barium": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Ductography": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Fistulogram": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Gastrografin": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case HSG": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case IVP": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case IVU": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case MCU": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case RGU": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Scanogram": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Sialogram": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case T Tube Cholangiogram": {
-      "price": 250
+        "price": 250
     },
     "XRAY Special Case Sinogram": {
-      "price": 250
+        "price": 250
     },
     "XRAY Tuberculosis Screening": {
-      "price": 50
+        "price": 50
     },
     "USG Soft Tissue": {
-      "price": 50
+        "price": 50
     },
     "USG Thyroid": {
-      "price": 50
+        "price": 50
     }
-}    
-
-
-
-
-
-
-
+}
