@@ -128,7 +128,6 @@ model Study {
   studySide String[] @default([]) 
   studyType String[] @default([])
   price     Int? 
-  format    String?
   cases     Case[]  // Many-to-many relationship without fields/references
 }
 
