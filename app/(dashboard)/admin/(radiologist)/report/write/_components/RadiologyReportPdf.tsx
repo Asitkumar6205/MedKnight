@@ -66,7 +66,6 @@ Font.register({
 interface RadiologyReportPDFProps {
   patientData: PatientData;
   observations: string;
-  impression: string;
   qrCode: string | null;
   radiologist: Radiologist | null;
   currentDateTime: DateTime;
@@ -270,7 +269,6 @@ export const prepareRadiologistWithSvg = async (radiologist: Radiologist | null)
 export const RadiologyReportPDF: React.FC<RadiologyReportPDFProps> = ({
   patientData,
   observations,
-  impression,
   qrCode,
   radiologist,
   currentDateTime,
@@ -327,9 +325,6 @@ export const RadiologyReportPDF: React.FC<RadiologyReportPDFProps> = ({
       <Text style={styles.sectionTitle}>Observations</Text>
       <HtmlToPdfComponents htmlContent={observations} />
 
-      {/* Impression Section */}
-      <Text style={styles.sectionTitle}>Impression</Text>
-      <HtmlToPdfComponents htmlContent={impression} />
 
       {/* Radiologist Information Section */}
       <View style={styles.radiologistSection}>

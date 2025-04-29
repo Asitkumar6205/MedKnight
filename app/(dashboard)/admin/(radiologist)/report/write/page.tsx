@@ -58,7 +58,6 @@ function RadiologyReportPage() {
   const [preparedRadiologist, setPreparedRadiologist] =
     useState<Radiologist | null>(null);
   const [observations, setObservations] = useState("");
-  const [impression, setImpression] = useState("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { setCompletedCase } = useCompletedCase();
@@ -179,7 +178,6 @@ function RadiologyReportPage() {
         <RadiologyReportPDF
           patientData={patientData}
           observations={observations}
-          impression={impression}
           qrCode={qrCode}
           radiologist={preparedRadiologist}
           currentDateTime={currentDateTime}
@@ -204,7 +202,7 @@ function RadiologyReportPage() {
 
   const handleCompleteReport = async () => {
     if (!observations) {
-      alert("Please complete both Observations and Impression sections before completing the report.");
+      alert("Please write report before completing the report.");
       return;
     }
 
@@ -217,7 +215,6 @@ function RadiologyReportPage() {
         <RadiologyReportPDF
           patientData={patientData}
           observations={observations}
-          impression={impression}
           qrCode={qrCode}
           radiologist={preparedRadiologist}
           currentDateTime={currentDateTime}
@@ -298,13 +295,12 @@ function RadiologyReportPage() {
             <span>{isGeneratingPDF ? "Generating..." : "View Report"}</span>
             <Save size={20} className="ml-1" />
           </button>
-          {!isGeneratingPDF && observations && impression && (
+          {!isGeneratingPDF && observations && (
             <PDFDownloadLink
               document={
                 <RadiologyReportPDF
                   patientData={patientData}
                   observations={observations}
-                  impression={impression}
                   qrCode={qrCode}
                   radiologist={preparedRadiologist}
                   currentDateTime={currentDateTime}
