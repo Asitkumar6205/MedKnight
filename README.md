@@ -1,36 +1,128 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MedKnight — Teleradiology Reporting SaaS Platform
 
-## Getting Started
+## ⚙️ Setup Instructions
 
-First, run the development server:
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/medknight-in/MedKnight.git
+cd MedKnight  
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Configure Environment
+Create a .env.local file at the root of your project with the following:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Authentication
+NEXTAUTH_URL=http://localhost:3000
+AUTH_SECRET=your-auth-secret
 
-## Learn More
+# Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
 
-To learn more about Next.js, take a look at the following resources:
+# Database
+DATABASE_URL=postgresql://username:password@host:port/database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Server
+NEXT_PORT=3000
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Email Server (for passwordless auth or notifications)
+EMAIL_SERVER_HOST=smtp.yourmail.com
+EMAIL_SERVER_PORT=587
+EMAIL_SERVER_USER=your-email@example.com
+EMAIL_SERVER_PASSWORD=your-email-password
+EMAIL_FROM=your-email@example.com
 
-## Deploy on Vercel
+# AWS S3 (for DICOM storage)
+AWS_REGION=your-aws-region
+AWS_ACCESS_KEY_ID=your-access-key-id
+AWS_SECRET_ACCESS_KEY=your-secret-access-key
+S3_BUCKET_NAME=your-s3-bucket-name
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 4. Run the App
+```bash
+npm run dev
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📁 Project Structure
+
+```bash
+.
+├── app/                # Application routes and pages
+├── components/         # Shared UI components
+├── lib/                # Auth, utilities, API helpers
+├── prisma/             # Prisma schema and DB migrations
+├── public/             # Static assets
+├── types/              # Custom TypeScript types
+.env.local              # Environment variables
+middleware.ts           # NextAuth middleware
+next.config.js          # Next.js configuration
+README.md
+```
+
+---
+
+## 🧪 Testing DICOM Flow
+
+1. Hospital uploads DICOM studies via dashboard.
+
+2. DICOM Server receives and stores images.
+
+2. DICOM Viewer integrated for radiologist image analysis.
+
+3. Radiologist writes findings via rich text report editor.
+
+4. Report is saved in AWS S3 storage.
+
+5. WebSocket/email notifies the hospitals once the report is ready.
+
+---
+
+## 🛡️ Deployment
+
+✅ Frontend hosted on Vercel
+
+✅ Dicom PACS on AWS EC2 (Windows Server)
+
+✅ HTTPS via Nginx Reverse Proxy 
+
+---
+
+## 🚀 Features
+
+### ✅ User Roles & Authentication
+- Role-based access control using `NextAuth.js`
+- Approval Workflow based Authorization  
+- User Roles: **Admin**, **Radiologist**, **Hospital**
+
+### 🖼️ DICOM Upload & PACS Integration
+- DICOM Server integration
+- DICOM file upload by hospitals
+- Secure image storage in **AWS S3**
+- Real-time rendering and analysis via **Weasis** viewer
+
+### 📝 Reporting System
+- Radiologists write structured reports
+- AI-assisted optional pre-analysis
+- Rich-text report editor with templates
+- PDF report export and hospital notifications
+
+### 🔔 Notifications & Real-time Updates
+- WebSocket-based real-time case updates
+- Email & SMS notifications for case status
+
+### 🔐 Security & Compliance
+- End-to-end encryption (TLS) 
+- HIPAA/GDPR-ready architecture(in future)
+- Audit logs and access monitoring
+- Role-based permissions
+
