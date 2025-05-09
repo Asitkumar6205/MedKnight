@@ -1,4 +1,7 @@
-# MedKnight — Teleradiology Reporting SaaS Platform
+<h1>
+  <img src="/public/favicon.ico" alt="MedKnight Logo" width="28" height="30" style="vertical-align: middle; margin-right: 10px;">
+  <strong>MedKnight — Teleradiology Reporting SaaS Platform</strong>
+</h1>
 
 ## ⚙️ Setup Instructions
 
