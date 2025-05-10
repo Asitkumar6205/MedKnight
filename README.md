@@ -92,11 +92,11 @@ README.md
 
 ## 🛡️ Deployment
 
-Frontend hosted on Vercel
+Frontend hosted on `Vercel`
 
-Dicom PACS on AWS EC2 (Windows Server)
+Dicom PACS on `AWS EC2` (Windows Server)
 
-HTTPS via Cloudfare + Nginx Reverse Proxy 
+HTTPS via `Cloudfare` + `Nginx` Reverse Proxy 
 
 ---
 
