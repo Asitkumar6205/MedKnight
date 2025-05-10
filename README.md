@@ -96,7 +96,7 @@ README.md
 
 ✅ Dicom PACS on AWS EC2 (Windows Server)
 
-✅ HTTPS via Nginx Reverse Proxy 
+✅ HTTPS via Cloudfare + Nginx Reverse Proxy 
 
 ---
 
