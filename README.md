@@ -76,50 +76,49 @@ README.md
 
 ## 🧪 Testing DICOM Flow
 
-1. Hospital uploads DICOM studies via dashboard.
+1. Healthcare services uploads cases via dashboard.
 
-2. DICOM Server receives and stores images.
+2. Dicom server receives and stores images.
 
-2. DICOM Viewer integrated for radiologist image analysis.
+2. Dicom viewer integrated for image analysis.
 
-3. Radiologist writes findings via rich text report editor.
+3. Report written by radiologist.
 
-4. Report is saved in AWS S3 storage.
+4. Report is saved in aws s3 storage.
 
-5. WebSocket/email notifies the hospitals once the report is ready.
+5. Platform notifies the hospitals once the report is ready.
 
 ---
 
 ## 🛡️ Deployment
 
-✅ Frontend hosted on Vercel
+Frontend hosted on `Vercel`
 
-✅ Dicom PACS on AWS EC2 (Windows Server)
+Dicom PACS on `AWS EC2` (Windows Server)
 
-✅ HTTPS via Nginx Reverse Proxy 
+HTTPS via `Cloudfare` + `Nginx` Reverse Proxy 
 
 ---
 
 ## 🚀 Features
 
-### ✅ User Roles & Authentication
+### User Roles & Authentication
 - Role-based access control using `NextAuth.js`
 - Approval Workflow based Authorization  
-- User Roles: **Admin**, **Radiologist**, **Hospital**
+- User Roles: `Admin`, `Radiologist`, `Hospital`
 
-### 🖼️ DICOM Upload & PACS Integration
-- DICOM Server integration
-- DICOM file upload by hospitals
-- Secure image storage in **AWS S3**
-- Real-time rendering and analysis via **Weasis** viewer
+### DICOM Upload & PACS Integration
+- Case dicom images upload by healthcare services
+- Secure image storage in `AWS S3`
+- Real-time rendering and analysis via dicom viewer
 
-### 📝 Reporting System
-- Radiologists write structured reports
-- AI-assisted optional pre-analysis
-- Rich-text report editor with templates
+### Reporting System
+- Rich-text report editor 
+- Structured report writing with study templates
 - PDF report export and hospital notifications
+<!-- - AI-assisted pre-analysis -->
 
-### 🔔 Notifications & Real-time Updates
+<!-- ### 🔔 Notifications & Real-time Updates
 - WebSocket-based real-time case updates
 - Email & SMS notifications for case status
 
@@ -127,5 +126,5 @@ README.md
 - End-to-end encryption (TLS) 
 - HIPAA/GDPR-ready architecture(in future)
 - Audit logs and access monitoring
-- Role-based permissions
+- Role-based permissions -->
 

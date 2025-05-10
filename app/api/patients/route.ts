@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const auth = "Basic " + Buffer.from("admin:admin").toString("base64");
+    const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
 
     const response = await fetch("http://archive-x1r8.medknight.in:8042/patients", {
       method: "GET",

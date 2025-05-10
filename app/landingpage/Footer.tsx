@@ -114,14 +114,14 @@ function Footer() {
                 MRI Interpretation
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link
                 href={"/#services"}
                 className="text-stone-500 hover:text-purple-500"
               >
                 Ultrasound Reports
               </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
         <div className="bg-none p-8 rounded-lg shadow-md">
