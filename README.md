@@ -115,8 +115,8 @@ README.md
 ### 📝 Reporting System
 - Rich-text report editor 
 - Structured report writing with study templates
-<!-- - AI-assisted pre-analysis -->
 - PDF report export and hospital notifications
+<!-- - AI-assisted pre-analysis -->
 
 <!-- ### 🔔 Notifications & Real-time Updates
 - WebSocket-based real-time case updates
