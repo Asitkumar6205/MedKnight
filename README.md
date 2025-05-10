@@ -92,27 +92,27 @@ README.md
 
 ## 🛡️ Deployment
 
-✅ Frontend hosted on Vercel
+Frontend hosted on Vercel
 
-✅ Dicom PACS on AWS EC2 (Windows Server)
+Dicom PACS on AWS EC2 (Windows Server)
 
-✅ HTTPS via Cloudfare + Nginx Reverse Proxy 
+HTTPS via Cloudfare + Nginx Reverse Proxy 
 
 ---
 
 ## 🚀 Features
 
-### ✅ User Roles & Authentication
+### User Roles & Authentication
 - Role-based access control using `NextAuth.js`
 - Approval Workflow based Authorization  
 - User Roles: `Admin`, `Radiologist`, `Hospital`
 
-### 🖼️ DICOM Upload & PACS Integration
+### DICOM Upload & PACS Integration
 - Case dicom images upload by healthcare services
 - Secure image storage in `AWS S3`
 - Real-time rendering and analysis via dicom viewer
 
-### 📝 Reporting System
+### Reporting System
 - Rich-text report editor 
 - Structured report writing with study templates
 - PDF report export and hospital notifications
