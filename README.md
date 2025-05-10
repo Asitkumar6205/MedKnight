@@ -86,7 +86,7 @@ README.md
 
 4. Report is saved in AWS S3 storage.
 
-5. WebSocket/email notifies the hospitals once the report is ready.
+5. Platform notifies the hospitals once the report is ready.
 
 ---
 
@@ -111,7 +111,7 @@ README.md
 - DICOM Server integration
 - DICOM file upload by hospitals
 - Secure image storage in **AWS S3**
-- Real-time rendering and analysis via **Weasis** viewer
+- Real-time rendering and analysis via Dicom viewer
 
 ### 📝 Reporting System
 - Radiologists write structured reports
