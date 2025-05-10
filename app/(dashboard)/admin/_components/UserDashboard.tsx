@@ -53,7 +53,7 @@ const modalityData = [
   { name: "MRI", value: 35 },
   { name: "CT", value: 40 },
   { name: "X-Ray", value: 15 },
-  { name: "Ultrasound", value: 10 },
+  // { name: "Ultrasound", value: 10 },
 ];
 
 const priorityData = [
@@ -390,7 +390,7 @@ export default function UserDashboard() {
               <option>MRI</option>
               <option>CT</option>
               <option>X-Ray</option>
-              <option>Ultrasound</option>
+              {/* <option>Ultrasound</option> */}
             </select>
           </div>
         </div>

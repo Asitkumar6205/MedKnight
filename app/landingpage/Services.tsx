@@ -7,7 +7,7 @@ import { TbCube3dSphere, TbReportMedical } from "react-icons/tb";
 
 function Services() {
   return (
-    <div id="services" className="bg-stone-100 lg:px-44 lg:-ml-4">
+    <div id="services" className="bg-stone-100 lg:px-44 lg:-ml-4 ">
       <div className="p-14 flex flex-col justify-center items-center gap-4">
         <h2 className="pt-8 text-4xl font-bold text-stone-800 text-center ">
           Our Comprehensive Services
@@ -18,7 +18,7 @@ function Services() {
           healthcare providers, anytime.
         </h3>
       </div>
-      <div className="max-lg:mx-4 lg:mx-14 mb-14 grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 gap-8 relative">
+      <div className="max-lg:mx-4 lg:mx-14 mb-14 grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-8 relative">
         <div className="bg-stone-100 p-8 rounded-lg shadow-md">
           <HiOutlineChip className="h-14 w-14 text-purple-400 mb-4" />
           <h2 className="text-stone-800 text-lg font-bold mb-2">
@@ -52,7 +52,7 @@ function Services() {
             reporting.
           </h3>
         </div>
-        <div className="bg-stone-100 p-8 rounded-lg shadow-md">
+        {/* <div className="bg-stone-100 p-8 rounded-lg shadow-md">
           <TbReportMedical className="h-14 w-14 text-purple-400 mb-4" />
           <h2 className="text-stone-800 text-lg font-bold mb-2">
             Ultrasound Reports
@@ -62,7 +62,7 @@ function Services() {
             abdominal, obstetric, and specialty sonography, guided by
             radiologist insights and AI validation.
           </h3>
-        </div>
+        </div> */}
       </div>
       <div className="flex justify-center items-center">
         <Button className="mb-14 bg-purple-400 text-md h-[52px] lg:px-9 font-bold hover:bg-purple-400">
