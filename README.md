@@ -76,15 +76,15 @@ README.md
 
 ## 🧪 Testing DICOM Flow
 
-1. Healthcare Services uploads cases via dashboard.
+1. Healthcare services uploads cases via dashboard.
 
-2. DICOM Server receives and stores images.
+2. Dicom server receives and stores images.
 
-2. DICOM Viewer integrated for image analysis.
+2. Dicom viewer integrated for image analysis.
 
 3. Report written by radiologist.
 
-4. Report is saved in AWS S3 storage.
+4. Report is saved in aws s3 storage.
 
 5. Platform notifies the hospitals once the report is ready.
 
