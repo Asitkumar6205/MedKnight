@@ -76,13 +76,13 @@ README.md
 
 ## 🧪 Testing DICOM Flow
 
-1. Hospital uploads DICOM studies via dashboard.
+1. Healthcare Services uploads cases via dashboard.
 
 2. DICOM Server receives and stores images.
 
-2. DICOM Viewer integrated for radiologist image analysis.
+2. DICOM Viewer integrated for image analysis.
 
-3. Radiologist writes findings via rich text report editor.
+3. Report written by radiologist.
 
 4. Report is saved in AWS S3 storage.
 
@@ -105,21 +105,20 @@ README.md
 ### ✅ User Roles & Authentication
 - Role-based access control using `NextAuth.js`
 - Approval Workflow based Authorization  
-- User Roles: **Admin**, **Radiologist**, **Hospital**
+- User Roles: `Admin`, `Radiologist`, `Hospital`
 
 ### 🖼️ DICOM Upload & PACS Integration
-- DICOM Server integration
-- DICOM file upload by hospitals
-- Secure image storage in **AWS S3**
-- Real-time rendering and analysis via Dicom viewer
+- Case dicom images upload by healthcare services
+- Secure image storage in `AWS S3`
+- Real-time rendering and analysis via dicom viewer
 
 ### 📝 Reporting System
-- Radiologists write structured reports
-- AI-assisted optional pre-analysis
-- Rich-text report editor with templates
+- Rich-text report editor 
+- Structured report writing with study templates
+<!-- - AI-assisted pre-analysis -->
 - PDF report export and hospital notifications
 
-### 🔔 Notifications & Real-time Updates
+<!-- ### 🔔 Notifications & Real-time Updates
 - WebSocket-based real-time case updates
 - Email & SMS notifications for case status
 
@@ -127,5 +126,5 @@ README.md
 - End-to-end encryption (TLS) 
 - HIPAA/GDPR-ready architecture(in future)
 - Audit logs and access monitoring
-- Role-based permissions
+- Role-based permissions -->
 
