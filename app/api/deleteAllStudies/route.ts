@@ -5,6 +5,11 @@ export async function DELETE() {
     const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
 
     // Step 1: Fetch all study IDs from Orthanc
+
+
+
+
+    
     const studiesResponse = await fetch("https://archive-x1r8.medknight.in/studies", {
       method: "GET",
       headers: {
