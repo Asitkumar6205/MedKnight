@@ -4,7 +4,7 @@ export async function GET() {
   try {
     const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
 
-    const response = await fetch("https://archive-x1r8.medknight.in/patients", {
+    const response = await fetch("http://localhost:8042/patients", {
       method: "GET",
       headers: {
         "Authorization": auth,

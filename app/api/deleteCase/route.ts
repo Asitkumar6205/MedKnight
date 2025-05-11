@@ -11,7 +11,7 @@ export async function DELETE(req: Request) {
     const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
     console.log(auth)
 
-    const response = await fetch(`https://archive-x1r8.medknight.in/studies/${studyId}`, {
+    const response = await fetch(`http://localhost:8042/studies/${studyId}`, {
       method: "DELETE",
       headers: {
         Authorization: auth,
