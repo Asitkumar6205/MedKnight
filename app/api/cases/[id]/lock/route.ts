@@ -3,13 +3,12 @@ import { db } from '@/lib/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
-// In App Router, route handlers use this type signature:
-// export async function POST(request: NextRequest, context: { params: { id: string } })
+type Params = { id: string };
 
 // POST /api/cases/[id]/lock
 export async function POST(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Params }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,7 +18,7 @@ export async function POST(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const caseId = context.params.id;
+    const caseId = params.id;
     const userId = session.user.id;
 
     // Check if case exists and is not already locked
@@ -88,7 +87,7 @@ export async function POST(
 // DELETE /api/cases/[id]/lock
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  { params }: { params: Params }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -97,7 +96,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const caseId = context.params.id;
+    const caseId = params.id;
     const userId = session.user.id;
 
     // Check if case exists and is locked by the current user
