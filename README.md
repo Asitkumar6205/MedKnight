@@ -25,19 +25,17 @@ Create a .env.local file at the root of your project with the following:
 NEXTAUTH_URL=http://localhost:3000
 AUTH_SECRET=your-auth-secret
 
-# Google OAuth
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
-
 # Database
 DATABASE_URL=postgresql://username:password@host:port/database
+
+BASE_URL=http://localhost:your-port
 
 # Server
 NEXT_PORT=3000
 
 # Server Authentication
-USERNAME=your-server-username
-PASSWORD=your-server-password
+SERVER_USERNAME=your-server-username
+SERVER_PASSWORD=your-server-password
 
 # Email Server (for passwordless auth or notifications)
 EMAIL_SERVER_HOST=smtp.yourmail.com
