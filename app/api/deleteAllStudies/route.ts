@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 
 export async function DELETE() {
   try {
-    const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
+    const auth = "Basic " + Buffer.from(`${process.env.SERVER_USERNAME}:${process.env.SERVER_PASSWORD}`).toString("base64");
 
     // Step 1: Fetch all study IDs from Orthanc
-    const studiesResponse = await fetch("http://archive-x1r8.medknight.in:8042/studies", {
+    const studiesResponse = await fetch(`${process.env.BASE_URL}/studies`, {
       method: "GET",
       headers: {
         Authorization: auth,
@@ -25,7 +25,7 @@ export async function DELETE() {
     }
 
     // Step 2: Bulk delete all studies
-    const deleteResponse = await fetch("http://archive-x1r8.medknight.in:8042/tools/bulk-delete", {
+    const deleteResponse = await fetch(`${process.env.BASE_URL}/tools/bulk-delete`, {
       method: "POST",
       headers: {
         Authorization: auth,

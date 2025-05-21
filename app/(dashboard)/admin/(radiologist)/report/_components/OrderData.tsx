@@ -32,10 +32,12 @@ interface Case {
 
 export default function OrderData({
   patientId,
+  studyUID,
   patientName,
   gender,
 }: {
   patientId: string;
+  studyUID: string;
   patientName: string;
   gender: string;
 }) {
@@ -43,10 +45,14 @@ export default function OrderData({
   const [loading, setLoading] = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
 
-  const dicomPath = `C:/Users/asit_/Downloads/democases/${patientId}`;
-  const weasisUrl = `weasis://${encodeURIComponent(
-    `$dicom:get -l "${dicomPath}"`
-  )}`;
+  // // For Local Use
+  // const dicomPath = `C:/Users/asit_/Downloads/democases/${patientId}`;
+  // const weasisUrl = `weasis://${encodeURIComponent(
+  //   `$dicom:get -l "${dicomPath}"`
+  // )}`;
+
+  // For Production Use
+  const weasisUrl = `weasis://${encodeURIComponent(`$dicom:rs --url "https://archive-x1r8.medknight.in/dicom-web" --header "Authorization: Basic c2VydmVyYWRtaW46TWVkS25pZ2h0YXJjaGl2ZUFJQjAwMw==" -r "patientID=${patientId}"`)}`
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -238,13 +244,22 @@ export default function OrderData({
 
               {/* Start Reporting Link */}
               <div className="flex justify-center items-center gap-2">
-                <Link
+                {/* <Link
+                  href={viewerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-8 py-2 font-medium bg-blue-500 text-stone-100 rounded hover:bg-blue-600 transition-colors duration-300 text-center flex items-center"
+                >
+                  View Study
+                </Link> */}
+                <a
+                  // href={viewerUrl}
                   href={weasisUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-8 py-2 font-bold bg-orange-500 text-stone-100 rounded hover:bg-orange-600 transition-colors duration-300 text-center flex items-center"
                 >
-                  View Study
+                  View Study in  <span className="text-stone-800 ml-1 font-bold"> Weasis </span> 
                   <span className="ml-1">
                     <img
                       src="/Weasis-512.svg.png"
@@ -252,7 +267,7 @@ export default function OrderData({
                       alt="Weasis Logo"
                     />
                   </span>
-                </Link>
+                </a>
                 <Link
                   href={{
                     pathname: "/admin/report/write",

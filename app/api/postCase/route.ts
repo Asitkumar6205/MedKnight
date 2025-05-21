@@ -22,6 +22,7 @@ export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     const patientId = formData.get("patientId")?.toString();
+    const studyUID = formData.get("studyUID")?.toString();
     const patientName = formData.get("patientName")?.toString();
     const studyDescription = formData.get("studyDescription")?.toString();
     const gender = formData.get("gender")?.toString();
@@ -49,7 +50,7 @@ export async function POST(req: Request) {
     const studyPricesString = formData.get("studyPrices");
     const totalAmountString = formData.get("totalAmount");
 
-    if (!patientId || !doctor || !history || !patientName || !studyDescription || !gender || !modality || !studyDate || !studyTime || !series || !structuredStudiesString || !studyPricesString || !totalAmountString) {
+    if (!patientId || !doctor || !history || !patientName || !studyUID || !studyDescription || !gender || !modality || !studyDate || !studyTime || !series || !structuredStudiesString || !studyPricesString || !totalAmountString) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
@@ -176,6 +177,7 @@ export async function POST(req: Request) {
     const newCase = await db.case.create({
       data: {
         patientId: patientId.toString(),
+        studyUID: studyUID,
         doctor: validatedData.doctor,
         priority: validatedData.priority,
         history: validatedData.history,

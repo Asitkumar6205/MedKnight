@@ -81,6 +81,7 @@ export default function PatientUploadForm() {
 
   const searchParams = useSearchParams();
   const patientId = searchParams?.get("patientId");
+  const studyUID = searchParams?.get("studyUID");
   const patientName = searchParams?.get("name");
   const studyDescription = searchParams?.get("description");
   const gender = searchParams?.get("gender");
@@ -340,6 +341,9 @@ export default function PatientUploadForm() {
       if (patientId) {
         formData.append("patientId", patientId);
         setActiveCase(patientId, true, true);
+      }
+      if (studyUID) {
+        formData.append("studyUID", studyUID);
       }
       if (patientName) {
         formData.append("patientName", patientName);

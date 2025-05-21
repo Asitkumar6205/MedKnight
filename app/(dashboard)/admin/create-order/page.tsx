@@ -8,6 +8,7 @@ function CreateOrder() {
 
   const patientId = searchParams?.get("patientId");
   const patientName = searchParams?.get("name");
+  const studyUID = searchParams?.get("studyUID")
   const studyDescription = searchParams?.get("description");
   const gender = searchParams?.get("gender");
   const modality = searchParams?.get("modality");

@@ -60,6 +60,7 @@ model User {
   passwordReset PasswordReset?
   accounts      Account[]
   sessions      Session[]
+  lockedCases   Case[]    // Cases locked by this user
   @@map("users")
 }
 
@@ -143,10 +144,21 @@ model Case {
   activeCase       Boolean    @default(false)
   completedCase    Boolean    @default(false)
   reviewCase       Boolean    @default(false)
+  
+  // New locking fields
+  isLocked         Boolean    @default(false)
+  lockedBy         String?    // User ID who locked the case
+  lockedAt         DateTime?  // When the case was locked
+  lockExpiry       DateTime?  // Optional: when the lock expires
+  
+  // Relations
   files            File[]     
   studies          Study[]    
   report           Report?
+  lockedByUser     User?      @relation(fields: [lockedBy], references: [id])
+  
   patientName      String
+  studyUID         String
   studyDescription String
   gender           String
   modality         String
@@ -155,10 +167,10 @@ model Case {
   studyTime        String
   reportTime       String?
   radiologist      String?
-  priceItems       PriceItem[] // One-to-many relationship
-  totalAmount      Int?        // Add total amount field
+  priceItems       PriceItem[]
+  totalAmount      Int?
   paymentStatus    PaymentStatus @default(PENDING)
-  billingMonth     String?    // Format: "YYYY-MM"
+  billingMonth     String?
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
 }

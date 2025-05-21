@@ -121,6 +121,7 @@ export const authOptions: NextAuthOptions = {
           username: user.username,
           role: user.role,
           status: user.status,
+          id: user.id,
         };
       }
       return token;
@@ -133,6 +134,7 @@ export const authOptions: NextAuthOptions = {
           username: token.username,
           role: token.role,
           status: token.status,
+          id: token.id, // <-- Add this line to pass the ID from token to session
         },
       };
     },

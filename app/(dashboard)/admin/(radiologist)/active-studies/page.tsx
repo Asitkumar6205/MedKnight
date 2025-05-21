@@ -1,15 +1,17 @@
 "use client";
-import { ChevronLeft, ChevronRight, Trash } from "lucide-react";
+import { ChevronLeft, ChevronRight, Lock, Trash, Unlock, User } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
 import DateRangeSelector from "../../_components/DateRangeSelector";
 import { useCompletedCase } from "@/app/context/CompletedCaseContext";
+import { useSession } from "next-auth/react";
 
 interface Case {
   id: string;
   patientName: string;
   patientId: string;
+  studyUID: string;
   doctor: string;
   gender: string;
   studyDescription: string;
@@ -25,6 +27,14 @@ interface Case {
   reportTime: string;
   activeCase: boolean;
   reviewCase: boolean;
+  isLocked: boolean;
+  lockedBy: string;
+  lockedByUser?: {
+    id: string;
+    name: string;
+    username: string;
+  };
+  lockExpiry: string;
 }
 
 interface Study {
@@ -42,13 +52,6 @@ interface Report {
   uploadedAt: string;
 }
 
-interface DateRangeSelectorProps {
-  fromDate: string;
-  setFromDate: (e: { target: { value: string } }) => void;
-  toDate: string;
-  setToDate: (e: { target: { value: string } }) => void;
-}
-
 export default function ActiveCasesPage() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -59,7 +62,10 @@ export default function ActiveCasesPage() {
   const [error, setError] = useState<string>("");
   const rowsPerPage = 6;
   const { isCompletedCase } = useCompletedCase();
-  // Removed the useActiveCase import and usage
+
+  const { data: session } = useSession();
+  console.log
+  const [lockingCases, setLockingCases] = useState<Set<string>>(new Set());
 
   const fetchStudies = async () => {
     try {
@@ -74,6 +80,7 @@ export default function ActiveCasesPage() {
       // Check if we got cases data before setting the state
       if (data.cases && Array.isArray(data.cases)) {
         setStudies(data.cases);
+        setError(""); // Clear any previous errors
       } else {
         console.error("Unexpected data format received:", data);
         setError("Failed to fetch studies: Unexpected data format");
@@ -83,8 +90,6 @@ export default function ActiveCasesPage() {
       setError(
         error instanceof Error ? error.message : "Failed to fetch studies"
       );
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -166,6 +171,112 @@ export default function ActiveCasesPage() {
     }
   }, [displayedOrders, filteredStudies]);
 
+  const handlePickCase = async (caseId: string) => {
+    if (lockingCases.has(caseId)) return; // Prevent multiple clicks
+
+    setLockingCases(prev => new Set(prev).add(caseId));
+
+    try {
+      const response = await fetch(`/api/cases/${caseId}/lock`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update the specific case in state immediately
+        setStudies(prevStudies => 
+          prevStudies.map(study => 
+            study.id === caseId 
+              ? { 
+                  ...study, 
+                  isLocked: true, 
+                  lockedBy: session?.user?.id || '',
+                  lockedByUser: {
+                    id: session?.user?.id || '',
+                    name: session?.user?.name || '',
+                    username: session?.user?.username || ''
+                  }
+                }
+              : study
+          )
+        );
+        
+        // Show success message
+        alert('Case picked successfully!');
+      } else {
+        // Error - show error message
+        alert(data.error || 'Failed to pick case');
+      }
+    } catch (error) {
+      console.error('Error picking case:', error);
+      alert('Failed to pick case. Please try again.');
+    } finally {
+      setLockingCases(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(caseId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleUnlockCase = async (caseId: string) => {
+    if (lockingCases.has(caseId)) return;
+
+    setLockingCases(prev => new Set(prev).add(caseId));
+
+    try {
+      const response = await fetch(`/api/cases/${caseId}/lock`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Update the specific case in state immediately
+        setStudies(prevStudies => 
+          prevStudies.map(study => 
+            study.id === caseId 
+              ? { 
+                  ...study, 
+                  isLocked: false, 
+                  lockedBy: '',
+                  lockedByUser: undefined
+                }
+              : study
+          )
+        );
+        
+        alert('Case released successfully!');
+      } else {
+        alert(data.error || 'Failed to release case');
+      }
+    } catch (error) {
+      console.error('Error releasing case:', error);
+      alert('Failed to release case. Please try again.');
+    } finally {
+      setLockingCases(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(caseId);
+        return newSet;
+      });
+    }
+  };
+
+  const isUserCase = (study: Case) => {
+    return study.lockedBy === session?.user?.id;
+  };
+
+  const canPickCase = (study: Case) => {
+    return !study.isLocked || (study.lockExpiry && new Date() > new Date(study.lockExpiry));
+  };
+
   return (
     <div className="p-4 relative h-auto min-h-screen">
       {loading && (
@@ -219,204 +330,281 @@ export default function ActiveCasesPage() {
       </div>
 
       {/* Main Content */}
-      <table className="w-full mt-2">
-        <thead>
-          <tr>
-            {[
-              "Study Id",
-              "Patient Name",
-              "Study",
-              "Gender",
-              "Modality",
-              "Study Date",
-              "Priority",
-              "Series",
-              "Action",
-            ].map((col, index, arr) => (
-              <th
-                key={col}
-                className={`
-            bg-stone-800 text-stone-200 text-xs px-4 py-3 text-center 
-            whitespace-nowrap uppercase tracking-wider font-medium
-            ${index === 0 ? "rounded-tl-md" : ""} 
-            ${index === arr.length - 1 ? "rounded-tr-md" : ""}
-          `}
-              >
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {displayedOrders.length > 0
-            ? displayedOrders.map((study) => {
-                // Standardize row class regardless of priority
-                const rowClassName =
-                  "hover:bg-stone-50 bg-white shadow-xs text-stone-700 text-sm";
+      <table className="w-full">
+          <thead>
+            <tr>
+              {[
+                "Study Id",
+                "Patient Name",
+                "Study",
+                "Gender",
+                "Modality",
+                "Study Date",
+                "Priority",
+                "Series",
+                "Status",
+                "Action",
+              ].map((col, index, arr) => (
+                <th
+                  key={col}
+                  className={`
+                    bg-stone-800 text-stone-200 text-xs px-4 py-3 text-center 
+                    whitespace-nowrap uppercase tracking-wider font-medium
+                    ${index === 0 ? "rounded-tl-md" : ""} 
+                    ${index === arr.length - 1 ? "rounded-tr-md" : ""}
+                  `}
+                >
+                  {col}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {displayedOrders.length > 0
+              ? displayedOrders.map((study) => {
+                  const rowClassName = `hover:bg-stone-50 bg-white shadow-xs text-stone-700 text-sm ${
+                    study.isLocked && !isUserCase(study) ? 'opacity-60' : ''
+                  }`;
 
-                return study.reviewCase ? (
-                  <tr key={study.id} className={rowClassName}>
-                    <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
-                      {study.patientId}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.patientName}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.studies.length > 0 && (
-                        <div>
-                          {study.studies.map((studyItem, index) => (
-                            <span key={studyItem.id || index}>
-                              {studyItem.name}
-                              {(studyItem.studySide.length > 0 ||
-                                studyItem.studyView.length > 0 ||
-                                studyItem.studyType.length > 0) &&
-                                " - "}
-                              {studyItem.studySide.length > 0
-                                ? studyItem.studySide.join(", ")
-                                : studyItem.studyView.length > 0
-                                ? studyItem.studyView.join(", ")
-                                : studyItem.studyType.length > 0
-                                ? studyItem.studyType.join(", ")
-                                : ""}
-                              {index < study.studies.length - 1 && ", "}
+                  return study.reviewCase ? (
+                    <tr key={study.id} className={rowClassName}>
+                      <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
+                        {study.patientId}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.patientName}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.studies.length > 0 && (
+                          <div>
+                            {study.studies.map((studyItem, index) => (
+                              <span key={studyItem.id || index}>
+                                {studyItem.name}
+                                {(studyItem.studySide.length > 0 ||
+                                  studyItem.studyView.length > 0 ||
+                                  studyItem.studyType.length > 0) &&
+                                  " - "}
+                                {studyItem.studySide.length > 0
+                                  ? studyItem.studySide.join(", ")
+                                  : studyItem.studyView.length > 0
+                                  ? studyItem.studyView.join(", ")
+                                  : studyItem.studyType.length > 0
+                                  ? studyItem.studyType.join(", ")
+                                  : ""}
+                                {index < study.studies.length - 1 && ", "}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.gender}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.modality}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.studyDate} {study.studyTime}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        <span
+                          className={`px-3 py-1 rounded text-xs font-bold
+                            ${
+                              study.priority?.toLowerCase() === "urgent"
+                                ? "bg-yellow-100 text-yellow-500"
+                                : study.priority?.toLowerCase() === "stat"
+                                ? "bg-red-100 text-red-500"
+                                : "bg-green-100 text-green-500"
+                            }`}
+                        >
+                          {study.priority} Priority
+                        </span>
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.radiologist}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.isLocked ? (
+                          <div className="flex items-center justify-center gap-1">
+                            <Lock size={16} className="text-red-500" />
+                            <span className="text-xs text-red-600">
+                              {isUserCase(study) ? 'You' : study.lockedByUser?.username || 'Other user'}
                             </span>
-                          ))}
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-1">
+                            <Unlock size={16} className="text-green-500" />
+                            <span className="text-xs text-green-600">Available</span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          {canPickCase(study) && !isUserCase(study) && (
+                            <button
+                              onClick={() => handlePickCase(study.id)}
+                              disabled={lockingCases.has(study.id)}
+                              className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 disabled:opacity-50"
+                            >
+                              {lockingCases.has(study.id) ? 'Picking...' : 'Pick Case'}
+                            </button>
+                          )}
+                          
+                             
+                          {isUserCase(study) && (
+                            <>
+                              <button
+                                onClick={() => handleUnlockCase(study.id)}
+                                disabled={lockingCases.has(study.id)}
+                                className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 disabled:opacity-50"
+                              >
+                                {lockingCases.has(study.id) ? 'Releasing...' : 'Release'}
+                              </button>
+                              <Link
+                                href={{
+                                  pathname: "/admin/report",
+                                  query: {
+                                    id: study.id,
+                                    patientId: study.patientId,
+                                    studyUID: study.studyUID,
+                                    name: study.patientName,
+                                    description: study.studyDescription,
+                                    gender: study.gender,
+                                    modality: study.modality,
+                                    studyDate: study.studyDate,
+                                    time: study.studyTime,
+                                    series: study.series,
+                                  },
+                                }}
+                              >
+                                <ChevronRight
+                                  size={24}
+                                  className="text-stone-600 hover:text-stone-800"
+                                  onClick={() => {
+                                    setLoading(true);
+                                  }}
+                                />
+                              </Link>
+                            </>
+                          )}
                         </div>
-                      )}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.gender}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.modality}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.studyDate} {study.studyTime}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      <span
-                        className={`px-3 py-1 rounded text-xs font-bold
-              ${
-                study.priority?.toLowerCase() === "urgent"
-                  ? "bg-yellow-100 text-yellow-500"
-                  : study.priority?.toLowerCase() === "stat"
-                  ? "bg-red-100 text-red-500"
-                  : "bg-green-100 text-green-500"
-              }`}
-                      >
-                        {study.priority} Priority
-                      </span>
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.radiologist}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      <div className="flex items-center justify-center">
-                        <Link
-                          href={{
-                            pathname: "/admin/report",
-                            query: {
-                              id: study.id,
-                              patientId: study.patientId,
-                              name: study.patientName,
-                              description: study.studyDescription,
-                              gender: study.gender,
-                              modality: study.modality,
-                              studyDate: study.studyDate,
-                              time: study.studyTime,
-                              series: study.series,
-                            },
-                          }}
+                      </td>
+                    </tr>
+                  ) : (
+                    <tr key={study.id} className={rowClassName}>
+                      <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
+                        {study.patientId}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.patientName}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.studyDescription}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.gender}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.modality}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.studyDate} {study.studyTime}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        <span
+                          className={`px-3 py-1 rounded text-xs font-bold
+                            ${
+                              study.priority?.toLowerCase() === "urgent"
+                                ? "bg-yellow-100 text-yellow-500"
+                                : study.priority?.toLowerCase() === "stat"
+                                ? "bg-red-100 text-red-500"
+                                : "bg-green-100 text-green-500"
+                            }`}
                         >
-                          <ChevronRight
-                            size={24}
-                            className="text-stone-600 hover:text-stone-800"
-                            onClick={() => {
-                              setLoading(true);
-                            }}
-                          />
-                        </Link>
-                      </div>
+                          {study.priority}
+                        </span>
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.series}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        {study.isLocked ? (
+                          <div className="flex items-center justify-center gap-1">
+                            <Lock size={16} className="text-red-500" />
+                            <span className="text-xs text-red-600">
+                              {isUserCase(study) ? 'You' : study.lockedByUser?.username || 'Other user'}
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center gap-1">
+                            <Unlock size={16} className="text-green-500" />
+                            <span className="text-xs text-green-600">Available</span>
+                          </div>
+                        )}
+                      </td>
+                      <td className="border-b border-stone-300 px-2 py-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          {canPickCase(study) && !isUserCase(study) && (
+                            <button
+                              onClick={() => handlePickCase(study.id)}
+                              disabled={lockingCases.has(study.id)}
+                              className="px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600 disabled:opacity-50"
+                            >
+                              {lockingCases.has(study.id) ? 'Picking...' : 'Pick Case'}
+                            </button>
+                          )}
+                          
+                          {isUserCase(study) && (
+                            <>
+                              <button
+                                onClick={() => handleUnlockCase(study.id)}
+                                disabled={lockingCases.has(study.id)}
+                                className="px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 disabled:opacity-50"
+                              >
+                                {lockingCases.has(study.id) ? 'Releasing...' : 'Release'}
+                              </button>
+                              <Link
+                                href={{
+                                  pathname: "/admin/report",
+                                  query: {
+                                    id: study.id,
+                                    patientId: study.patientId,
+                                    studyUID: study.studyUID,
+                                    name: study.patientName,
+                                    description: study.studyDescription,
+                                    gender: study.gender,
+                                    modality: study.modality,
+                                    studyDate: study.studyDate,
+                                    time: study.studyTime,
+                                    series: study.series,
+                                  },
+                                }}
+                              >
+                                <ChevronRight
+                                  size={24}
+                                  className="text-stone-600 hover:text-stone-800"
+                                  onClick={() => {
+                                    setLoading(true);
+                                  }}
+                                />  
+                              </Link>  
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              : !loading && (
+                  <tr>
+                    <td colSpan={10} className="text-center py-8 text-gray-500">
+                      {error ? "Error loading studies" : "No active studies found"}
                     </td>
                   </tr>
-                ) : (
-                  <tr key={study.id} className={rowClassName}>
-                    <td className="border-b border-stone-300 px-4 py-4 text-center whitespace-nowrap">
-                      {study.patientId}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.patientName}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.studyDescription}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.gender}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.modality}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.studyDate} {study.studyTime}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      <span
-                        className={`px-3 py-1 rounded text-xs font-bold
-              ${
-                study.priority?.toLowerCase() === "urgent"
-                  ? "bg-yellow-100 text-yellow-500"
-                  : study.priority?.toLowerCase() === "stat"
-                  ? "bg-red-100 text-red-500"
-                  : "bg-green-100 text-green-500"
-              }`}
-                      >
-                        {study.priority}
-                      </span>
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      {study.series}
-                    </td>
-                    <td className="border-b border-stone-300 px-2 py-4 text-center">
-                      <div className="flex items-center justify-center">
-                        <Link
-                          href={{
-                            pathname: "/admin/report",
-                            query: {
-                              id: study.id,
-                              patientId: study.patientId,
-                              name: study.patientName,
-                              description: study.studyDescription,
-                              gender: study.gender,
-                              modality: study.modality,
-                              studyDate: study.studyDate,
-                              time: study.studyTime,
-                              series: study.series,
-                            },
-                          }}
-                        >
-                          <ChevronRight
-                            size={24}
-                            className="text-stone-600 hover:text-stone-800"
-                            onClick={() => {
-                              setLoading(true);
-                            }}
-                          />
-                        </Link>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            : !loading && (
-                <tr>
-                  <td colSpan={9} className="text-center py-4 text-gray-500">
-                    No active studies found
-                  </td>
-                </tr>
-              )}
-        </tbody>
-      </table>
+                )}
+          </tbody>
+        </table>
+
 
       {/* Pagination Controls */}
       {totalPages > 1 && ( // Hide pagination if there's only 1 page

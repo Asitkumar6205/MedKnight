@@ -1,10 +1,10 @@
-import { Button } from "@mui/material";
+import Link from "next/link";
 import React from "react";
 import { FaArrowRight, FaCheck, FaUserDoctor } from "react-icons/fa6";
 
 function Ourteam() {
   return (
-    <div id="ourteam" className="bg-stone-900 lg:mx-40 lg:pr-4">
+    <div id="ourteam" className="lg:mx-40 lg:pr-4">
       <div className="p-14 flex flex-col justify-center items-center gap-4">
         <h2 className="pt-8 text-4xl font-bold text-center text-stone-100">
           Expert Radiologists Team
@@ -158,12 +158,12 @@ function Ourteam() {
         </div>
       </div>
       <div className="flex justify-center items-center mt-8">
-        <button className="mb-8 bg-purple-400 rounded flex justify-center items-center gap-2 text-stone-700 text-md h-[52px] px-9 font-bold hover:bg-purple-400">
+        <Link href={"/signin"} className="mt-6 flex justify-center items-center gap-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-lg h-[50px] text-white font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-10 rounded-full transition-all duration-300 transform hover:scale-105">
           Work with Our Experts
           <span>
             <FaArrowRight />
           </span>
-        </button>
+        </Link>
       </div>
     </div>
   );

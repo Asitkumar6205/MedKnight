@@ -49,6 +49,7 @@ export async function middleware(request: NextRequest) {
         "/api/me",
         "/api/user",
         "/api/getCases",
+        "/api/cases", // Added: This allows access to /api/cases/[id]/lock
         "/api/saveReport",
         "/api/admin/users",
         "/api/studies",
@@ -70,6 +71,7 @@ export async function middleware(request: NextRequest) {
         "/api/me",
         "/api/user",
         "/api/getCases",
+        "/api/cases", // Added: This allows access to /api/cases/[id]/lock
         "/api/radiologist/getuser",
         "/api/saveReport",
         "/api/getCompletedCases",
@@ -218,4 +220,4 @@ export const config = {
     // All API routes
     '/api/:path*'
   ],
-};
+};  
