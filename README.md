@@ -35,6 +35,10 @@ DATABASE_URL=postgresql://username:password@host:port/database
 # Server
 NEXT_PORT=3000
 
+# Server Authentication
+USERNAME=your-server-username
+PASSWORD=your-server-password
+
 # Email Server (for passwordless auth or notifications)
 EMAIL_SERVER_HOST=smtp.yourmail.com
 EMAIL_SERVER_PORT=587
