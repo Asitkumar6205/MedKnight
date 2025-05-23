@@ -8,6 +8,7 @@ function ReportContent() {
   const searchParams = useSearchParams();
 
   const patientId = searchParams?.get("patientId");
+  const studyUID = searchParams?.get("studyUID");
   const patientName = searchParams?.get("name");
   const studyDescription = searchParams?.get("description");
   const gender = searchParams?.get("gender");
@@ -75,6 +76,7 @@ function ReportContent() {
       </table>
       <OrderData
         patientId={patientId as string}
+        studyUID={studyUID as string}
         patientName={patientName as string}
         gender={gender as string}
       />

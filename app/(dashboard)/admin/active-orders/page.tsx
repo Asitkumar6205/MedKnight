@@ -10,6 +10,7 @@ import { useCompletedCase } from "@/app/context/CompletedCaseContext";
 interface Study {
   ID: string;
   PatientName: string;
+  StudyInstanceUID: string;
   PatientID: string;
   PatientSex: string;
   StudyDescription: string;
@@ -439,6 +440,7 @@ export default function ActiveCasesPage() {
                                 id: study.ID,
                                 patientId: study.PatientID,
                                 name: study.PatientName,
+                                studyUID: study.StudyInstanceUID,
                                 description: study.StudyDescription,
                                 gender: study.PatientSex,
                                 modality: study.Modality,

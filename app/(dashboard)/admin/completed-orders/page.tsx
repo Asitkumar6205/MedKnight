@@ -240,6 +240,7 @@ export default function ActiveCasesPage() {
                 const weasisUrl = `weasis://${encodeURIComponent(
                   `$dicom:get -l "${dicomPath}"`
                 )}`;
+                console.log(weasisUrl)
                 return (
                   <tr
                     key={study.id}

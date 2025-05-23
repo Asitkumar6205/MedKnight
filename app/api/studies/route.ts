@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
+    const auth = "Basic " + Buffer.from(`${process.env.SERVER_USERNAME}:${process.env.SERVER_PASSWORD}`).toString("base64");
 
-    const response = await fetch("https://archive-x1r8.medknight.in/tools/find", {
+    const response = await fetch(`${process.env.BASE_URL}/tools/find`, {
       method: "POST",
       headers: {
         Authorization: auth,
@@ -39,6 +39,7 @@ export async function GET() {
     const formattedStudies = studies.map((study) => ({
       PatientName: study.PatientMainDicomTags?.PatientName || "N/A",
       PatientID: study.PatientMainDicomTags?.PatientID || "N/A",
+      StudyInstanceUID: study.MainDicomTags?.StudyInstanceUID || "N/A",
       StudyDescription: study.MainDicomTags?.StudyDescription || "N/A",
       PatientSex: study.PatientMainDicomTags?.PatientSex || "N/A",
       StudyDate: study.MainDicomTags?.StudyDate || "N/A",

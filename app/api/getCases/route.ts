@@ -1,9 +1,13 @@
 // app/api/getCases/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { cleanExpiredLocks } from "@/lib/lockUtils";
 
 export async function GET() {
   try {
+    // Clean expired locks before fetching cases (optional)
+    await cleanExpiredLocks();
+    
     // Updated query to only fetch cases where activeCase is true
     const cases = await db.case.findMany({
       where: {
@@ -12,6 +16,16 @@ export async function GET() {
       include: {
         studies: true,
         files: true,
+        lockedByUser: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
 

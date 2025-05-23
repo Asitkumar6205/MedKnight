@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 interface Study {
   ID: string;
   PatientName: string;
+  StudyInstanceUID: string;
   PatientID: string;
   PatientSex: string;
   StudyDescription: string;
@@ -59,6 +60,7 @@ export default function StudiesList() {
           {studies.map((study) => (
             <li key={study.ID} className="p-4 border rounded-lg shadow-md">
               <p><strong>Patient Name:</strong> {study.PatientName}</p>
+              <p><strong>Patient Name:</strong> {study.StudyInstanceUID}</p>
               <p><strong>Patient ID:</strong> {study.PatientID}</p>
               <p><strong>Description:</strong> {study.StudyDescription}</p>
               <p><strong>Date:</strong> {study.StudyDate}</p>

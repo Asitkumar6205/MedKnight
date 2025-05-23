@@ -23,16 +23,18 @@ function Getintouch(): React.ReactElement {
     fullName: "",
     email: "",
     organization: "",
-    message: ""
+    message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus | null>(null);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void => {
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
     const { name, value } = e.target;
-    setFormData(prevData => ({
+    setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -40,41 +42,49 @@ function Getintouch(): React.ReactElement {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
-  
+
     try {
-      const response = await fetch('/api/send-email', {
-        method: 'POST',
+      const response = await fetch("/api/send-email", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           to: "contact@medknight.in",
           subject: "New Contact Form Submission",
-          formData
+          formData,
         }),
       });
-  
+
       if (response.ok) {
-        setSubmitStatus({ success: true, message: "Your message has been sent successfully!" });
+        setSubmitStatus({
+          success: true,
+          message: "Your message has been sent successfully!",
+        });
         // Reset form after successful submission
         setFormData({
           fullName: "",
           email: "",
           organization: "",
-          message: ""
+          message: "",
         });
       } else {
-        setSubmitStatus({ success: false, message: "Failed to send message. Please try again later." });
+        setSubmitStatus({
+          success: false,
+          message: "Failed to send message. Please try again later.",
+        });
       }
-      
+
       // Set a timeout to clear the status message after 5 seconds
       setTimeout(() => {
         setSubmitStatus(null);
       }, 5000);
-      
     } catch (error) {
-      setSubmitStatus({ success: false, message: "An error occurred. Please try again later." });
-      
+      setSubmitStatus({
+        success: false,
+        message: "An error occurred. Please try again later.",
+      });
+
       // Also set timeout for error messages
       setTimeout(() => {
         setSubmitStatus(null);
@@ -87,67 +97,84 @@ function Getintouch(): React.ReactElement {
   return (
     <div
       id="getintouch"
-      className="bg-stone-100 max-sm:p-4 max-md:p-7 md:p-7 lg:p-14"
+      className="max-sm:p-4 max-md:p-7 md:p-7 lg:p-14 lg:my-20 max-lg:my-14 max-sm:my-4 sm:my-6"
     >
       <div className="grid lg:grid-cols-2 md:grid-cols-2 lg:mx-40">
         <div className="flex flex-col pl-0 pb-4 pt-4 pr-4 gap-4">
-          <h2 className="text-4xl font-bold text-stone-800">Get in Touch</h2>
+          <h2 className="text-4xl font-bold text-stone-100">Get in Touch</h2>
           <div>
-            <h3 className="py-2 text-stone-700">
+            <h3 className="py-2 text-stone-100">
               Ready to Revolutionize Your Radiology Workflow?
             </h3>
-            <h3 className="py-2 text-stone-700">
+            <h3 className="py-2 text-stone-100">
               Partner with MedKnight for faster, smarter, and more accurate
               diagnostics. Let's discuss how our AI-powered teleradiology
               solutions can transform your patient care.
             </h3>
           </div>
 
-          <div className="flex flex-row gap-4 items-center">
-            <FaPhoneAlt className="h-16 w-16 p-5 text-stone-100 bg-purple-400 rounded-lg" />
+          <div className="flex flex-row gap-4 items-center ">
+            <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105">
+              <FaPhoneAlt className="h-6 w-6 text-stone-100" />
+            </div>
             <div>
-              <h2 className="text-stone-700">Phone Support</h2>
-              <h2 className="text-stone-700">24/7 Available</h2>
-              <h2 className="text-purple-800">
+              <h2 className="text-stone-400">Phone Support</h2>
+              <h2 className="text-stone-400">24/7 Available</h2>
+              <h2 className="text-purple-100">
                 +91 6205400732, +91 8789573665
               </h2>
             </div>
           </div>
           <div className="flex flex-row gap-4 items-center">
-            <MdOutlineMailOutline className="h-16 w-16 p-4 text-stone-100 bg-purple-400 rounded-lg" />
+            <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105">
+              <MdOutlineMailOutline className="h-8 w-8 text-stone-100" />
+            </div>
             <div>
-              <h2 className="text-stone-700">Email</h2>
-              <h2 className="text-stone-700">Get in Touch</h2>
-              <h2 className="text-purple-800">contact@medknight.in</h2>
+              <h2 className="text-stone-400">Email</h2>
+              <h2 className="text-stone-400">Get in Touch</h2>
+              <h2 className="text-purple-400">contact@medknight.in</h2>
             </div>
           </div>
           <div>
-            <h2 className="text-stone-700">
+            <h2 className="text-stone-100">
               Contact us today for a free pilot consultation tailored to your
               needs.
             </h2>
           </div>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col bg-stone-100 p-3 gap-4 rounded-lg">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col bg-stone-100 py-4 px-6 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl"
+        >
           {submitStatus && (
-            <div className={`p-3 rounded ${submitStatus.success ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+            <div
+              className={`p-3 rounded ${
+                submitStatus.success
+                  ? "bg-green-100 text-green-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
               {submitStatus.message}
             </div>
           )}
           <div>
-            <Label htmlFor="fullName" className="text-stone-600 font-bold">Full Name</Label>
+            <Label htmlFor="fullName" className="text-stone-100 font-bold">
+              Full Name
+            </Label>
             <Input
               id="fullName"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Enter Your Name"
-              className="bg-white"
+              className="text-stone-800 bg-slate-100"
               required
             />
           </div>
           <div>
-            <Label htmlFor="email" className="text-stone-600 font-bold">Email</Label>
+            <Label htmlFor="email" className="text-stone-100 font-bold">
+              Email
+            </Label>
             <Input
               id="email"
               name="email"
@@ -155,38 +182,42 @@ function Getintouch(): React.ReactElement {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter Your Email"
-              className="bg-white"
+              className="text-stone-800 bg-slate-100"
               required
             />
           </div>
           <div>
-            <Label htmlFor="organization" className="text-stone-600 font-bold">Organization</Label>
+            <Label htmlFor="organization" className="text-stone-100 font-bold">
+              Organization
+            </Label>
             <Input
               id="organization"
               name="organization"
               value={formData.organization}
               onChange={handleChange}
               placeholder="Enter Your Organization"
-              className="bg-white"
+              className="text-stone-800 bg-slate-100"
               required
             />
           </div>
           <div>
-            <Label htmlFor="message" className="text-stone-600 font-bold">Message</Label>
+            <Label htmlFor="message" className="text-stone-100 font-bold">
+              Message
+            </Label>
             <Textarea
               id="message"
               name="message"
               value={formData.message}
               onChange={handleChange}
               placeholder="Type Your Message"
-              className="bg-white h-24 resize-none"
+              className="border h-24 resize-none text-stone-800 bg-slate-100"
               required
             />
           </div>
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isSubmitting}
-            className="bg-purple-400 h-10 font-bold hover:bg-purple-500 disabled:opacity-50"
+            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-lg h-[50px] text-stone-100 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-10 rounded-full transition-all duration-300 transform hover:scale-105"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </Button>

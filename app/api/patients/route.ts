@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const auth = "Basic " + Buffer.from(`${process.env.USERNAME}:${process.env.PASSWORD}`).toString("base64");
+    const auth = "Basic " + Buffer.from(`${process.env.SERVER_USERNAME}:${process.env.SERVER_PASSWORD}`).toString("base64");
 
-    const response = await fetch("https://archive-x1r8.medknight.in/patients", {
+    const response = await fetch(`${process.env.BASE_URL}/patients`, {
       method: "GET",
       headers: {
         "Authorization": auth,
