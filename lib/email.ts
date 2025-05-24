@@ -133,7 +133,7 @@ function html({ url, host, email }: EmailTemplate): string {
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td align="center">
-              <img src="LOGO-MEDKNIGHT.png" height="60" width="60" alt="MedKnight logo" style="display: inline-block; vertical-align: middle;">
+              <img src="logo.png" height="60" width="60" alt="MedKnight logo" style="display: inline-block; vertical-align: middle;">
               <span style="display: inline-block; vertical-align: middle; font-size: 24px; font-weight: bold; font-family: Helvetica, Arial, sans-serif;">
                 <span style="background: linear-gradient(to right, #f8fafc, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Med</span><span style="background: linear-gradient(to right, #a855f7, #57534e); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Knight</span>
               </span>
@@ -201,7 +201,7 @@ function passwordResetHtml({ url, host, email }: EmailTemplate): string {
         <table border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td align="center">
-              <img src="LOGO-MEDKNIGHT.png" height="60" width="60" alt="MedKnight logo" style="display: inline-block; vertical-align: middle;">
+              <img src="logo.png" height="60" width="60" alt="MedKnight logo" style="display: inline-block; vertical-align: middle;">
               <span style="display: inline-block; vertical-align: middle; font-size: 24px; font-weight: bold; font-family: Helvetica, Arial, sans-serif;">
                 <span style="background: linear-gradient(to right, #f8fafc, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Med</span><span style="background: linear-gradient(to right, #a855f7, #57534e); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Knight</span>
               </span>

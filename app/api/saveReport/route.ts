@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     // Upload to S3
     try {
       await s3Client.send(new PutObjectCommand({
-        Bucket: process.env.S3_BUCKET_NAME || 'your-bucket-name',
+        Bucket: process.env.S3_REPORTS || 'your-bucket-name',
         Key: `reports/${fileName}`,
         Body: buffer,
         ContentType: 'application/pdf',
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate the public URL for the file
-    const publicPath = `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/reports/${fileName}`;
+    const publicPath = `https://${process.env.S3_REPORTS}.s3.${process.env.AWS_REGION}.amazonaws.com/reports/${fileName}`;
     // Alternative if using CloudFront or custom domain:
     // const publicPath = `${process.env.CLOUD_STORAGE_URL}/reports/${fileName}`;
 

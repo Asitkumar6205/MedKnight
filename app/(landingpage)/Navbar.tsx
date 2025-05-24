@@ -43,7 +43,7 @@ export default function Navbar() {
             className="bg-stone-900/95 backdrop-blur-lg text-white border-r border-white/10"
           >
             <SheetTitle className="sr-only" />
-            <div className="py-4">
+            <div className="py-2 ">
               <Logo />
             </div>
             <div className="grid gap-2 py-6">
@@ -120,18 +120,9 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
 
 function Logo() {
   return (
-    <div className="flex items-center group transition-all duration-300">
-      <img src="LOGO-MEDKNIGHT.png" height={60} width={60} alt="logo" className="mr-2" />
-      <h2 className="flex items-center relative">
-        <span className="relative inline-block transition-all duration-300">
-          <span className="bg-gradient-to-r from-stone-200 to-stone-400 bg-clip-text text-transparent  transition-all duration-300">Med</span>
-          <span className="absolute left-0 top-0 opacity-0 bg-gradient-to-r from-purple-400 via-indigo-300 to-purple-500 bg-clip-text text-transparent transition-all duration-300">Med</span>
-        </span>
-        <span className="relative inline-block transition-all duration-300">
-          <span className="bg-gradient-to-r from-purple-500 to-stone-600 bg-clip-text text-transparent  transition-all duration-300">Knight</span>
-          <span className="absolute left-0 top-0 opacity-0 bg-gradient-to-r from-indigo-400 to-purple-600 bg-clip-text text-transparent transition-all duration-300">Knight</span>
-        </span>
-      </h2>
+    <div className="flex items-center group transition-all duration-300 -ml-6">
+      <img src="logo.png" height={60} width={60} alt="logo"/>
+      <img src="name-img.png" height={160} width={180} alt="name" className="pt-2"/>
     </div>
   );
 }

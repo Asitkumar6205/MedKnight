@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import * as z from "zod";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const caseSchema = z.object({
   doctor: z.string(),
@@ -17,6 +16,53 @@ const caseSchema = z.object({
 });
 
 type CaseSchema = z.infer<typeof caseSchema>;
+
+// Initialize S3 client
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION || 'ap-south-1',
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+// Helper function to upload file to S3
+async function uploadToS3(file: File): Promise<{ filename: string; path: string; uploadedAt: Date }> {
+  try {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const filename = `${uniqueSuffix}-${file.name}`;
+    
+    // Create the S3 key (path in bucket)
+    const key = `uploads/${filename}`;
+
+    const command = new PutObjectCommand({
+      Bucket: process.env.S3_CLINICAL_HISTORY!,
+      Key: key,
+      Body: buffer,
+      ContentType: file.type || 'application/octet-stream',
+      // Optional: Set ACL to public-read if you want files to be publicly accessible
+      // ACL: 'public-read',
+    });
+
+    await s3Client.send(command);
+
+    // Construct the file URL
+    const fileUrl = `https://${process.env.S3_CLINICAL_HISTORY}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`;
+    
+    console.log("File uploaded to S3:", filename);
+
+    return {
+      filename: file.name,
+      path: fileUrl,
+      uploadedAt: new Date(),
+    };
+  } catch (error) {
+    console.error("Error uploading file to S3:", error);
+    throw error;
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -54,6 +100,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
+      );
+    }
+
+    // Validate AWS S3 configuration
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.S3_CLINICAL_HISTORY) {
+      return NextResponse.json(
+        { message: "AWS S3 configuration is missing" },
+        { status: 500 }
       );
     }
 
@@ -106,7 +160,7 @@ export async function POST(req: Request) {
 
       let studyType = new Set(study.studyType || []);
       let studyView = new Set(study.studyView || []);
-      let studySide = new Set(study.studySide || []);
+      let studySide = new Set(study.studySide || []); 
 
       Object.entries(studyData).forEach(([field, valuesObj]) => {
         if (typeof valuesObj === "object" && valuesObj !== null) {
@@ -134,42 +188,13 @@ export async function POST(req: Request) {
     // Get all study IDs for the new case
     const studyIds = allStudies.map((study) => ({ id: study.id }));
 
-    // Create upload directory if not exists
-    const uploadDir = join(process.cwd(), "public/uploads");
-    await mkdir(uploadDir, { recursive: true });
-
-    // Handle file uploads
+    // Handle file uploads to S3
     const files = formData.getAll("files") as File[];
     console.log("Number of files received:", files.length);
 
-    const fileData =
-      files.length > 0
-        ? await Promise.all(
-            files.map(async (file) => {
-              try {
-                const bytes = await file.arrayBuffer();
-                const buffer = Buffer.from(bytes);
-                const uniqueSuffix = `${Date.now()}-${Math.round(
-                  Math.random() * 1e9
-                )}`;
-                const filename = `${uniqueSuffix}-${file.name}`;
-                const filePath = join(uploadDir, filename);
-
-                await writeFile(filePath, buffer);
-                console.log("File saved:", filename);
-
-                return {
-                  filename: file.name,
-                  path: `/uploads/${filename}`,
-                  uploadedAt: new Date(),
-                };
-              } catch (error) {
-                console.error("Error processing file:", error);
-                throw error;
-              }
-            })
-          )
-        : [];
+    const fileData = files.length > 0
+      ? await Promise.all(files.map(uploadToS3))
+      : [];
 
     console.log("File data prepared:", fileData);
 

@@ -11,18 +11,25 @@ function Footer() {
         <div className="bg-none pl-0 pt-8 pb-8 pr-8 rounded-lg shadow-md flex flex-col gap-4">
           <div className="cursor-pointer">
             <h2 className="text-stone-100 text-2xl font-bold bg-none">
-              <Link href={"/#home"} className="transition-all duration-300 transform hover:scale-105">
-                <span>Med</span>
-                <span className="bg-gradient-to-r from-purple-500 to-stone-700 bg-clip-text text-transparent">
-                  Knight
-                </span>
+              <Link
+                href={"/#home"}
+                className="transition-all duration-300 transform hover:scale-105 flex -ml-2"
+              >
+                <img src="logo.png" height={40} width={50} alt="logo"/>
+                <img
+                  src="name-img.png"
+                  height={140}
+                  width={160}
+                  alt="name"
+                  className="pt-2"
+                />
               </Link>
             </h2>
             <h3 className="text-stone-500 font-medium">
               Fast, Accurate, 24/7 Diagnostic Reporting
             </h3>
           </div>
-                   <ul className="flex gap-2">
+          <ul className="flex gap-2">
             <li>
               <div className="cursor-pointer rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20">
                 <FaInstagramSquare className="h-8 w-8 text-pink-700 hover:text-purple-500" />
@@ -155,9 +162,7 @@ function Footer() {
                 </div>
                 <div>
                   <p className="text-stone-500 text-sm mb-1">Email us at</p>
-                  <h3 className="text-stone-300">
-                    contact@medknight.in
-                  </h3>
+                  <h3 className="text-stone-300">contact@medknight.in</h3>
                 </div>
               </div>
             </li>
