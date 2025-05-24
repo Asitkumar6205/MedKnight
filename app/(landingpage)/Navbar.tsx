@@ -43,7 +43,7 @@ export default function Navbar() {
             className="bg-stone-900/95 backdrop-blur-lg text-white border-r border-white/10"
           >
             <SheetTitle className="sr-only" />
-            <div className="py-4">
+            <div className="py-2 ">
               <Logo />
             </div>
             <div className="grid gap-2 py-6">
@@ -120,9 +120,9 @@ function MenuIcon(props: React.SVGProps<SVGSVGElement>) {
 
 function Logo() {
   return (
-    <div className="flex items-center group transition-all duration-300">
+    <div className="flex items-center group transition-all duration-300 -ml-6">
       <img src="logo.png" height={60} width={60} alt="logo"/>
-      <img src="name-img.png" height={260} width={260} alt="name" className="pt-2"/>
+      <img src="name-img.png" height={160} width={180} alt="name" className="pt-2"/>
     </div>
   );
 }
