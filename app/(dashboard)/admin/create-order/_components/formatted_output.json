@@ -1,6 +1,8 @@
 {
     "CT 3D": {
-        "price": 150
+        "price": 150,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "CT Abdomen & Pelvis": {
         "price": 400,
@@ -11,7 +13,9 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Abdomen & Pelvis Lifesaver": {
         "price": 400,
@@ -21,44 +25,68 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Abdomen & Pelvis Triphasic": {
         "price": 600,
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Abdominal": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Aortogram": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Cerebral": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Cerebral Venogram": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Neck": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Peripheral Arms": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Peripheral Legs": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Pulmonary": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Renal": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Angiography Thoracic": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Brain": {
         "price": 225,
@@ -66,13 +94,18 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Perfusion": {
-        "price": 150
+        "price": 150,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI DWI": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Brain & Face": {
         "price": 450,
@@ -80,31 +113,46 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Brain Lifesaver": {
         "price": 225,
         "Select Type": [
             "Plain"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Cardiac": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT CBCT": {
-        "price": 275
+        "price": 275,
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Cisternography": {
-        "price": 400
+        "price": 400,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Comparative Study": {
-        "price": 150
+        "price": 150,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "CT Covid": {
-        "price": 300
+        "price": 300,
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Enterography": {
-        "price": 400
+        "price": 400,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Ankle": {
         "price": 400,
@@ -116,7 +164,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Arm": {
         "price": 400,
@@ -128,7 +177,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Clavicle": {
         "price": 400,
@@ -140,7 +190,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Elbow": {
         "price": 400,
@@ -152,7 +203,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Foot": {
         "price": 400,
@@ -164,7 +216,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Foot With Ankle": {
         "price": 400,
@@ -175,7 +228,9 @@
         "Select Side": [
             "Left",
             "Right"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Forearm": {
         "price": 400,
@@ -187,7 +242,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Hand": {
         "price": 400,
@@ -199,7 +255,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Heel": {
         "price": 400,
@@ -211,7 +268,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Hip Joints": {
         "price": 400,
@@ -219,7 +277,8 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Knee": {
         "price": 400,
@@ -231,7 +290,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Leg": {
         "price": 400,
@@ -243,7 +303,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities PM Joint": {
         "price": 400,
@@ -251,7 +312,8 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Shoulder": {
         "price": 400,
@@ -263,7 +325,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Scapula": {
         "price": 400,
@@ -275,7 +338,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities SI Joint": {
         "price": 400,
@@ -283,7 +347,8 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Thigh": {
         "price": 400,
@@ -295,7 +360,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Thumb": {
         "price": 400,
@@ -307,7 +373,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities TM Joints": {
         "price": 400,
@@ -315,7 +382,8 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Extremities Wrist": {
         "price": 400,
@@ -327,7 +395,8 @@
             "Left",
             "Right"
         ],
-        "Additional studies": []
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Face": {
         "price": 275,
@@ -335,7 +404,8 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT KUB": {
         "price": 300,
@@ -346,7 +416,9 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Lower Abdomen": {
         "price": 300,
@@ -357,28 +429,36 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Maxillofacial": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Nasopharynx": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Neck": {
         "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Pelvis": {
         "price": 300,
@@ -389,111 +469,145 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Pituitary": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Orbits": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Cervico Dorsal": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Sinogram": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "CT PNS": {
         "price": 225,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT ROC Fungal": {
-        "price": 275
+        "price": 275,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "CT Sella": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Cervical": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Coccyx": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Dorsal": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine CV Junction": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Dorso Lumbar": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Lumbo Sacral": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Sacrum": {
         "price": 350,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Spine Whole Spine": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Temporal Bone": {
         "price": 275,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Thorax": {
         "price": 300,
@@ -501,11 +615,13 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Thorax HRCT": {
         "price": 300,
-        "Additional studies": []
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Upper Abdomen": {
         "price": 300,
@@ -516,23 +632,33 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Venogram Peripheral Legs": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Venogram Peripheral Arms": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Urography": {
         "price": 400,
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "CT Whole Body": {
-        "price": 1200
+        "price": 1200,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Abdomen & Pelvis": {
         "price": 800,
@@ -543,51 +669,77 @@
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Abdominal": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Adrenal Region": {
         "price": 450,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Aortogram": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Central Venogram": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Neck": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Peripheral Arms": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Peripheral Legs": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Pulmonary": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Angiography Renal": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Arthrogram": {
-        "price": 300
+        "price": 300,
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Axilla": {
         "price": 800,
         "Select Type": [
             "Plain",
             "Contrast"
-        ]
+        ],
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Brachial Plexus": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Brain": {
         "price": 450,
@@ -595,673 +747,901 @@
             "Plain",
             "Contrast"
         ],
-        "Additional studies": []
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI MRA": {
-        "price": 300
+        "price": 300,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI MRV": {
-        "price": 300
+        "price": 300,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Spectro": {
-        "price": 300
+        "price": 300,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Perfusion": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Brain Epilepsy Protocol": {
-        "price": 450
+        "price": 450,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Brain Stroke Protocol": {
-        "price": 450
+        "price": 450,
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Breast": {
         "price": 800,
-        "Additional studies": []
+        "subspeciality": "Breast Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Cardiac": {
-        "price": 800
+        "price": 800,
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "MRI Cartigram": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Cisternography": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Comparative Study": {
-        "price": 250
+      "price": 250,
+      "subspeciality": "General Radiology",
+      "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Cranial Nerves": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI CSF Flow": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Defecography": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Enterography": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Face": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Head and Neck Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI KUB": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Gender": [
-            "Male",
-            "Female"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Gender": [
+        "Male",
+        "Female"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI IAC (Inner Ear)": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Fetal": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Obstetric and Gynecologic Imaging",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Fistulogram": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Interventional Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Maxillofacial": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Head and Neck Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MRCP": {
-        "price": 450
+      "price": 450,
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Ankle": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Arm": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Clavicle": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Elbow": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Foot With Ankle": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ]
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Hand": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Forearm": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Foot": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Heel": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Knee": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Leg": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Hip Joints": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK PM Joint": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Shoulder": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK SI Joint": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Thigh": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Scapula": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Thumb": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK TM Joints": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI MSK Wrist": {
-        "price": 550,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Side": [
-            "Left",
-            "Right"
-        ],
-        "Additional studies": []
+      "price": 550,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Side": [
+        "Left",
+        "Right"
+      ],
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Multiparametric Prostate": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Neck": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Head and Neck Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Neurography": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Orbits": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Penile": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Perineum": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Placenta": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Obstetric and Gynecologic Imaging",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Pelvis": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Gender": [
-            "Male",
-            "Female"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Gender": [
+        "Male",
+        "Female"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI PNS": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Head and Neck Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI ROC Fungal": {
-        "price": 450
+      "price": 450,
+      "subspeciality": "General Radiology",
+      "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Screening Abdomen": {
-        "price": 300,
-        "Select Gender": [
-            "Male",
-            "Female"
-        ]
+      "price": 300,
+      "Select Gender": [
+        "Male",
+        "Female"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Brain": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Hip Joints": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening PBH": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "General Radiology",
+      "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Screening Orbits": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Shoulder": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening SI Joint": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Musculoskeletal (MSK) Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Spine Cervical": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Spine Dorsal": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Spine Lumbo Sacral": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Screening Whole Spine": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Scrotum": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Sinogram": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Interventional Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Sella (Pituitary)": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Sleep Study": {
-        "price": 800
+      "price": 800,
+      "subspeciality": "General Radiology",
+      "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Spine Cervico Dorsal": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Whole Spine Screening": {
-        "price": 300
+      "price": 300,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Cervical": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Coccyx": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine CV Junction": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Dorso Lumbar": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Whole Spine": {
-        "price": 1000
+      "price": 1000,
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Lumbo Sacral": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Dorsal": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Spine Sacro Coccygeal": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Additional studies": []
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Temporal Bone": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Neuroradiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Tongue": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Head and Neck Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Upper Abdomen": {
-        "price": 450,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 450,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Urography": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ],
-        "Select Gender": [
-            "Male",
-            "Female"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "Select Gender": [
+        "Male",
+        "Female"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Whole Body": {
-        "price": 2250
+      "price": 2250,
+      "subspeciality": "General Radiology",
+      "qualifications": ["MD/DNB or DMRD"]
     },
     "MRI Upper Airway": {
-        "price": 450
+      "price": 450,
+      "subspeciality": "Head and Neck Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "MRI Thorax": {
-        "price": 800,
-        "Select Type": [
-            "Plain",
-            "Contrast"
-        ]
+      "price": 800,
+      "Select Type": [
+        "Plain",
+        "Contrast"
+      ],
+      "subspeciality": "Thoracic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "NM Comparative Study": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera DMSA Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera DSMA Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Bone Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera DTPA Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera HIDA Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Lung Perfusion Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Lung Ventilation Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Myocardial Perfusion Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Renal Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Thyroid Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Ventilation Perfusion Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM Gamma Camera Whole Body Iodine Scan": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM PET CT PSMA": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM PET CT Whole Body": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM PET Whole Body": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM PET CT Brain": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "NM PET CT Cardiac": {
+      "subspeciality": "Nuclear Medicine",
+      "qualifications": ["MD"]
     },
     "USG Abdomen": {
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "USG Abdomen & Pelvis": {
-        "Select Gender": [
-            "Male",
-            "Female"
-        ]
+      "Select Gender": [
+        "Male",
+        "Female"
+      ],
+      "subspeciality": "Abdominal and Pelvic Radiology",
+      "qualifications": ["MD/DNB"]
     },
     "USG Anomaly Twins": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG BPP Doppler Twins": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG Breast": {
+        "subspeciality": "Breast Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG Artery Doppler": {
         "Select Side": [
             "Left",
             "Right"
-        ]
+        ],
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Carotid Doppler": {
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Fetal Echo": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
-    "USG Cranuim": {
+    "USG Cranium": {
+        "subspeciality": "Pediatric Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Early Obstetrics Twins": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG Growth": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG Hemithorax": {
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG KUB": {
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Obstetrics Twins": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG NT/NB Twins": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG Pelvis": {
         "Select Gender": [
             "Male",
             "Female"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Renal Doppler": {
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Scrotal": {
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "USG Term Scan Twins": {
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "USG Venous Doppler": {
         "Select Side": [
             "Left",
             "Right"
-        ]
+        ],
+        "subspeciality": "Cardiovascular Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Comparative Study": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "XRAY Mammography Both": {
-        "price": 500
+        "price": 500,
+        "subspeciality": "Breast Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Mammography Single": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Breast Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY OPG": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Osteocheck": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Abdomen": {
         "price": 50,
@@ -1270,13 +1650,17 @@
             "Supine",
             "AP",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Adenoids": {
         "price": 50,
         "Select View": [
             "LAT"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Chest": {
         "price": 50,
@@ -1286,7 +1670,9 @@
             "LAT",
             "Oblique",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Big Toe": {
         "price": 50,
@@ -1298,7 +1684,9 @@
             "AP",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Arm": {
         "price": 50,
@@ -1310,7 +1698,9 @@
             "AP",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Ankle": {
         "price": 50,
@@ -1326,10 +1716,14 @@
             "Weight Bearing AP",
             "Weight Bearing LAT",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Chest Lifesaver": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Clavicle": {
         "price": 50,
@@ -1343,7 +1737,9 @@
             "Chepalic",
             "Portable",
             "Zanca"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Elbow": {
         "price": 50,
@@ -1356,7 +1752,9 @@
             "LAT",
             "Oblique",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Face": {
         "price": 50,
@@ -1364,7 +1762,9 @@
             "LAT",
             "Water's",
             "Caldwell"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Forearm": {
         "price": 50,
@@ -1376,7 +1776,9 @@
             "AP",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Hand": {
         "price": 50,
@@ -1390,7 +1792,9 @@
             "Oblique",
             "PA",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Heel": {
         "price": 50,
@@ -1403,7 +1807,9 @@
             "LAT",
             "Axial",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Foot": {
         "price": 50,
@@ -1418,7 +1824,9 @@
             "Hindfoot",
             "Portable",
             "Weight Bearing"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Hip": {
         "price": 50,
@@ -1432,7 +1840,9 @@
             "Oblique",
             "Frog Leg",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Knee": {
         "price": 50,
@@ -1451,14 +1861,18 @@
             "Internal oblique",
             "External oblique",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph KUB": {
         "price": 50,
         "Select View": [
             "AP",
             "Supine"
-        ]
+        ],
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Leg": {
         "price": 50,
@@ -1470,7 +1884,9 @@
             "AP",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Mandible": {
         "price": 50,
@@ -1478,7 +1894,9 @@
             "AP",
             "PA",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Mastoids": {
         "price": 50,
@@ -1490,7 +1908,9 @@
             "LAT",
             "Oblique",
             "AP"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Nasal Bone": {
         "price": 50,
@@ -1502,27 +1922,35 @@
             "LAT",
             "Water's",
             "Caldwell"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Nasopharynx": {
         "price": 50,
         "Select View": [
             "LAT"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Neck": {
         "price": 50,
         "Select View": [
             "AP",
             "LAT"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Orbit": {
         "price": 50,
         "Select View": [
             "PA",
             "LAT"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Pelvis": {
         "price": 50,
@@ -1531,14 +1959,18 @@
             "Inlet view",
             "Outlet view",
             "Obstrector view"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph PNS": {
         "price": 50,
         "Select View": [
             "Water's",
             "Caldwell"
-        ]
+        ],
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Scapula": {
         "price": 50,
@@ -1551,7 +1983,9 @@
             "AP",
             "Oblique",
             "Y view"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Shoulder": {
         "price": 50,
@@ -1565,7 +1999,9 @@
             "LAT",
             "Oblique",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Sella": {
         "price": 50,
@@ -1573,14 +2009,18 @@
             "LAT",
             "Cone Beam",
             "Cone Down"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Skull": {
         "price": 50,
         "Select View": [
             "AP",
             "LAT"
-        ]
+        ],
+        "subspeciality": "Neuroradiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Spine Cervical": {
         "price": 50,
@@ -1592,7 +2032,9 @@
             "Extension",
             "Trans LAT",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Spine Dorsal": {
         "price": 50,
@@ -1600,7 +2042,9 @@
             "AP",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Spine Sacrum": {
         "price": 50,
@@ -1608,7 +2052,9 @@
             "AP",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Sternum": {
         "price": 50,
@@ -1616,7 +2062,9 @@
             "PA",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Thigh": {
         "price": 50,
@@ -1627,7 +2075,9 @@
         "Select View": [
             "AP",
             "LAT"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Spine Lumbar": {
         "price": 50,
@@ -1637,14 +2087,18 @@
             "Oblique",
             "Flexion",
             "Extension"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Spine Coccyx": {
         "price": 50,
         "Select View": [
             "AP",
             "LAT"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Thumb": {
         "price": 50,
@@ -1656,7 +2110,9 @@
             "PA",
             "LAT",
             "Oblique"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph Wrist": {
         "price": 50,
@@ -1670,63 +2126,103 @@
             "Oblique",
             "Scapoid",
             "Portable"
-        ]
+        ],
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Bone Age": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Pediatric Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Radiograph TM Joints": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case ASU": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Barium": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Ductography": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Breast Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Fistulogram": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Interventional Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Gastrografin": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case HSG": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Obstetric and Gynecologic Imaging",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case IVP": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case IVU": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case MCU": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case RGU": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Abdominal and Pelvic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Scanogram": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Musculoskeletal (MSK) Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Sialogram": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Head and Neck Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case T Tube Cholangiogram": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Interventional Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Special Case Sinogram": {
-        "price": 250
+        "price": 250,
+        "subspeciality": "Interventional Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "XRAY Tuberculosis Screening": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "Thoracic Radiology",
+        "qualifications": ["MD/DNB"]
     },
     "USG Soft Tissue": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     },
     "USG Thyroid": {
-        "price": 50
+        "price": 50,
+        "subspeciality": "General Radiology",
+        "qualifications": ["MD/DNB or DMRD"]
     }
 }

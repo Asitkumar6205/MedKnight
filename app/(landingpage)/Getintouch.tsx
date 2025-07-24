@@ -97,11 +97,11 @@ function Getintouch(): React.ReactElement {
   return (
     <div
       id="getintouch"
-      className="max-sm:p-4 max-md:p-7 md:p-7 lg:p-14 lg:my-20 max-lg:my-14 max-sm:my-4 sm:my-6"
+      className="max-sm:p-4 max-md:p-7 md:p-7 lg:p-12 lg:my-20 max-lg:my-14 max-sm:my-4 sm:my-6"
     >
-      <div className="grid lg:grid-cols-2 md:grid-cols-2 lg:mx-40">
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 lg:mx-24  bg-stone-100 py-6 px-12 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl">
         <div className="flex flex-col pl-0 pb-4 pt-4 pr-4 gap-4">
-          <h2 className="text-4xl font-bold text-stone-100">Get in Touch</h2>
+          <h2 className="text-4xl font-bold text-stone-100 mb-4">Get in Touch</h2>
           <div>
             <h3 className="py-2 text-stone-100">
               Ready to Revolutionize Your Radiology Workflow?
@@ -113,14 +113,14 @@ function Getintouch(): React.ReactElement {
             </h3>
           </div>
 
-          <div className="flex flex-row gap-4 items-center ">
+          <div className="flex flex-row gap-4 items-center pt-4">
             <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105">
               <FaPhoneAlt className="h-6 w-6 text-stone-100" />
             </div>
             <div>
-              <h2 className="text-stone-400">Phone Support</h2>
-              <h2 className="text-stone-400">24/7 Available</h2>
-              <h2 className="text-purple-100">
+              <h2 className="text-stone-200 text-sm">Phone Support</h2>
+              <h2 className="text-stone-200 text-sm">24/7 Available</h2>
+              <h2 className="text-purple-400">
                 +91 6205400732, +91 8789573665
               </h2>
             </div>
@@ -130,12 +130,12 @@ function Getintouch(): React.ReactElement {
               <MdOutlineMailOutline className="h-8 w-8 text-stone-100" />
             </div>
             <div>
-              <h2 className="text-stone-400">Email</h2>
-              <h2 className="text-stone-400">Get in Touch</h2>
+              <h2 className="text-stone-200 text-sm">Email</h2>
+              <h2 className="text-stone-200 text-sm">Get in Touch</h2>
               <h2 className="text-purple-400">contact@medknight.in</h2>
             </div>
           </div>
-          <div>
+          <div className="pt-4">
             <h2 className="text-stone-100">
               Contact us today for a free pilot consultation tailored to your
               needs.
@@ -144,7 +144,7 @@ function Getintouch(): React.ReactElement {
         </div>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col bg-stone-100 py-4 px-6 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl"
+          className="flex flex-col bg-stone-100 pt-8 pb-4 px-6 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl"
         >
           {submitStatus && (
             <div

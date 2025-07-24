@@ -79,7 +79,7 @@ export default function OrderData({
   );
 
   return (
-    <div className="">
+      <div className="">
       {loadingReport && (
         <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-60 z-50">
           <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
@@ -275,6 +275,7 @@ export default function OrderData({
                       patientId: patientId,
                       patientName: patientName,
                       gender: gender,
+                      history: caseItem.history,
                       doctor: caseItem.doctor,
                       studyNames: caseItem.studies
                         .map((study) => study.name)

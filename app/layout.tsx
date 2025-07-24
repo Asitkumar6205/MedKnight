@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Mulish } from "next/font/google";
 import "./globals.css";
 import Provider from "./Provider";
-import { ActiveCaseProvider } from "./context/ActiveCaseContext";
-import { CompletedCaseProvider } from "./context/CompletedCaseContext";
+// import { ActiveCaseProvider } from "./context/ActiveCaseContext";
+// import { CompletedCaseProvider } from "./context/CompletedCaseContext";
 
 const mulish = Mulish({
   variable: "--font-muli",
@@ -29,15 +29,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Provider>
-        <CompletedCaseProvider>
-          <ActiveCaseProvider>
-            <body
-              className={`${mulish.variable} ${mulish.variable} antialiased bg-stone-900`}
-            >
-              {children}
-            </body>
-          </ActiveCaseProvider>
-        </CompletedCaseProvider>
+        {/* <CompletedCaseProvider>
+          <ActiveCaseProvider> */}
+          <body
+            className={`${mulish.variable} ${mulish.variable} antialiased bg-stone-900`}
+          >
+            {children}
+          </body>
+        {/* </ActiveCaseProvider>
+        </CompletedCaseProvider> */}
       </Provider>
     </html>
   );

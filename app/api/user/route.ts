@@ -18,9 +18,12 @@ const signInSchema = z.object({
     .min(1, "Password is required")
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
+  userType: z.enum(["RADIOLOGIST", "HOSPITAL"], {
+    required_error: "User type is required",
+  }),
 });
 
-async function sendVerificationEmail(email: string, token: string, userData: { username: string, password: string }) {
+async function sendVerificationEmail(email: string, token: string, userData: { username: string, password: string, userType: string }) {
   const baseUrl = process.env.NEXTAUTH_URL || 'https://medknight.in';
   // Store user data in the token query params (encrypted as JSON)
   const userDataParam = Buffer.from(JSON.stringify(userData)).toString('base64');
@@ -40,6 +43,8 @@ async function sendVerificationEmail(email: string, token: string, userData: { u
   const { host } = new URL(url);
   
   const transport = createTransport(emailServer);
+  
+  const userTypeDisplay = userData.userType === 'RADIOLOGIST' ? 'Radiologist' : 'Hospital';
   
   await transport.sendMail({
     to: email,
@@ -62,6 +67,11 @@ async function sendVerificationEmail(email: string, token: string, userData: { u
             </td>
           </tr>
           <tr>
+            <td align="center" style="padding: 10px 0px 0px 0px; font-size: 16px; font-family: Helvetica, Arial, sans-serif; color: #666666;">
+              Account Type: <strong>${userTypeDisplay}</strong>
+            </td>
+          </tr>
+          <tr>
             <td align="center" style="padding: 20px 0;">
               <table border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -81,7 +91,7 @@ async function sendVerificationEmail(email: string, token: string, userData: { u
           </tr>
           <tr>
             <td align="center" style="padding: 10px 0px 0px 0px; font-size: 14px; font-family: Helvetica, Arial, sans-serif; color: #666666;">
-              <p>Note: After verifying your email, an administrator will need to approve your account before you can sign in.</p>
+              <p>Note: After verifying your email, an administrator will need to approve your ${userTypeDisplay.toLowerCase()} account before you can sign in.</p>
             </td>
           </tr>
         </table>
@@ -93,7 +103,7 @@ async function sendVerificationEmail(email: string, token: string, userData: { u
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { username, email, password } = signInSchema.parse(body);
+    const { username, email, password, userType } = signInSchema.parse(body);
 
     // Check if username already exists
     const existingUserByUsername = await db.user.findUnique({
@@ -137,11 +147,14 @@ export async function POST(req: Request) {
     // Send verification email with the token and user data
     await sendVerificationEmail(email, token, { 
       username,
-      password: hashedPassword // Send the already hashed password
+      password: hashedPassword, // Send the already hashed password
+      userType
     });
 
+    const userTypeDisplay = userType === 'RADIOLOGIST' ? 'radiologist' : 'hospital';
+
     return NextResponse.json(
-      { message: "Verification email sent. Please check your inbox to complete registration. Once verified, an administrator will need to approve your account before you can sign in." },
+      { message: `Verification email sent. Please check your inbox to complete registration. Once verified, an administrator will need to approve your ${userTypeDisplay} account before you can sign in.` },
       { status: 200 }
     );
   } catch (error) {
@@ -194,5 +207,3 @@ export async function DELETE(req: Request) {
     );
   }
 }
-
-

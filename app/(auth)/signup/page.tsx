@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FcGoogle } from "react-icons/fc";
 import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -16,6 +15,9 @@ const FormSchema = z
     email: z.string().min(1, "Email is required").email("Invalid email"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Password confirmation is required"),
+    userType: z.enum(["RADIOLOGIST", "HOSPITAL"], {
+      required_error: "Please select your user type",
+    }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
@@ -32,15 +34,15 @@ const FormSchema = z
     } = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
     });
-  
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [loading, setLoading] = useState(false);
-  
+
     const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
     const toggleConfirmPasswordVisibility = () =>
       setShowConfirmPassword((prev) => !prev);
-  
+
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
       setLoading(true);
       try {
@@ -51,11 +53,12 @@ const FormSchema = z
             username: data.username,
             email: data.email,
             password: data.password,
+            userType: data.userType,
           }),
         });
-  
+
         const responseData = await response.json();
-  
+
         if (response.ok) {
           // Redirect to signin page with a query parameter to show verification message
           router.push("/signin?needsVerification=true");
@@ -93,6 +96,33 @@ const FormSchema = z
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
+            <label className="block text-stone-700 mb-2">I am a</label>
+            <div className="space-y-2">
+              <label className="flex items-center">
+                <input
+                  {...register("userType")}
+                  type="radio"
+                  value="RADIOLOGIST"
+                  className="mr-2"
+                />
+                <span className="text-stone-700">Radiologist</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  {...register("userType")}
+                  type="radio"
+                  value="HOSPITAL"
+                  className="mr-2"
+                />
+                <span className="text-stone-700">Hospital</span>
+              </label>
+            </div>
+            {errors.userType && (
+              <p className="text-red-500 text-sm mt-1">{errors.userType.message}</p>
+            )}
+          </div>
+
+          <div>
             <label className="block text-stone-700">Username</label>
             <Input
               {...register("username")}
@@ -103,6 +133,7 @@ const FormSchema = z
               <p className="text-red-500 text-sm">{errors.username.message}</p>
             )}
           </div>
+
           <div>
             <label className="block text-stone-700">Email</label>
             <Input
@@ -118,6 +149,7 @@ const FormSchema = z
               <p className="text-red-500 text-sm">{errors.root.message}</p>
             )}
           </div>
+
           <div className="relative">
             <label className="block text-stone-700">Password</label>
             <Input
@@ -136,13 +168,17 @@ const FormSchema = z
                   className="text-stone-500 hover:text-stone-700"
                 />
               ) : (
-                <Eye size={20} className="text-stone-500 hover:text-stone-700" />
+                <Eye
+                  size={20}
+                  className="text-stone-500 hover:text-stone-700"
+                />
               )}
             </span>
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
             )}
           </div>
+
           <div className="relative">
             <label className="block text-stone-700">Confirm Password</label>
             <Input
@@ -161,7 +197,10 @@ const FormSchema = z
                   className="text-stone-500 hover:text-stone-700"
                 />
               ) : (
-                <Eye size={20} className="text-stone-500 hover:text-stone-700" />
+                <Eye
+                  size={20}
+                  className="text-stone-500 hover:text-stone-700"
+                />
               )}
             </span>
             {errors.confirmPassword && (
@@ -216,20 +255,3 @@ const FormSchema = z
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

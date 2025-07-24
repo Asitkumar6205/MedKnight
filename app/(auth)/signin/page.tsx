@@ -59,6 +59,7 @@ function SignInContent() {
   const needsVerification = searchParams?.get("needsVerification") === "true";
   const passwordResetSent = searchParams?.get("passwordResetSent") === "true";
 
+  // Fixed onSubmit function with correct API endpoints
   const onSubmit = async (values: FormData) => {
     setLoading(true);
     setError(null);
@@ -74,17 +75,16 @@ function SignInContent() {
         email: values.email,
         password: values.password,
         redirect: false,
-        // Pass the rememberMe value to the signIn function
         callbackUrl: "/admin",
         remember: values.rememberMe,
       });
 
       if (signInData?.error) {
         if (signInData.error.includes("pending_approval")) {
-          router.push("/pending-approval"); // Changed from pending_approval to pending-approval
+          router.push("/pending-approval");
           return;
         } else if (signInData.error.includes("account_suspended")) {
-          router.push("/account-suspended"); // Changed from account_suspended to account-suspended
+          router.push("/account-suspended");
           return;
         } else if (signInData.error.includes("CredentialsSignin")) {
           setError("Invalid email or password. Please try again.");
@@ -93,10 +93,50 @@ function SignInContent() {
         }
       } else {
         router.refresh();
-        // Redirect based on user role
+
+        // Get user data to check role
         const userData = await fetch("/api/me").then((res) => res.json());
+
         if (userData?.user?.role === "ADMIN") {
           router.push("/admin");
+        } else if (userData?.user?.role === "HOSPITAL") {
+          // Check if hospital has completed setup
+          try {
+            const hospitalSetupResponse = await fetch(
+              "/api/hospital/setup-status"
+            );
+            const hospitalSetupData = await hospitalSetupResponse.json();
+
+            if (hospitalSetupData.hasCompletedSetup) {
+              router.push("/admin");
+            } else {
+              router.push("/welcome/hospital");
+            }
+          } catch (error) {
+            console.error("Error checking hospital setup:", error);
+            // If there's an error, redirect to welcome/hospital to be safe
+            router.push("/welcome/hospital");
+          }
+        } else if (userData?.user?.role === "RADIOLOGIST") {
+          // Check if radiologist has completed setup
+          try {
+            // FIXED: Changed from setup-status to check-setup
+            const radiologistSetupResponse = await fetch(
+              "/api/radiologist/check-setup"
+            );
+            const radiologistSetupData = await radiologistSetupResponse.json();
+
+            // FIXED: Changed from hasCompletedSetup to hasCompleted
+            if (radiologistSetupData.hasCompleted) {
+              router.push("/admin");
+            } else {
+              router.push("/welcome/radiologist");
+            }
+          } catch (error) {
+            console.error("Error checking radiologist setup:", error);
+            // If there's an error, redirect to welcome/radiologist to be safe
+            router.push("/welcome/radiologist");
+          }
         } else {
           router.push("/admin");
         }
@@ -119,7 +159,7 @@ function SignInContent() {
 
   useEffect(() => {
     const callbackUrl = searchParams?.get("callbackUrl");
-    
+
     // Check if the callbackUrl is exactly http://localhost:3000
     if (callbackUrl === process.env.NEXTAUTH_URL) {
       // Remove the callbackUrl parameter by redirecting to /signin without it
@@ -342,7 +382,7 @@ function SignInContent() {
         </form>
 
         <p className="text-sm text-center text-stone-600 mt-4">
-          If you don't have an account, please 
+          If you don't have an account, please
           <Link
             href="/signup"
             className="text-blue-500 hover:underline ml-1"
@@ -368,6 +408,3 @@ export default function SignIn() {
     </Suspense>
   );
 }
-
-
-

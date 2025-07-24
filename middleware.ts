@@ -16,6 +16,7 @@ export async function middleware(request: NextRequest) {
       "/api/user", // User registration endpoint
       "/api/send-email",
       "/api/me",
+      "/api/hospital/setup-status", // Add this to public routes for setup check
     ];
 
     // Check if the route is public
@@ -31,7 +32,6 @@ export async function middleware(request: NextRequest) {
       );
     }
 
-    // Rest of the middleware remains the same...
     // Check if user account is active
     if (token.status !== "ACTIVE") {
       return new NextResponse(
@@ -47,9 +47,14 @@ export async function middleware(request: NextRequest) {
     const roleApiPermissions = {
       ADMIN: [
         "/api/me",
+        "/api/dashboard/stats",
+        "/api/dashboard/turnaround",
+        "/api/dashboard/operational",
+        "/api/hospital/setup-status", 
+        "/api/hospital/setup",
         "/api/user",
         "/api/getCases",
-        "/api/cases", // Added: This allows access to /api/cases/[id]/lock
+        "/api/cases",
         "/api/saveReport",
         "/api/admin/users",
         "/api/studies",
@@ -65,22 +70,35 @@ export async function middleware(request: NextRequest) {
         "/api/radiologist/postuser",
         "/api/radiologist/deleteuser",
         "/api/updateActiveCase",
-        "/api/updateCompletedCase"
+        "/api/updateCompletedCase",
+        "/api/extract-pdf",
+        "/api/invoices"
       ],
       RADIOLOGIST: [
         "/api/me",
+        "/api/dashboard/stats",
+        "/api/dashboard/operational",
+        "/api/dashboard/turnaround",
+        "/api/radiologist/check-setup",
         "/api/user",
         "/api/getCases",
-        "/api/cases", // Added: This allows access to /api/cases/[id]/lock
+        "/api/cases",
         "/api/radiologist/getuser",
+        "/api/radiologist/postuser",
         "/api/saveReport",
         "/api/getCompletedCases",
         "/api/caseReview",
         "/api/updateActiveCase",
-        "/api/updateCompletedCase"
+        "/api/updateCompletedCase",
+        "/api/hospital/getuser" // Add this line to allow radiologist access
       ],
       HOSPITAL: [
         "/api/me",
+        "/api/dashboard/stats",
+        "/api/dashboard/operational",
+        "/api/dashboard/turnaround",
+        "/api/hospital/setup-status", // Add this for hospital setup check
+        "/api/hospital/setup", // Add this for hospital setup
         "/api/user",
         "/api/getCases",
         "/api/studies",
@@ -89,7 +107,8 @@ export async function middleware(request: NextRequest) {
         "/api/hospital/postuser",
         "/api/hospital/deleteuser",
         "/api/getCompletedCases",
-        "/api/caseReview"
+        "/api/caseReview",
+        "/api/invoices"
       ]
     };
 
@@ -103,13 +122,24 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    // Hospital-specific routes - only ADMIN or HOSPITAL roles can access
+    // Hospital-specific routes - Allow ADMIN, HOSPITAL, and RADIOLOGIST roles to access hospital user endpoints
     if (pathname.startsWith("/api/hospital/")) {
-      if (token.role !== "ADMIN" && token.role !== "HOSPITAL") {
-        return new NextResponse(
-          JSON.stringify({ error: "Forbidden: Hospital access required" }),
-          { status: 403, headers: { "Content-Type": "application/json" } }
-        );
+      // Allow radiologist access to hospital user endpoints for case reviews
+      if (pathname === "/api/hospital/getuser") {
+        if (token.role !== "ADMIN" && token.role !== "HOSPITAL" && token.role !== "RADIOLOGIST") {
+          return new NextResponse(
+            JSON.stringify({ error: "Forbidden: Insufficient permissions" }),
+            { status: 403, headers: { "Content-Type": "application/json" } }
+          );
+        }
+      } else {
+        // Other hospital routes remain restricted to ADMIN and HOSPITAL only
+        if (token.role !== "ADMIN" && token.role !== "HOSPITAL") {
+          return new NextResponse(
+            JSON.stringify({ error: "Forbidden: Hospital access required" }),
+            { status: 403, headers: { "Content-Type": "application/json" } }
+          );
+        }
       }
     }
 
@@ -145,6 +175,42 @@ export async function middleware(request: NextRequest) {
         JSON.stringify({ error: "Forbidden: Insufficient permissions for this endpoint" }),
         { status: 403, headers: { "Content-Type": "application/json" } }
       );
+    }
+  }
+
+  // HOSPITAL ONBOARDING LOGIC - Check setup status for hospital users
+  if (token?.role === "HOSPITAL" && token?.email && 
+      pathname !== "/welcome/hospital" && 
+      pathname !== "/signin" && 
+      pathname !== "/api/hospital/setup" && 
+      pathname !== "/api/hospital/setup-status" &&
+      !pathname.startsWith("/api/auth")) { // Also exclude auth routes
+    
+    try {
+      // Call your existing API route to check hospital setup status
+      const response = await fetch(new URL("/api/hospital/setup-status", request.url), {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Forward the session cookie to authenticate the request
+          "Cookie": request.headers.get("Cookie") || ""
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        
+        // If hospital hasn't completed setup, redirect to welcome page
+        // Use the correct property name from your API response
+        if (!data.hasCompletedSetup) {
+          return NextResponse.redirect(new URL("/welcome/hospital", request.url));
+        }
+      } else {
+        console.error("Hospital setup check failed:", response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error("Error checking hospital setup status:", error);
+      // On error, allow through to prevent blocking
     }
   }
 
@@ -218,6 +284,9 @@ export const config = {
     // Protected frontend routes
     '/admin/:path*',
     // All API routes
-    '/api/:path*'
+    '/api/:path*',
+    // Add welcome page to matcher
+    '/welcome/hospital',
+    '/welcome/radiologist'
   ],
-};  
+};

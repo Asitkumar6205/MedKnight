@@ -56,6 +56,7 @@ function CaseReview() {
   const [users, setUsers] = useState<User[]>([]);
   const [showSuccessSent, setShowSuccessSent] = useState(false);
   const router = useRouter();
+  const [isNoTechnicianModalOpen, setIsNoTechnicianModalOpen] = useState(false);
 
   const {
     register,
@@ -65,6 +66,16 @@ function CaseReview() {
   } = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
   });
+
+  // Add this function to handle opening the review modal with technician check
+  const openReviewModal = () => {
+    // Check if there are any technicians
+    if (!users || users.length === 0) {
+      setIsNoTechnicianModalOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
 
   const onReviewSubmit = async (data: ReviewFormData) => {
     setIsReviewModalOpen(false);
@@ -78,7 +89,7 @@ function CaseReview() {
 
       // Prepare the data to be sent to the API
       const updateData = {
-        patientId: patientId, // You'll need to get the case ID from props or state
+        patientId: patientId,
         doctorPhNo: data.phone,
         technicianName: technicianName,
         reviewReason: data.reason,
@@ -105,7 +116,7 @@ function CaseReview() {
       setTimeout(() => {
         setShowSuccessSent(false);
         router.push("/admin/completed-orders");
-      }, 2000); // Assuming you have a function to close the modal/form
+      }, 2000);
     } catch (error) {
       console.error("Error updating review information:", error);
     } finally {
@@ -132,6 +143,11 @@ function CaseReview() {
   useEffect(() => {
     fetchUsers();
   }, []);
+
+  const handleAddTechnician = () => {
+    setIsNoTechnicianModalOpen(false);
+    router.push("/admin/hospital-users");
+  };
 
   return (
     <div className="p-4 h-auto min-h-screen bg-stone-100">
@@ -197,7 +213,10 @@ function CaseReview() {
           {studies ? (
             <ul className="px-2 gap-2 items-start justify-start flex flex-col">
               {studies.split(",").map((study, index) => (
-                <li key={index} className="font-normal list-none border px-4 py-2 text-stone-700 border-stone-200 rounded bg-stone-50">
+                <li
+                  key={index}
+                  className="font-normal list-none border px-4 py-2 text-stone-700 border-stone-200 rounded bg-stone-50"
+                >
                   {study.trim()}
                   {(studyType || studySide || studyView) && index === 0 ? (
                     <span className="text-stone-500 ml-1">
@@ -234,9 +253,7 @@ function CaseReview() {
             {/* Add User Button */}
             <div className="flex justify-center mt-2 ">
               <button
-                onClick={() =>
-                  reviewCase !== "true" && setIsReviewModalOpen(true)
-                }
+                onClick={() => reviewCase !== "true" && openReviewModal()}
                 disabled={reviewCase == "true"}
                 className={`py-2 pl-6 px-8 rounded flex gap-2 items-center ${
                   reviewCase == "true"
@@ -250,6 +267,46 @@ function CaseReview() {
                 <span> Send for Review </span>
               </button>
             </div>
+
+            {isNoTechnicianModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-10">
+                <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+                  {/* Close Button */}
+                  <button
+                    className="absolute top-2 right-2 text-stone-600 hover:text-stone-500"
+                    onClick={() => setIsNoTechnicianModalOpen(false)}
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+
+                  <h2 className="text-xl font-semibold mb-4">
+                    No Technicians Available
+                  </h2>
+
+                  <div className="space-y-4">
+                    <p className="text-stone-600">
+                      You need to add technicians before you can send reports
+                      for review.
+                    </p>
+
+                    <div className="flex justify-center space-x-3">
+                      <button
+                        onClick={() => setIsNoTechnicianModalOpen(false)}
+                        className="bg-red-500 text-white px-6 py-2 rounded hover:bg-red-600"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleAddTechnician}
+                        className="bg-stone-700 text-white px-6 py-2 rounded hover:bg-stone-800"
+                      >
+                        Add Technician
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Review Modal */}
             {isReviewModalOpen && (
@@ -280,6 +337,7 @@ function CaseReview() {
                         {...register("name")}
                         className="w-full border rounded px-2 py-1"
                       >
+                        <option value="">Select a technician</option>
                         {users.map((technician) => (
                           <option key={technician.id} value={technician.id}>
                             {technician.name}
@@ -338,12 +396,20 @@ function CaseReview() {
                       <button
                         type="submit"
                         className="bg-stone-700 text-white px-8 py-2 rounded hover:bg-stone-800"
+                        disabled={loading}
                       >
-                        Send
+                        {loading ? "Sending..." : "Send"}
                       </button>
                     </div>
                   </form>
                 </div>
+              </div>
+            )}
+
+            {/* Success Message */}
+            {showSuccessSent && (
+              <div className="fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow-lg z-20">
+                Report sent for review successfully!
               </div>
             )}
             {/* Add User Button */}

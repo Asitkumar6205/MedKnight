@@ -37,12 +37,13 @@ export async function GET(req: NextRequest) {
     });
     
     if (existingUser) {
-      // If user exists but not verified, mark as verified
+      // If user exists but not verified, mark as verified and update userType
       if (!existingUser.emailVerified) {
         await db.user.update({
           where: { email },
           data: { 
             emailVerified: new Date(),
+            userType: userData.userType, // Add the userType field
             // Ensure the user remains in PENDING_APPROVAL status
             status: 'PENDING_APPROVAL',
             role: 'PENDING'
@@ -56,6 +57,7 @@ export async function GET(req: NextRequest) {
           username: userData.username,
           email: email,
           password: userData.password, // Already hashed from previous step
+          userType: userData.userType, // Add the userType field here
           emailVerified: new Date(),
           status: 'PENDING_APPROVAL', // Set the initial status as pending approval
           role: 'PENDING' // Set role as pending
@@ -80,4 +82,3 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/error?message=Verification failed', req.url));
   }
 }
-
