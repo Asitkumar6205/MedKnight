@@ -6,10 +6,11 @@ import formattedOutput from "./formatted_output.json";
 import * as z from "zod";
 import { X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useActiveCase } from "@/app/context/ActiveCaseContext";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
+  patientAge: z.string().min(1, "Doctor name is required"),
+  patientContactNo: z.string().min(10, "Doctor name is required"),
   doctor: z.string().min(1, "Doctor name is required"),
   priority: z.enum(["Routine", "Urgent", "Stat"]).default("Routine"),
   history: z.string().min(1, "Clinical history is required"),
@@ -25,6 +26,11 @@ const formSchema = z.object({
       return val !== "[]" && val !== "";
     }
   }, "At least one study must be selected"),
+
+  // Add the missing fields
+  studyView: z.array(z.string()).optional().default([]),
+  studySide: z.array(z.string()).optional().default([]),
+  studyType: z.array(z.string()).optional().default([]),
 
   // File Upload Validation
   files: z
@@ -43,8 +49,12 @@ const formSchema = z.object({
 type StudyData = {
   [studyName: string]: {
     price?: number;
-    // format?: string;
-    [field: string]: string[] | number | undefined;
+    subspeciality?: string;
+    qualifications?: string[];
+    "Select Type"?: string[];
+    "Select Side"?: string[];
+    "Select View"?: string[];
+    [field: string]: string[] | string | number | undefined;
   };
 };
 
@@ -77,7 +87,6 @@ export default function PatientUploadForm() {
 
   const router = useRouter();
 
-  const { setActiveCase } = useActiveCase();
 
   const searchParams = useSearchParams();
   const patientId = searchParams?.get("patientId");
@@ -89,6 +98,7 @@ export default function PatientUploadForm() {
   const studyDate = searchParams?.get("studyDate");
   const studyTime = searchParams?.get("time");
   const series = searchParams?.get("series");
+  const images = searchParams?.get("images");
 
   useEffect(() => {
     setStudies(formattedOutput); // Set data directly
@@ -340,7 +350,6 @@ export default function PatientUploadForm() {
 
       if (patientId) {
         formData.append("patientId", patientId);
-        setActiveCase(patientId, true, true);
       }
       if (studyUID) {
         formData.append("studyUID", studyUID);
@@ -357,7 +366,6 @@ export default function PatientUploadForm() {
       if (modality) {
         formData.append("modality", modality);
       }
-
       if (studyDate) {
         formData.append("studyDate", studyDate);
       }
@@ -367,11 +375,23 @@ export default function PatientUploadForm() {
       if (series) {
         formData.append("series", series);
       }
+      if (images) {
+        formData.append("images", images);
+      }
 
       // Add text fields
+      formData.append("patientAge", data.patientAge);
+      formData.append("patientContactNo", data.patientContactNo);
       formData.append("doctor", data.doctor);
       formData.append("priority", data.priority || "Routine");
       formData.append("history", data.history);
+
+      // ADD THIS: Include hospitalId - you need to get this from your app context/state
+      // Replace with actual hospital ID from your authentication/context
+      formData.append(
+        "hospitalId",
+        data.hospitalId || "your-default-hospital-id"
+      );
 
       // Transform selected options into structured format
       const structuredStudies: Record<
@@ -379,8 +399,17 @@ export default function PatientUploadForm() {
         Record<string, Record<string, string[]>>
       > = {};
 
+      // ... rest of your existing code remains the same
+
       // Collect prices for selected studies
       const studyPrices: Record<string, number> = {};
+
+      // NEW: Collect study metadata (qualifications and subspeciality)
+      const studyMetadata: Record<
+        string,
+        { qualifications: string[]; subspeciality: string }
+      > = {};
+
       let totalAmount = 0;
 
       selectedStudies.forEach((studyName) => {
@@ -453,6 +482,15 @@ export default function PatientUploadForm() {
           totalAmount += price * multiplier;
         }
 
+        // NEW: Extract qualifications and subspeciality for each study
+        const qualifications = studies[studyName]?.qualifications || [];
+        const subspeciality = studies[studyName]?.subspeciality || "";
+
+        studyMetadata[studyName] = {
+          qualifications: Array.isArray(qualifications) ? qualifications : [],
+          subspeciality: typeof subspeciality === "string" ? subspeciality : "",
+        };
+
         // Continue with your existing code for structuring studies
         Object.entries(studies[studyName] || {}).forEach(([field, values]) => {
           structuredStudies[studyName][field] = {};
@@ -476,6 +514,9 @@ export default function PatientUploadForm() {
       formData.append("totalAmount", totalAmount.toString());
       formData.append("selectedStudies", JSON.stringify(structuredStudies));
 
+      // NEW: Add study metadata to formData
+      formData.append("studyMetadata", JSON.stringify(studyMetadata));
+
       // Add files
       if (rFiles && rFiles.length > 0) {
         for (const file of rFiles) {
@@ -497,7 +538,7 @@ export default function PatientUploadForm() {
         method: "POST",
         body: formData,
         headers: {
-          Accept: "application/json", // Add this to ensure proper response parsing
+          Accept: "application/json",
         },
       });
 
@@ -514,7 +555,7 @@ export default function PatientUploadForm() {
         setTimeout(() => {
           setShowSuccess(false);
           router.push("/admin/active-orders");
-        }, 1000); // Reduced timeout to 1 second for faster navigation
+        }, 1000);
       } else {
         const errorData = await response.json();
         setError(errorData.error);
@@ -551,9 +592,7 @@ export default function PatientUploadForm() {
         </div>
       )}
 
-      <h2 className="text-2xl font-semibold text-stone-800 mb-2">
-        Draft Case
-      </h2>
+      <h2 className="text-2xl font-semibold text-stone-800 mb-2">Draft Case</h2>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -564,7 +603,55 @@ export default function PatientUploadForm() {
           {/* 1. Referring Doctor/Physician */}
           <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-3">
-              1. Referring Doctor
+              1. Patient's Age
+            </h3>
+            <div className="flex max-sm:flex-col flex-row items-start">
+              <label className="text-stone-700 min-w-36 p-1 mt-1">
+                Age <span className="text-red-500 font-bold"> *</span>
+              </label>
+              <div className="w-full">
+                <input
+                  placeholder="Patient's Age"
+                  className="w-full text-stone-600 p-2 border border-stone-300 hover:border-stone-500 focus:border-stone-500 focus:outline-none rounded"
+                  {...register("patientAge")}
+                />
+                {errors?.patientAge && (
+                  <p className="text-red-500 text-xs">
+                    {String(errors.patientAge?.message)}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 1. Referring Doctor/Physician */}
+          <div className="bg-white rounded p-4">
+            <h3 className="font-medium text-stone-700 mb-3">
+              2. Patient's Contact Details
+            </h3>
+            <div className="flex max-sm:flex-col flex-row items-start">
+              <label className="text-stone-700 min-w-36 p-1 mt-1">
+                Contact No. <span className="text-red-500 font-bold"> *</span>
+              </label>
+              <div className="w-full">
+                <input
+                  placeholder="Patient's Contact No."
+                  className="w-full text-stone-600 p-2 border border-stone-300 hover:border-stone-500 focus:border-stone-500 focus:outline-none rounded"
+                  {...register("patientContactNo")}
+                />
+                {errors?.patientContactNo && (
+                  <p className="text-red-500 text-xs">
+                    {String(errors.patientContactNo?.message)}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 1. Referring Doctor/Physician */}
+          <div className="bg-white rounded p-4">
+            <h3 className="font-medium text-stone-700 mb-3">
+              3. Referring Doctor
             </h3>
             <div className="flex max-sm:flex-col flex-row items-start">
               <label className="text-stone-700 min-w-36 p-1 mt-1">
@@ -572,7 +659,7 @@ export default function PatientUploadForm() {
               </label>
               <div className="w-full">
                 <input
-                  placeholder="Doctor Name"
+                  placeholder="Doctor's Name"
                   className="w-full text-stone-600 p-2 border border-stone-300 hover:border-stone-500 focus:border-stone-500 focus:outline-none rounded"
                   {...register("doctor")}
                 />
@@ -588,7 +675,7 @@ export default function PatientUploadForm() {
           {/* 2. Reporting Preferences */}
           <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-3">
-              2. Reporting Preferences
+              4. Reporting Preferences
             </h3>
             <div className="flex max-sm:flex-col flex-row items-start">
               <label className="text-stone-700 w-32 lg:w-36 flex-none p-1">
@@ -618,7 +705,7 @@ export default function PatientUploadForm() {
           {/* 3. Clinical History/Report with File Upload */}
           <div className="bg-white rounded p-4">
             <h3 className="font-medium text-stone-700 mb-3">
-              3. Clinical History
+              5. Clinical History
               <span className="text-red-500 font-bold"> *</span>
             </h3>
             <textarea
@@ -734,7 +821,7 @@ export default function PatientUploadForm() {
           {/* 4. Select Study */}
           <div className="bg-white rounded p-4 ">
             <h3 className="font-medium text-stone-700 mb-3">
-              4. Select Study <span className="text-red-500 font-bold"> *</span>
+              6. Select Study <span className="text-red-500 font-bold"> *</span>
             </h3>
 
             {/* Search Input */}
@@ -826,10 +913,12 @@ export default function PatientUploadForm() {
                     </h4>
                     <div className="flex flex-wrap gap-3">
                       {Object.entries(studies[study] || {})
-                        // Filter out 'price' and 'Additional studies' fields
+                        // Filter to only show specific fields
                         .filter(
                           ([field]) =>
-                            field !== "price" && field !== "Additional studies"
+                            field === "Select Side" ||
+                            field === "Select View" ||
+                            field === "Select Type"
                         )
                         .map(([field, values]) => (
                           <div
@@ -838,11 +927,7 @@ export default function PatientUploadForm() {
                           >
                             <h5 className="text-sm text-stone-600 font-medium mb-1">
                               {field}
-                              {field != "Select Gender" && (
-                                <span className="text-red-500 font-bold">
-                                  *
-                                </span>
-                              )}
+                              <span className="text-red-500 font-bold">*</span>
                             </h5>
                             <div className="flex flex-row flex-wrap items-center">
                               {Array.isArray(values) &&
@@ -852,16 +937,7 @@ export default function PatientUploadForm() {
                                     className="flex items-center mr-4 mb-2 text-sm text-stone-700 whitespace-nowrap"
                                   >
                                     <input
-                                      type={
-                                        field == "Select Gender"
-                                          ? "radio"
-                                          : "checkbox"
-                                      }
-                                      name={
-                                        field == "Select Gender"
-                                          ? `${study}-gender`
-                                          : undefined
-                                      }
+                                      type="checkbox"
                                       className="accent-stone-700 mr-1"
                                       checked={
                                         selectedOptions[study]?.includes(
@@ -895,6 +971,7 @@ export default function PatientUploadForm() {
             </div>
           </div>
         )}
+
         {/* Submit Button */}
         <div className="flex justify-center">
           <button

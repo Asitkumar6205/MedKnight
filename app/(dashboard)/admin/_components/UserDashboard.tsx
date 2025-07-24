@@ -27,7 +27,6 @@ import {
   BarChart2,
   Clipboard,
   Award,
-  TrendingUp,
   PieChart as PieChartIcon,
   Filter,
   Download,
@@ -38,46 +37,90 @@ import { useEffect } from "react";
 import { User as UserIcon } from "lucide-react";
 import UserInfo from "./UserInfo";
 import AdminDashboard from "./AdminDashboard";
+import Link from "next/link";
 
-// Sample data - in a real application this would come from your API
-const caseData = [
-  { month: "Jan", reported: 145, active: 42, underReview: 15 },
-  { month: "Feb", reported: 132, active: 38, underReview: 12 },
-  { month: "Mar", reported: 151, active: 45, underReview: 18 },
-  { month: "Apr", reported: 164, active: 51, underReview: 22 },
-  { month: "May", reported: 178, active: 47, underReview: 19 },
-  { month: "Jun", reported: 162, active: 39, underReview: 14 },
-];
+interface ChartData {
+  name: string;
+  value: number;
+}
 
-const modalityData = [
-  { name: "MRI", value: 35 },
-  { name: "CT", value: 40 },
-  { name: "X-Ray", value: 15 },
-  // { name: "Ultrasound", value: 10 },
-];
+interface ChartDataWithPercentage extends ChartData {
+  percentage: string;
+}
 
-const priorityData = [
-  { name: "Stat", value: 15 },
-  { name: "Urgent", value: 15 },
-  { name: "Routine", value: 25 },
-];
+interface TurnaroundTimeData {
+  day: string;
+  time: number;
+  caseCount?: number;
+}
 
-const turnaroundTimeData = [
-  { day: "Mon", time: 3.2 },
-  { day: "Tue", time: 2.8 },
-  { day: "Wed", time: 3.5 },
-  { day: "Thu", time: 2.9 },
-  { day: "Fri", time: 3.1 },
-  { day: "Sat", time: 2.5 },
-  { day: "Sun", time: 2.3 },
-];
+interface CaseData {
+  month?: string;
+  week?: string;
+  quarter?: string;
+  reported: number;
+  active: number;
+  underReview: number;
+}
 
-const waitTimeData = [
-  { priority: "Urgent", avgTime: 0.5 },
-  { priority: "High", avgTime: 1.2 },
-  { priority: "Medium", avgTime: 2.4 },
-  { priority: "Low", avgTime: 3.8 },
-];
+interface OperationalData {
+  caseUrgencyTrendData: Array<{
+    month: string;
+    urgent: number;
+    high: number;
+    medium: number;
+  }>;
+  waitTimeData: Array<{
+    priority: string;
+    avgTime: number;
+  }>;
+  peakUsageData: Array<{
+    hour: string;
+    cases: number;
+  }>;
+  subspecialityData: Array<{
+    subspeciality: string;
+    cases: number;
+    availability: number;
+  }>;
+}
+
+interface DashboardData {
+  totalActiveCases: number;
+  urgentCases: number;
+  totalCases: number;
+  completedCases: number;
+  reviewCases: number;
+  loading: boolean;
+  averageTurnaroundTime: number;
+  lockedCases?: number;
+  priorityBreakdown?: ChartData[];
+  modalityBreakdown?: ChartData[];
+  caseData?: CaseData[];
+  turnaroundTimeData?: TurnaroundTimeData[];
+  weeklyTurnaroundTimeData?: TurnaroundTimeData[];
+  dateRange?: string;
+  operationalData?: OperationalData;
+}
+
+interface CaseDataItem {
+  id: string;
+  patientId: string;
+  patientName: string;
+  studyDescription: string;
+  modality: string;
+  priority: "Stat" | "Urgent" | "Routine";
+  doctor: string;
+  createdAt: string;
+  activeCase: boolean;
+  isLocked: boolean;
+  lockedAt?: string;
+  lockedByUser?: {
+    id: string;
+    name?: string;
+    username?: string;
+  };
+}
 
 const caseUrgencyTrendData = [
   { month: "Jan", urgent: 15, high: 25, medium: 65, low: 40 },
@@ -86,6 +129,33 @@ const caseUrgencyTrendData = [
   { month: "Apr", urgent: 19, high: 31, medium: 70, low: 44 },
   { month: "May", urgent: 23, high: 33, medium: 75, low: 47 },
   { month: "Jun", urgent: 20, high: 28, medium: 68, low: 46 },
+];
+
+const waitTimeData = [
+  { priority: "Stat", avgTime: 0.5 },
+  { priority: "Urgent", avgTime: 1.2 },
+  { priority: "Routine", avgTime: 6.2 },
+];
+
+const peakUsageData = [
+  { hour: "6am", cases: 5 },
+  { hour: "8am", cases: 12 },
+  { hour: "10am", cases: 25 },
+  { hour: "12pm", cases: 18 },
+  { hour: "2pm", cases: 22 },
+  { hour: "4pm", cases: 19 },
+  { hour: "6pm", cases: 15 },
+  { hour: "8pm", cases: 10 },
+  { hour: "10pm", cases: 7 },
+  { hour: "12am", cases: 3 },
+];
+
+const subspecialityData = [
+  { subspeciality: "Neuroradiology", cases: 32, availability: 85 },
+  { subspeciality: "Musculoskeletal", cases: 45, availability: 92 },
+  { subspeciality: "Abdominal", cases: 38, availability: 78 },
+  { subspeciality: "Chest", cases: 29, availability: 90 },
+  { subspeciality: "Cardiac", cases: 18, availability: 75 },
 ];
 
 const financialData = [
@@ -104,33 +174,12 @@ const radiologistPerformanceData = [
   { name: "Dr. Brown", satisfaction: 4.7, accuracy: 4.6, turnaround: 4.8 },
 ];
 
-const peakUsageData = [
-  { hour: "6am", cases: 5 },
-  { hour: "8am", cases: 12 },
-  { hour: "10am", cases: 25 },
-  { hour: "12pm", cases: 18 },
-  { hour: "2pm", cases: 22 },
-  { hour: "4pm", cases: 19 },
-  { hour: "6pm", cases: 15 },
-  { hour: "8pm", cases: 10 },
-  { hour: "10pm", cases: 7 },
-  { hour: "12am", cases: 3 },
-];
-
 const patientTimelineData = [
   { stage: "Scan Completed", avgTime: 0 },
   { stage: "Case Uploaded", avgTime: 0.5 },
   { stage: "Radiologist Assigned", avgTime: 0.8 },
   { stage: "Report Generated", avgTime: 3.2 },
   { stage: "Report Available to Patient", avgTime: 3.5 },
-];
-
-const subspecialtyData = [
-  { subspecialty: "Neuroradiology", cases: 32, availability: 85 },
-  { subspecialty: "Musculoskeletal", cases: 45, availability: 92 },
-  { subspecialty: "Abdominal", cases: 38, availability: 78 },
-  { subspecialty: "Chest", cases: 29, availability: 90 },
-  { subspecialty: "Cardiac", cases: 18, availability: 75 },
 ];
 
 const incidentalFindingsData = [
@@ -166,9 +215,263 @@ export default function UserDashboard() {
     image: string;
     name: string;
     role?: string;
-    email?: string; // Added email to the user state
+    email?: string;
   } | null>(null);
-  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false); // State to control modal visibility
+
+  const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
+  const [turnaroundTimeView, setTurnaroundTimeView] = useState<
+    "daily" | "weekly"
+  >("daily");
+  const [turnaroundDateRange, setTurnaroundDateRange] = useState<
+    "weekly" | "monthly" | "quarterly"
+  >("weekly");
+  const [turnaroundModality, setTurnaroundModality] = useState<string>("all");
+
+  const [dashboardData, setDashboardData] = useState<DashboardData>({
+    totalActiveCases: 0,
+    urgentCases: 0,
+    totalCases: 0,
+    completedCases: 0,
+    reviewCases: 0,
+    loading: true,
+    averageTurnaroundTime: 0,
+    lockedCases: 0,
+    priorityBreakdown: [],
+    modalityBreakdown: [],
+    caseData: [],
+    turnaroundTimeData: [],
+    weeklyTurnaroundTimeData: [],
+    dateRange: "monthly",
+    operationalData: undefined,
+  });
+
+  const [cases, setCases] = useState<CaseDataItem[]>([]);
+  const [dateRange, setDateRange] = useState("monthly");
+  const [operationalDateRange, setOperationalDateRange] = useState("monthly");
+
+  useEffect(() => {
+    const fetchOperationalData = async () => {
+      try {
+        const response = await fetch(
+          `/api/dashboard/operational?dateRange=${operationalDateRange}`
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          setDashboardData((prev) => ({
+            ...prev,
+            operationalData: data,
+          }));
+        } else {
+          console.log("Error fetching operational data:", data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching operational data:", error);
+      }
+    };
+
+    fetchOperationalData();
+  }, [operationalDateRange]);
+
+  // Fetch dashboard data
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setDashboardData((prev) => ({ ...prev, loading: true }));
+
+        const response = await fetch(
+          `/api/dashboard/stats?dateRange=${dateRange}`
+        );
+        const data = await response.json();
+
+        if (response.ok) {
+          setDashboardData({
+            totalActiveCases: data.totalActiveCases || 0,
+            urgentCases: data.urgentCases || 0,
+            totalCases: data.totalCases || 0,
+            completedCases: data.completedCases || 0,
+            reviewCases: data.reviewCases || 0,
+            loading: false,
+            averageTurnaroundTime: data.averageTurnaroundTime || 0,
+            lockedCases: data.lockedCases || 0,
+            priorityBreakdown: data.priorityBreakdown || [],
+            modalityBreakdown: data.modalityBreakdown || [],
+            caseData: data.caseData || [],
+            turnaroundTimeData: data.turnaroundTimeData || [],
+            weeklyTurnaroundTimeData: data.weeklyTurnaroundTimeData || [],
+            dateRange: data.dateRange || dateRange, // Fixed: now matches interface
+          });
+        } else {
+          console.log("Error fetching dashboard data:", data.message);
+          setDashboardData((prev) => ({ ...prev, loading: false }));
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+        setDashboardData((prev) => ({ ...prev, loading: false }));
+      }
+    };
+
+    fetchDashboardData();
+  }, [dateRange]);
+
+  // Function to get the appropriate dataKey for X-axis based on date range
+  const getXAxisDataKey = () => {
+    switch (dateRange) {
+      case "weekly":
+        return "week";
+      case "quarterly":
+        return "quarter";
+      case "monthly":
+      default:
+        return "month";
+    }
+  };
+
+  // Function to get chart title based on date range
+  const getChartTitle = () => {
+    switch (dateRange) {
+      case "weekly":
+        return "Weekly Case Summary (Last 8 Weeks)";
+      case "quarterly":
+        return "Quarterly Case Summary (Last 8 Quarters)";
+      case "monthly":
+      default:
+        return "Monthly Case Summary (Last 6 Months)";
+    }
+  };
+
+  // Export function for CSV download
+  const exportToCSV = () => {
+    // Fixed: Added null check and proper typing
+    const caseData = dashboardData.caseData || [];
+    if (caseData.length === 0) {
+      console.warn("No data to export");
+      return;
+    }
+
+    const csvData = caseData.map((item) => ({
+      Period: item.month || item.week || item.quarter || "",
+      "Reported Cases": item.reported,
+      "Active Cases": item.active,
+      "Under Review": item.underReview,
+    }));
+
+    const csvContent = [
+      Object.keys(csvData[0]).join(","),
+      ...csvData.map((row) => Object.values(row).join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `case-summary-${dateRange}-${
+      new Date().toISOString().split("T")[0]
+    }.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  // Fetch recent cases
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const response = await fetch("/api/getCases");
+        const data = await response.json();
+        setCases(data.cases || []);
+      } catch (error) {
+        console.error("Error fetching cases:", error);
+      }
+    };
+
+    fetchCases();
+  }, []);
+
+  const formatTurnaroundTime = (hours: number) => {
+    if (hours === 0) return "N/A";
+    if (hours < 1) {
+      const minutes = Math.round(hours * 60);
+      return `${minutes} min`;
+    }
+    if (hours < 24) {
+      return `${hours.toFixed(1)} hours`;
+    } else {
+      const days = Math.floor(hours / 24);
+      const remainingHours = hours % 24;
+      if (remainingHours < 1) {
+        return `${days} day${days !== 1 ? "s" : ""}`;
+      }
+      return `${days}d ${remainingHours.toFixed(1)}h`;
+    }
+  };
+
+  const getTurnaroundChartTitle = () => {
+    const baseTitle = "Average Turnaround Time";
+    const rangeText =
+      turnaroundDateRange === "weekly"
+        ? "Weekly"
+        : turnaroundDateRange === "monthly"
+        ? "Monthly"
+        : "Quarterly";
+    const viewText = turnaroundTimeView === "daily" ? "Daily" : "Weekly";
+    const modalityText =
+      turnaroundModality === "all" ? "All Modalities" : turnaroundModality;
+
+    return `${baseTitle} - ${rangeText} ${viewText} (${modalityText})`;
+  };
+
+  const getTurnaroundXAxisLabel = () => {
+    if (turnaroundTimeView === "weekly") {
+      return "Day of Week";
+    }
+
+    switch (turnaroundDateRange) {
+      case "weekly":
+        return "Day";
+      case "monthly":
+        return "Month";
+      case "quarterly":
+        return "Quarter";
+      default:
+        return "Period";
+    }
+  };
+
+  // Enhanced getCurrentTurnaroundData function
+  const getCurrentTurnaroundData = () => {
+    if (turnaroundTimeView === "weekly") {
+      return dashboardData.weeklyTurnaroundTimeData || [];
+    }
+    return dashboardData.turnaroundTimeData || [];
+  };
+
+  // Function to get summary statistics
+  const getTurnaroundSummary = () => {
+    const data = getCurrentTurnaroundData();
+
+    if (!data || data.length === 0) {
+      return { avg: 0, min: 0, max: 0, totalCases: 0 };
+    }
+
+    const validData = data.filter((d) => d.time > 0);
+    const times = validData.map((d) => d.time);
+    const totalCases = data.reduce((sum, d) => sum + (d.caseCount || 0), 0);
+
+    if (times.length === 0) {
+      return { avg: 0, min: 0, max: 0, totalCases };
+    }
+
+    const avg = times.reduce((sum, time) => sum + time, 0) / times.length;
+    const min = Math.min(...times);
+    const max = Math.max(...times);
+
+    return {
+      avg: Math.round(avg * 100) / 100,
+      min: Math.round(min * 100) / 100,
+      max: Math.round(max * 100) / 100,
+      totalCases,
+    };
+  };
 
   useEffect(() => {
     if (status === "authenticated" && session?.user) {
@@ -176,10 +479,50 @@ export default function UserDashboard() {
         image: session.user.image || "",
         name: session.user.name || (session.user.username as string),
         role: session.user.role || "",
-        email: session.user.email || "", // Store the email from session
+        email: session.user.email || "",
       });
     }
   }, [session, status]);
+
+  // Calculate percentages for labels
+  const calculatePercentages = (
+    data: ChartData[]
+  ): ChartDataWithPercentage[] => {
+    const total = data.reduce(
+      (sum: number, item: ChartData) => sum + item.value,
+      0
+    );
+    return data.map((item: ChartData) => ({
+      ...item,
+      percentage: total > 0 ? ((item.value / total) * 100).toFixed(0) : "0",
+    }));
+  };
+
+  // Custom tooltip for turnaround time chart
+  const TurnaroundTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-white p-3 border border-gray-200 rounded shadow-lg">
+          <p className="font-semibold text-gray-800">{label}</p>
+          <p className="text-blue-600 font-medium">
+            Avg. Time: {formatTurnaroundTime(data.time)}
+          </p>
+          {data.caseCount !== undefined && (
+            <p className="text-gray-600 text-sm">
+              Cases: {data.caseCount} {data.caseCount === 1 ? "case" : "cases"}
+            </p>
+          )}
+          {turnaroundModality !== "all" && (
+            <p className="text-purple-600 text-sm">
+              Modality: {turnaroundModality}
+            </p>
+          )}
+        </div>
+      );
+    }
+    return null;
+  };
 
   // Toggle the user info modal
   const toggleUserInfo = () => {
@@ -187,7 +530,6 @@ export default function UserDashboard() {
   };
 
   const [activeTab, setActiveTab] = useState("overview");
-  const [dateRange, setDateRange] = useState("monthly");
   const [showNotifications, setShowNotifications] = useState(false);
 
   const notifications = [
@@ -267,112 +609,194 @@ export default function UserDashboard() {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <FileText className="mr-2 text-blue-500" />
-            <h3 className="text-lg font-semibold">Case Summary</h3>
+            <h3 className="text-lg font-semibold">{getChartTitle()}</h3>
           </div>
           <div className="flex space-x-2">
             <select
-              className="bg-gray-100 text-sm rounded-lg p-1 border border-gray-200"
+              className="bg-gray-100 text-sm rounded-lg p-2 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => setDateRange(e.target.value)}
               value={dateRange}
+              disabled={dashboardData.loading}
             >
               <option value="weekly">Weekly</option>
               <option value="monthly">Monthly</option>
               <option value="quarterly">Quarterly</option>
             </select>
-            <button className="p-1 text-gray-500 hover:text-gray-700">
+            <button
+              className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              onClick={exportToCSV}
+              disabled={
+                dashboardData.loading ||
+                !dashboardData.caseData ||
+                dashboardData.caseData.length === 0
+              }
+              title="Export to CSV"
+            >
               <Download size={16} />
             </button>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart
-            data={caseData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="reported" name="Reported Cases" fill="#0088FE" />
-            <Bar dataKey="active" name="Active Cases" fill="#00C49F" />
-            <Bar dataKey="underReview" name="Under Review" fill="#FFBB28" />
-          </BarChart>
-        </ResponsiveContainer>
+
+        {dashboardData.loading ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : !dashboardData.caseData || dashboardData.caseData.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No data available for the selected period
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart
+              data={dashboardData.caseData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey={getXAxisDataKey()}
+                fontSize={12}
+                angle={0}
+                textAnchor="middle"
+                height={30}
+              />
+              <YAxis allowDecimals={false} fontSize={12} />
+              <Tooltip
+                formatter={(value: number, name: string) => [value, name]}
+                labelFormatter={(label) => {
+                  switch (dateRange) {
+                    case "weekly":
+                      return `Week of ${label}`;
+                    case "quarterly":
+                      return `Quarter ${label}`;
+                    case "monthly":
+                    default:
+                      return `Month: ${label}`;
+                  }
+                }}
+              />
+              <Legend />
+              <Bar dataKey="reported" name="Reported Cases" fill="#0088FE" />
+              <Bar dataKey="active" name="Active Cases" fill="#00C49F" />
+              <Bar dataKey="underReview" name="Under Review" fill="#FFBB28" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* Priority Distribution */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <AlertTriangle className="mr-2 text-yellow-500" />
-            <h3 className="text-lg font-semibold">Priority Distribution</h3>
+      <div className="bg-white rounded-lg shadow p-3 sm:p-4 min-w-0">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex items-center min-w-0">
+            <AlertTriangle className="mr-2 text-yellow-500 flex-shrink-0" />
+            <h3 className="text-sm sm:text-lg font-semibold truncate">
+              Priority Distribution
+            </h3>
           </div>
-          <button className="p-1 text-gray-500 hover:text-gray-700">
+          <button className="p-1 text-gray-500 hover:text-gray-700 flex-shrink-0">
             <Filter size={16} />
           </button>
         </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
-            <Pie
-              data={priorityData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
-              }
-            >
-              {priorityData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+
+        <div className="flex flex-col sm:flex-row items-center">
+          <div className="flex flex-row sm:flex-col justify-center sm:justify-start space-x-4 sm:space-x-0 sm:space-y-2 mb-4 sm:mb-0 sm:pr-4 w-full sm:w-1/2">
+            {calculatePercentages(dashboardData.priorityBreakdown || []).map(
+              (entry: ChartDataWithPercentage, index: number) => (
+                <div key={entry.name} className="flex items-center">
+                  <div
+                    className="w-3 h-3 rounded-full mr-1 sm:mr-2 flex-shrink-0"
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  ></div>
+                  <span className="font-medium whitespace-nowrap">
+                    {entry.name}: {entry.percentage}%
+                  </span>
+                </div>
+              )
+            )}
+          </div>
+
+          <div className="w-full sm:w-1/2 h-48 sm:h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={dashboardData.priorityBreakdown}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="100%"
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {(dashboardData.priorityBreakdown || []).map(
+                    (entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    )
+                  )}
+                </Pie>
+                <Tooltip formatter={(value, name) => [`${value}`, name]} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Modality Distribution */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center">
-            <BarChart2 className="mr-2 text-purple-500" />
-            <h3 className="text-lg font-semibold">Modality Distribution</h3>
+      <div className="bg-white rounded-lg shadow p-3 sm:p-4 min-w-0">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex items-center min-w-0">
+            <BarChart2 className="mr-2 text-purple-500 flex-shrink-0" />
+            <h3 className="text-sm sm:text-lg font-semibold truncate">
+              Modality Distribution
+            </h3>
           </div>
-          <button className="p-1 text-gray-500 hover:text-gray-700">
+          <button className="p-1 text-gray-500 hover:text-gray-700 flex-shrink-0">
             <PieChartIcon size={16} />
           </button>
         </div>
-        <ResponsiveContainer width="100%" height={210}>
-          <PieChart>
-            <Pie
-              data={modalityData}
-              cx="50%"
-              cy="50%"
-              labelLine={false}
-              outerRadius={80}
-              fill="#8884d8"
-              dataKey="value"
-              label={({ name, percent }) =>
-                `${name}: ${(percent * 100).toFixed(0)}%`
-              }
-            >
-              {modalityData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
+
+        <div className="flex flex-col sm:flex-row items-center">
+          <div className="flex flex-row sm:flex-col justify-center sm:justify-start space-x-4 sm:space-x-0 sm:space-y-2 mb-4 sm:mb-0 sm:pr-4 w-full sm:w-1/2">
+            {calculatePercentages(dashboardData.modalityBreakdown || []).map(
+              (entry: ChartDataWithPercentage, index: number) => (
+                <div key={entry.name} className="flex items-center">
+                  <div
+                    className="w-3 h-3 rounded-full mr-1 sm:mr-2 flex-shrink-0"
+                    style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                  ></div>
+                  <span className="font-medium whitespace-nowrap">
+                    {entry.name}: {entry.percentage}%
+                  </span>
+                </div>
+              )
+            )}
+          </div>
+
+          <div className="w-full sm:w-1/2 h-48 sm:h-52">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={dashboardData.modalityBreakdown}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius="100%"
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {(dashboardData.modalityBreakdown || []).map(
+                    (entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    )
+                  )}
+                </Pie>
+                <Tooltip formatter={(value, name) => [`${value}`, name]} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Average Turnaround Time */}
@@ -385,115 +809,168 @@ export default function UserDashboard() {
             </h3>
           </div>
           <div className="flex space-x-2">
-            <select className="bg-gray-100 text-sm rounded-lg p-1 border border-gray-200">
-              <option>All Modalities</option>
-              <option>MRI</option>
-              <option>CT</option>
-              <option>X-Ray</option>
-              {/* <option>Ultrasound</option> */}
+            {/* Date Range Filter */}
+            <select
+              className="bg-gray-100 text-sm rounded-lg p-1 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) =>
+                setTurnaroundDateRange(
+                  e.target.value as "weekly" | "monthly" | "quarterly"
+                )
+              }
+              value={turnaroundDateRange}
+            >
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+            </select>
+
+            {/* View Type Filter */}
+            <select
+              className="bg-gray-100 text-sm rounded-lg p-1 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) =>
+                setTurnaroundTimeView(e.target.value as "daily" | "weekly")
+              }
+              value={turnaroundTimeView}
+            >
+              <option value="daily">Daily Average</option>
+              <option value="weekly">Weekly Average</option>
+            </select>
+
+            {/* Modality Filter */}
+            <select
+              className="bg-gray-100 text-sm rounded-lg p-1 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) => setTurnaroundModality(e.target.value)}
+              value={turnaroundModality}
+            >
+              <option value="all">All Modalities</option>
+              <option value="MRI">MRI</option>
+              <option value="CT">CT</option>
+              <option value="X-Ray">X-Ray</option>
+              <option value="Ultrasound">Ultrasound</option>
+              <option value="Mammography">Mammography</option>
+              <option value="Nuclear Medicine">Nuclear Medicine</option>
             </select>
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={turnaroundTimeData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="day" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="time"
-              name="Avg. Hours"
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
 
-      {/* AI-Assisted Triage Effectiveness */}
-      <div className="bg-white rounded-lg shadow p-4">
-        <div className="flex items-center mb-4">
-          <TrendingUp className="mr-2 text-blue-500" />
-          <h3 className="text-lg font-semibold">AI Triage Effectiveness</h3>
+        {dashboardData.loading ? (
+          <div className="flex items-center justify-center h-48">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={200}>
+            <LineChart data={getCurrentTurnaroundData()}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="day"
+                fontSize={12}
+                angle={turnaroundDateRange === "quarterly" ? -45 : 0}
+                textAnchor={
+                  turnaroundDateRange === "quarterly" ? "end" : "middle"
+                }
+                height={turnaroundDateRange === "quarterly" ? 60 : 30}
+              />
+              <YAxis fontSize={12} tickFormatter={(value) => `${value}h`} />
+              <Tooltip content={<TurnaroundTooltip />} />
+              <Legend />
+              <Line
+                type="monotone"
+                dataKey="time"
+                name="Avg. Hours"
+                stroke="#8884d8"
+                strokeWidth={2}
+                activeDot={{ r: 6 }}
+                dot={{ r: 4 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
+
+        {/* Enhanced data summary */}
+        <div className="mt-2 text-xs text-gray-500 flex justify-between">
+          <span>
+            {turnaroundTimeView === "daily"
+              ? `Daily averages for ${turnaroundDateRange} period`
+              : `Weekly averages by day of week (${turnaroundDateRange} period)`}
+          </span>
+          <span>
+            {turnaroundModality === "all"
+              ? "All modalities"
+              : `${turnaroundModality} only`}
+          </span>
         </div>
-        <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={aiTriageMetricsData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="withAI"
-              name="With AI (mins)"
-              stroke="#00C49F"
-            />
-            <Line
-              type="monotone"
-              dataKey="withoutAI"
-              name="Without AI (mins)"
-              stroke="#FF8042"
-            />
-          </LineChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );
 
-  const renderOperationalTab = () => (
+  const renderOperationalTab = ( ) => (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Case Urgency Distribution */}
       <div className="bg-white rounded-lg shadow p-4 col-span-1 md:col-span-2">
-        <div className="flex items-center mb-4">
-          <AlertTriangle className="mr-2 text-yellow-500" />
-          <h3 className="text-lg font-semibold">
-            Case Urgency Distribution Over Time
-          </h3>
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <AlertTriangle className="mr-2 text-yellow-500" />
+            <h3 className="text-lg font-semibold">
+              Case Urgency Distribution Over Time
+            </h3>
+          </div>
+          <select
+            className="bg-gray-100 text-sm rounded-lg p-2 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onChange={(e) => setOperationalDateRange(e.target.value)}
+            value={operationalDateRange}
+            disabled={dashboardData.loading}
+          >
+            <option value="monthly">Last 6 Months</option>
+            <option value="quarterly">Last 8 Quarters</option>
+            <option value="yearly">Last 3 Years</option>
+          </select>
         </div>
-        <ResponsiveContainer width="100%" height={300}>
-          <AreaChart data={caseUrgencyTrendData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Area
-              type="monotone"
-              dataKey="urgent"
-              name="Urgent"
-              stackId="1"
-              fill="#FF8042"
-              stroke="#FF8042"
-            />
-            <Area
-              type="monotone"
-              dataKey="high"
-              name="High"
-              stackId="1"
-              fill="#FFBB28"
-              stroke="#FFBB28"
-            />
-            <Area
-              type="monotone"
-              dataKey="medium"
-              name="Medium"
-              stackId="1"
-              fill="#00C49F"
-              stroke="#00C49F"
-            />
-            <Area
-              type="monotone"
-              dataKey="low"
-              name="Low"
-              stackId="1"
-              fill="#0088FE"
-              stroke="#0088FE"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+
+        {dashboardData.loading || !dashboardData.operationalData ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : dashboardData.operationalData.caseUrgencyTrendData.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No urgency trend data available for the selected period
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart
+              data={dashboardData.operationalData.caseUrgencyTrendData}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Legend />
+              <Area
+                type="monotone"
+                dataKey="urgent"
+                name="Stat"
+                stackId="1"
+                fill="#FF8042"
+                stroke="#FF8042"
+              />
+              <Area
+                type="monotone"
+                dataKey="high"
+                name="Urgent"
+                stackId="1"
+                fill="#FFBB28"
+                stroke="#FFBB28"
+              />
+              <Area
+                type="monotone"
+                dataKey="medium"
+                name="Routine"
+                stackId="1"
+                fill="#00C49F"
+                stroke="#00C49F"
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* Average Wait Times */}
@@ -504,72 +981,107 @@ export default function UserDashboard() {
             Average Wait Times by Priority (Hours)
           </h3>
         </div>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart data={waitTimeData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="priority" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="avgTime" name="Avg. Hours" fill="#8884d8" />
-          </BarChart>
-        </ResponsiveContainer>
+
+        {dashboardData.loading || !dashboardData.operationalData ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : dashboardData.operationalData.waitTimeData.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No wait time data available
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={dashboardData.operationalData.waitTimeData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="priority" />
+              <YAxis />
+              <Tooltip
+                formatter={(value) => [`${value} hours`, "Avg. Hours"]}
+              />
+              <Bar dataKey="avgTime" name="Avg. Hours" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
       {/* Peak Usage Times */}
       <div className="bg-white rounded-lg shadow p-4">
         <div className="flex items-center mb-4">
           <Activity className="mr-2 text-green-500" />
-          <h3 className="text-lg font-semibold">Peak Usage Times</h3>
+          <h3 className="text-lg font-semibold">
+            Peak Usage Times (Last 30 Days)
+          </h3>
         </div>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={peakUsageData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="hour" />
-            <YAxis />
-            <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="cases"
-              name="Case Volume"
-              stroke="#82ca9d"
-            />
-          </LineChart>
-        </ResponsiveContainer>
+
+        {dashboardData.loading || !dashboardData.operationalData ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : dashboardData.operationalData.peakUsageData.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No peak usage data available
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={dashboardData.operationalData.peakUsageData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="hour" />
+              <YAxis allowDecimals={false} />
+              <Tooltip
+                formatter={(value) => [`${value} cases`, "Case Volume"]}
+              />
+              <Line
+                type="monotone"
+                dataKey="cases"
+                name="Case Volume"
+                stroke="#82ca9d"
+                strokeWidth={2}
+                activeDot={{ r: 6 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
 
-      {/* Subspecialty Availability */}
+      {/* Subspeciality Case Distribution */}
       <div className="bg-white rounded-lg shadow p-4 col-span-1 md:col-span-2">
         <div className="flex items-center mb-4">
           <Users className="mr-2 text-indigo-500" />
           <h3 className="text-lg font-semibold">
-            Subspecialty Availability vs. Case Mix
+            Case Distribution by Subspeciality (Last 30 Days)
           </h3>
         </div>
-        <ResponsiveContainer width="100%" height={250}>
-          <BarChart
-            data={subspecialtyData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="subspecialty" />
-            <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
-            <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
-            <Tooltip />
-            <Legend />
-            <Bar
-              yAxisId="left"
-              dataKey="cases"
-              name="Monthly Cases"
-              fill="#8884d8"
-            />
-            <Bar
-              yAxisId="right"
-              dataKey="availability"
-              name="Availability %"
-              fill="#82ca9d"
-            />
-          </BarChart>
-        </ResponsiveContainer>
+
+        {dashboardData.loading || !dashboardData.operationalData ? (
+          <div className="flex items-center justify-center h-64">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+          </div>
+        ) : dashboardData.operationalData.subspecialityData.length === 0 ? (
+          <div className="flex items-center justify-center h-64 text-gray-500">
+            No subspeciality data available
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart
+              data={dashboardData.operationalData.subspecialityData}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="subspeciality"
+                angle={-45}
+                textAnchor="end"
+                height={80}
+                fontSize={11}
+              />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="cases" name="Cases Count" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );
@@ -968,18 +1480,18 @@ export default function UserDashboard() {
                 {renderNotifications()}
               </div>
               {/* <div className=""> */}
-                {/* <h2 className="text-lg text-stone-500 ">
+              {/* <h2 className="text-lg text-stone-500 ">
             Welcome
             <span className="text-purple-600 font-bold">
               {user?.name || "Guest"}
             </span>
           </h2> */}
-                <div
-                  className="bg-purple-100 border border-purple-300 p-2 rounded-full text-purple-900 cursor-pointer hover:bg-purple-200 transition-colors"
-                  onClick={toggleUserInfo}
-                >
-                  <UserIcon strokeWidth={1} />
-                </div>
+              <div
+                className="bg-purple-100 border border-purple-300 p-2 rounded-full text-purple-900 cursor-pointer hover:bg-purple-200 transition-colors"
+                onClick={toggleUserInfo}
+              >
+                <UserIcon strokeWidth={1} />
+              </div>
               {/* </div> */}
             </div>
           </div>
@@ -1010,31 +1522,44 @@ export default function UserDashboard() {
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Total Active Cases</p>
-              <p className="text-2xl font-bold text-gray-900">248</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {dashboardData.totalActiveCases}
+              </p>
               <p className="text-xs text-green-500">↑ 5% from last week</p>
             </div>
             <FileText className="h-10 w-10 text-blue-500" />
           </div>
+
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Avg. Turnaround Time</p>
-              <p className="text-2xl font-bold text-gray-900">2.8 hrs</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {dashboardData.loading
+                  ? "Loading..."
+                  : formatTurnaroundTime(
+                      dashboardData.averageTurnaroundTime || 0
+                    )}
+              </p>
               <p className="text-xs text-green-500">↓ 12% from last week</p>
             </div>
             <Clock className="h-10 w-10 text-green-500" />
           </div>
+
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div>
-              <p className="text-sm text-gray-500">Urgent Cases</p>
-              <p className="text-2xl font-bold text-gray-900">35</p>
+              <p className="text-sm text-gray-500">Stat/Urgent Cases</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {dashboardData.urgentCases}
+              </p>
               <p className="text-xs text-yellow-500">↔ No change</p>
             </div>
             <AlertTriangle className="h-10 w-10 text-yellow-500" />
           </div>
+
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Available Radiologists</p>
-              <p className="text-2xl font-bold text-gray-900">16</p>
+              <p className="text-2xl font-bold text-gray-900">coming soon...</p>
               <p className="text-xs text-red-500">↓ 2 from yesterday</p>
             </div>
             <Users className="h-10 w-10 text-purple-500" />
@@ -1108,10 +1633,10 @@ export default function UserDashboard() {
                 Help
               </button>
               <button className="text-sm text-gray-500 hover:text-gray-700">
-                Privacy
+                <Link href={"/privacy-policy"}>Privacy</Link>
               </button>
               <button className="text-sm text-gray-500 hover:text-gray-700">
-                Terms
+                <Link href={"/terms-of-service"}>Terms</Link>
               </button>
             </div>
           </div>

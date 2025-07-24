@@ -23,6 +23,7 @@ interface Case {
   series: number;
   reportTime: string;
   reviewCase: boolean;
+  completedCase: boolean;
 }
 
 interface Study {
@@ -47,7 +48,7 @@ interface DateRangeSelectorProps {
   setToDate: (e: { target: { value: string } }) => void;
 }
 
-export default function ActiveCasesPage() {
+export default function CompletedCasesPage() {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [fromDate, setFromDate] = useState<string>("");
@@ -70,12 +71,13 @@ export default function ActiveCasesPage() {
       // Check if we got cases data before setting the state
       if (data.cases && Array.isArray(data.cases)) {
         setStudies(data.cases);
+        setError(""); // Clear any previous errors
       } else {
         console.error("Unexpected data format received:", data);
         setError("Failed to fetch studies: Unexpected data format");
       }
     } catch (error) {
-      console.error("Error fetching active cases:", error);
+      console.error("Error fetching completed cases:", error);
       setError(
         error instanceof Error ? error.message : "Failed to fetch studies"
       );
@@ -139,19 +141,24 @@ export default function ActiveCasesPage() {
     }
   });
 
+  // Filter for completed cases only - cases where completedCase is true
+  const completedFilteredStudies = filteredStudies.filter(
+    (study) => study.completedCase === true
+  );
+
   // Calculate Pagination
-  const totalPages = Math.ceil(filteredStudies.length / rowsPerPage);
+  const totalPages = Math.ceil(completedFilteredStudies.length / rowsPerPage);
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const displayedOrders = filteredStudies.slice(
+  const displayedOrders = completedFilteredStudies.slice(
     startIndex,
     startIndex + rowsPerPage
   );
 
   useEffect(() => {
-    if (displayedOrders.length === 0 && filteredStudies.length > 0) {
+    if (displayedOrders.length === 0 && completedFilteredStudies.length > 0) {
       setCurrentPage(1); // Redirect to first page if empty
     }
-  }, [displayedOrders, filteredStudies]);
+  }, [displayedOrders, completedFilteredStudies]);
 
   return (
     <div className="p-4 relative h-auto min-h-screen">
@@ -240,7 +247,7 @@ export default function ActiveCasesPage() {
                 const weasisUrl = `weasis://${encodeURIComponent(
                   `$dicom:get -l "${dicomPath}"`
                 )}`;
-                console.log(weasisUrl)
+                console.log(weasisUrl);
                 return (
                   <tr
                     key={study.id}

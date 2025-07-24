@@ -13,6 +13,7 @@ type User = {
   role: string;
   status: string;
   name: string | null;
+  userType: string | null; // Add userType field
   createdAt?: string;
   emailVerified?: string | null;
 };
@@ -28,7 +29,6 @@ export default function AdminDashboard() {
   const [actionType, setActionType] = useState<"approve" | "reject" | null>(
     null
   );
-  const [selectedRole, setSelectedRole] = useState<string>("RADIOLOGIST");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isLoading, setIsLoading] = useState<{ [key: string]: boolean }>({});
 
@@ -82,10 +82,13 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleApproveUser = async (userId: string, role: string) => {
+  const handleApproveUser = async (userId: string, userType: string) => {
     setIsLoading({ ...isLoading, [userId]: true });
     try {
-      // First, approve the user
+      // Automatically determine role based on userType
+      const role = userType === "RADIOLOGIST" ? "RADIOLOGIST" : "HOSPITAL";
+
+      // Approve the user
       const response = await fetch("/api/admin/users", {
         method: "PATCH",
         headers: {
@@ -97,30 +100,11 @@ export default function AdminDashboard() {
           role,
         }),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to approve user");
       }
-  
-      // Then, send approval notification email
-      const emailResponse = await fetch("/api/send-approval-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          userEmail: selectedUser?.email,
-          userName: selectedUser?.name || selectedUser?.username || "User",
-          role,
-        }),
-      });
-  
-      if (!emailResponse.ok) {
-        console.error("Email notification failed to send");
-        // You might want to show a warning that the user was approved but email failed
-      }
-  
+
       // Refresh the user list
       fetchUsers();
       setShowModal(false);
@@ -132,33 +116,33 @@ export default function AdminDashboard() {
     }
   };
 
-const handleRejectUser = async (userId: string) => {
-  setIsLoading({ ...isLoading, [userId]: true });
-  try {
-    const response = await fetch("/api/user", {
-      method: "DELETE", 
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId,
-      }),
-    });
+  const handleRejectUser = async (userId: string) => {
+    setIsLoading({ ...isLoading, [userId]: true });
+    try {
+      const response = await fetch("/api/user", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+        }),
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to reject user");
+      if (!response.ok) {
+        throw new Error("Failed to reject user");
+      }
+
+      // Refresh the user list
+      fetchUsers();
+      setShowModal(false);
+    } catch (err) {
+      setError("Failed to reject user");
+      console.error(err);
+    } finally {
+      setIsLoading({ ...isLoading, [userId]: false });
     }
-
-    // Refresh the user list
-    fetchUsers();
-    setShowModal(false);
-  } catch (err) {
-    setError("Failed to reject user");
-    console.error(err);
-  } finally {
-    setIsLoading({ ...isLoading, [userId]: false });
-  }
-};
+  };
 
   const openModal = (user: User, type: "approve" | "reject") => {
     setSelectedUser(user);
@@ -176,7 +160,10 @@ const handleRejectUser = async (userId: string) => {
     if (!selectedUser) return;
 
     if (actionType === "approve") {
-      handleApproveUser(selectedUser.id, selectedRole);
+      handleApproveUser(
+        selectedUser.id,
+        selectedUser.userType || "RADIOLOGIST"
+      );
     } else if (actionType === "reject") {
       handleRejectUser(selectedUser.id);
     }
@@ -219,6 +206,17 @@ const handleRejectUser = async (userId: string) => {
         return "bg-indigo-100 text-indigo-800";
       default:
         return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const getUserTypeBadgeClasses = (userType: string) => {
+    switch (userType) {
+      case "RADIOLOGIST":
+        return "bg-purple-50 text-purple-700 border border-purple-200";
+      case "HOSPITAL":
+        return "bg-blue-50 text-blue-700 border border-blue-200";
+      default:
+        return "bg-gray-50 text-gray-700 border border-gray-200";
     }
   };
 
@@ -391,7 +389,13 @@ const handleRejectUser = async (userId: string) => {
                       scope="col"
                       className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
                     >
-                      Role
+                      User Type
+                    </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                    >
+                      Current Role
                     </th>
                     <th
                       scope="col"
@@ -411,7 +415,7 @@ const handleRejectUser = async (userId: string) => {
                   {filteredUsers.length === 0 ? (
                     <tr>
                       <td
-                        colSpan={6}
+                        colSpan={7}
                         className="px-6 py-10 text-center text-sm text-gray-500"
                       >
                         No users found with the selected criteria.
@@ -456,6 +460,17 @@ const handleRejectUser = async (userId: string) => {
                           >
                             {user.status.replace("_", " ")}
                           </span>
+                        </td>
+                        <td className="whitespace-nowrap px-6 py-4 text-sm">
+                          {user.userType && (
+                            <span
+                              className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${getUserTypeBadgeClasses(
+                                user.userType
+                              )}`}
+                            >
+                              {user.userType}
+                            </span>
+                          )}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm">
                           {user.role && (
@@ -627,22 +642,15 @@ const handleRejectUser = async (userId: string) => {
 
                     {actionType === "approve" &&
                       selectedUser.status === "PENDING_APPROVAL" && (
-                        <div className="mt-4">
-                          <label
-                            htmlFor="role"
-                            className="block text-sm font-medium text-gray-700"
-                          >
-                            Select Role:
-                          </label>
-                          <select
-                            id="role"
-                            value={selectedRole}
-                            onChange={(e) => setSelectedRole(e.target.value)}
-                            className="mt-1 block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                          >
-                            <option value="RADIOLOGIST">Radiologist</option>
-                            <option value="HOSPITAL">Hospital</option>
-                          </select>
+                        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                          <p className="text-sm text-blue-800">
+                            <strong>Role Assignment:</strong> This user will be
+                            automatically assigned the{" "}
+                            <span className="font-semibold">
+                              {selectedUser.userType || "RADIOLOGIST"}
+                            </span>{" "}
+                            role based on their registration type.
+                          </p>
                         </div>
                       )}
                   </div>
@@ -681,3 +689,5 @@ const handleRejectUser = async (userId: string) => {
     </div>
   );
 }
+
+

@@ -102,6 +102,7 @@ export async function POST(request: NextRequest) {
       const updatedCase = await prisma.case.update({
         where: { id: existingCase.id },
         data: {
+          activeCase: false,
           completedCase: true,
           radiologist: radiologistName || null,
           reportTime: reportDT || null,

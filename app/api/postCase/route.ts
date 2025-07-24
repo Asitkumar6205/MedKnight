@@ -1,12 +1,18 @@
+// app/api/postCase/route.ts
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
 import * as z from "zod";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const caseSchema = z.object({
+  patientAge: z.string(),
+  patientContactNo: z.string(),
   doctor: z.string(),
   priority: z.enum(["Routine", "Urgent", "Stat"]),
   history: z.string(),
+  hospitalId: z.string(),
   structuredStudies: z.record(
     z.string(),
     z.record(z.string(), z.record(z.string(), z.array(z.string())))
@@ -19,7 +25,7 @@ type CaseSchema = z.infer<typeof caseSchema>;
 
 // Initialize S3 client
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'ap-south-1',
+  region: process.env.AWS_REGION || "ap-south-1",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -27,30 +33,30 @@ const s3Client = new S3Client({
 });
 
 // Helper function to upload file to S3
-async function uploadToS3(file: File): Promise<{ filename: string; path: string; uploadedAt: Date }> {
+async function uploadToS3(
+  file: File
+): Promise<{ filename: string; path: string; uploadedAt: Date }> {
   try {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
     const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
     const filename = `${uniqueSuffix}-${file.name}`;
-    
-    // Create the S3 key (path in bucket)
+
     const key = `uploads/${filename}`;
 
     const command = new PutObjectCommand({
       Bucket: process.env.S3_CLINICAL_HISTORY!,
       Key: key,
       Body: buffer,
-      ContentType: file.type || 'application/octet-stream',
-      // Optional: Set ACL to public-read if you want files to be publicly accessible
-      // ACL: 'public-read',
+      ContentType: file.type || "application/octet-stream",
     });
 
     await s3Client.send(command);
 
-    // Construct the file URL
-    const fileUrl = `https://${process.env.S3_CLINICAL_HISTORY}.s3.${process.env.AWS_REGION || 'us-east-1'}.amazonaws.com/${key}`;
-    
+    const fileUrl = `https://${process.env.S3_CLINICAL_HISTORY}.s3.${
+      process.env.AWS_REGION || "us-east-1"
+    }.amazonaws.com/${key}`;
+
     console.log("File uploaded to S3:", filename);
 
     return {
@@ -66,6 +72,41 @@ async function uploadToS3(file: File): Promise<{ filename: string; path: string;
 
 export async function POST(req: Request) {
   try {
+    // Get user session to determine hospitalId
+    const session = await getServerSession(authOptions);
+    
+    if (!session || !session.user?.email) {
+      return NextResponse.json(
+        { message: "Not authenticated" },
+        { status: 401 }
+      );
+    }
+
+    // Get user and their hospital
+    const user = await db.user.findUnique({
+      where: { email: session.user.email },
+      select: { id: true, role: true }
+    });
+
+    if (!user || user.role !== 'HOSPITAL') {
+      return NextResponse.json(
+        { message: "Access denied. Hospital role required." },
+        { status: 403 }
+      );
+    }
+
+    // Find hospital by user's email (assuming hospital email matches user email)
+    const hospital = await db.hospital.findUnique({
+      where: { email: session.user.email }
+    });
+
+    if (!hospital) {
+      return NextResponse.json(
+        { message: "Hospital not found. Please complete hospital setup first." },
+        { status: 400 }
+      );
+    }
+
     const formData = await req.formData();
     const patientId = formData.get("patientId")?.toString();
     const studyUID = formData.get("studyUID")?.toString();
@@ -76,6 +117,10 @@ export async function POST(req: Request) {
     const studyDate = formData.get("studyDate")?.toString();
     const studyTime = formData.get("studyTime")?.toString();
     const series = formData.get("series")?.toString();
+    const images = formData.get("images")?.toString();
+
+    // Use hospitalId from the authenticated user's hospital
+    const hospitalId = hospital.id;
 
     // Check if a case with the same patientId already exists
     const existingCase = await db.case.findUnique({
@@ -88,15 +133,37 @@ export async function POST(req: Request) {
         { status: 400 }
       );
     }
-
+    
+    const patientAge = formData.get("patientAge");
+    const patientContactNo = formData.get("patientContactNo");
     const doctor = formData.get("doctor");
     const priority = formData.get("priority") || "Routine";
     const history = formData.get("history");
     const structuredStudiesString = formData.get("selectedStudies");
     const studyPricesString = formData.get("studyPrices");
     const totalAmountString = formData.get("totalAmount");
+    const studyMetadataString = formData.get("studyMetadata");
 
-    if (!patientId || !doctor || !history || !patientName || !studyUID || !studyDescription || !gender || !modality || !studyDate || !studyTime || !series || !structuredStudiesString || !studyPricesString || !totalAmountString) {
+    if (
+      !patientId ||
+      !patientAge ||
+      !images ||
+      !patientContactNo ||
+      !doctor ||
+      !history ||
+      !patientName ||
+      !studyUID ||
+      !studyDescription ||
+      !gender ||
+      !modality ||
+      !studyDate ||
+      !studyTime ||
+      !series ||
+      !structuredStudiesString ||
+      !studyPricesString ||
+      !totalAmountString ||
+      !studyMetadataString
+    ) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
@@ -104,7 +171,11 @@ export async function POST(req: Request) {
     }
 
     // Validate AWS S3 configuration
-    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.S3_CLINICAL_HISTORY) {
+    if (
+      !process.env.AWS_ACCESS_KEY_ID ||
+      !process.env.AWS_SECRET_ACCESS_KEY ||
+      !process.env.S3_CLINICAL_HISTORY
+    ) {
       return NextResponse.json(
         { message: "AWS S3 configuration is missing" },
         { status: 500 }
@@ -114,19 +185,23 @@ export async function POST(req: Request) {
     const structuredStudies = JSON.parse(structuredStudiesString as string);
     const studyPrices = JSON.parse(studyPricesString as string);
     const totalAmount = parseFloat(totalAmountString as string);
+    const studyMetadata = JSON.parse(studyMetadataString as string);
 
     const validatedData: CaseSchema = caseSchema.parse({
+      patientAge: patientAge.toString(),
+      patientContactNo: patientContactNo.toString(),
       doctor: doctor.toString(),
       priority: priority as "Routine" | "Urgent" | "Stat",
       history: history.toString(),
+      hospitalId: hospitalId, // Use hospitalId from authenticated user
       structuredStudies: structuredStudies,
       studyPrices: studyPrices,
-      totalAmount: totalAmount
+      totalAmount: totalAmount,
     });
 
     console.log("Validated Data:", validatedData);
 
-    // Process studies
+    // Process studies (existing code remains the same)
     const studyNames = Object.keys(structuredStudies);
     const existingStudies = await db.study.findMany({
       where: { name: { in: studyNames } },
@@ -137,13 +212,21 @@ export async function POST(req: Request) {
     // Insert missing studies
     const missingStudies = studyNames
       .filter((name) => !existingStudyNames.includes(name))
-      .map((name) => ({
-        name,
-        studyType: [],
-        studyView: [],
-        studySide: [],
-        price: studyPrices[name] || 0,
-      }));
+      .map((name) => {
+        const metadata = studyMetadata[name] || {};
+        const qualifications = metadata.qualifications ?? "";
+        const subspeciality = metadata.subspeciality ?? "";
+
+        return {
+          name,
+          studyType: [],
+          studyView: [],
+          studySide: [],
+          price: studyPrices[name] || 0,
+          qualifications: qualifications,
+          subspeciality: subspeciality,
+        };
+      });
 
     if (missingStudies.length > 0) {
       await db.study.createMany({ data: missingStudies });
@@ -160,7 +243,7 @@ export async function POST(req: Request) {
 
       let studyType = new Set(study.studyType || []);
       let studyView = new Set(study.studyView || []);
-      let studySide = new Set(study.studySide || []); 
+      let studySide = new Set(study.studySide || []);
 
       Object.entries(studyData).forEach(([field, valuesObj]) => {
         if (typeof valuesObj === "object" && valuesObj !== null) {
@@ -174,6 +257,10 @@ export async function POST(req: Request) {
         }
       });
 
+      const metadata = studyMetadata[study.name] || {};
+      const qualifications = metadata.qualifications ?? "";
+      const subspeciality = metadata.subspeciality ?? "";
+
       await db.study.update({
         where: { id: study.id },
         data: {
@@ -181,6 +268,8 @@ export async function POST(req: Request) {
           studyView: Array.from(studyView),
           studySide: Array.from(studySide),
           price: studyPrices[study.name] || study.price || 0,
+          qualifications: qualifications,
+          subspeciality: subspeciality,
         },
       });
     }
@@ -192,16 +281,19 @@ export async function POST(req: Request) {
     const files = formData.getAll("files") as File[];
     console.log("Number of files received:", files.length);
 
-    const fileData = files.length > 0
-      ? await Promise.all(files.map(uploadToS3))
-      : [];
+    const fileData =
+      files.length > 0 ? await Promise.all(files.map(uploadToS3)) : [];
 
     console.log("File data prepared:", fileData);
 
-    // Create a new case
+    // Create a new case with hospitalId
+    const currentTime = new Date();
+    
     const newCase = await db.case.create({
       data: {
         patientId: patientId.toString(),
+        patientAge: validatedData.patientAge,
+        patientContactNo: validatedData.patientContactNo,
         studyUID: studyUID,
         doctor: validatedData.doctor,
         priority: validatedData.priority,
@@ -213,8 +305,11 @@ export async function POST(req: Request) {
         studyDate: studyDate,
         studyTime: studyTime,
         series: series,
+        images: images,
         activeCase: true,
         totalAmount: validatedData.totalAmount,
+        caseUploadTime: currentTime.toISOString(),
+        hospitalId: validatedData.hospitalId,
         studies: {
           connect: studyIds,
         },
@@ -227,6 +322,7 @@ export async function POST(req: Request) {
       include: {
         files: true,
         studies: true,
+        hospital: true,
       },
     });
 

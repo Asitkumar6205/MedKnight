@@ -4,8 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { RxCaretSort } from "react-icons/rx";
 import DateRangeSelector from "../_components/DateRangeSelector";
-import { useActiveCase } from "@/app/context/ActiveCaseContext";
-import { useCompletedCase } from "@/app/context/CompletedCaseContext";
 
 interface Study {
   ID: string;
@@ -18,6 +16,9 @@ interface Study {
   StudyTime: string;
   Modality: string;
   Series: number;
+  CountInstances: number;
+  InstitutionName: string;
+  isActiveCase: boolean;
 }
 
 interface DateRangeSelectorProps {
@@ -43,16 +44,23 @@ export default function ActiveCasesPage() {
   const [selectedPatientID, setSelectedPatientID] = useState<string>("");
   const rowsPerPage = 8;
 
-  const { isActiveCase } = useActiveCase();
-  const { setActiveCase } = useActiveCase();
-  const { setCompletedCase } = useCompletedCase();
-
   const fetchStudies = async () => {
     try {
-      const response = await fetch("/api/studies");
+      const response = await fetch("/api/studies", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+
       if (!response.ok) {
+        if (response.status === 401) {
+          setError("Please log in to view studies");
+          return;
+        }
         throw new Error(`Error ${response.status}: ${await response.text()}`);
       }
+
       const data: Study[] = await response.json();
 
       // Only update state if new studies are found (without reloading the page)
@@ -69,7 +77,7 @@ export default function ActiveCasesPage() {
   useEffect(() => {
     fetchStudies(); // Initial fetch
     const interval = setInterval(fetchStudies, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval); // Cleanup on unmount
+    return () => clearInterval(interval);
   }, []);
 
   // Then update your handleDeleteStudy function:
@@ -95,12 +103,6 @@ export default function ActiveCasesPage() {
       if (response.ok) {
         // Remove from local storage first
         if (patientIdToUpdate) {
-          // Remove from active case tracking
-          setActiveCase(patientIdToUpdate, false, true);
-
-          // Reset completed case status - add this line
-          setCompletedCase(patientIdToUpdate, false, true);
-
           // Also explicitly remove from localStorage
           const activeCasesStr = localStorage.getItem("activeCases");
           if (activeCasesStr) {
@@ -157,13 +159,6 @@ export default function ActiveCasesPage() {
       const data = await response.json();
 
       if (response.ok) {
-        // Set active case to false for all patient IDs
-        patientIds.forEach((patientId: string) => {
-          setActiveCase(patientId, false, true);
-          // Reset completed case status for each patient - add this line
-          setCompletedCase(patientId, false, true);
-        });
-
         // Also clear the entire activeCases array in localStorage
         localStorage.setItem("activeCases", JSON.stringify([]));
 
@@ -342,7 +337,7 @@ export default function ActiveCasesPage() {
               "Gender",
               "Modality",
               "Study Date",
-              "Series",
+              "Ser/Img",
               "Action",
             ].map((col, index, arr) => (
               <th
@@ -365,7 +360,7 @@ export default function ActiveCasesPage() {
                 <tr
                   key={study.ID}
                   className={
-                    isActiveCase(study.PatientID)
+                    study.isActiveCase
                       ? "bg-stone-50 shadow-xs text-stone-700 text-sm"
                       : "hover:bg-stone-50 bg-white shadow-xs text-stone-700 text-sm"
                   }
@@ -390,11 +385,11 @@ export default function ActiveCasesPage() {
                     {formatStudyTime(study.StudyTime)}
                   </td>
                   <td className="border-b border-stone-300 px-2 py-4 text-center">
-                    {study.Series}
+                    {`${study.Series}/${study.CountInstances}`}
                   </td>
                   <td className="border-b border-stone-300 px-2 py-4 text-center">
                     <div className="flex items-center justify-center">
-                      {isActiveCase(study.PatientID) ? (
+                      {study.isActiveCase ? (
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => {
@@ -448,6 +443,7 @@ export default function ActiveCasesPage() {
                                   .formattedDate,
                                 time: formatStudyTime(study.StudyTime),
                                 series: study.Series,
+                                images: study.CountInstances,
                               },
                             }}
                             className="flex items-center justify-center h-8 w-8"

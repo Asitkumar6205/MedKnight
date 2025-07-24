@@ -1,4 +1,3 @@
-// api/radiologist/postuser/route.ts
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod";
@@ -8,15 +7,15 @@ import { mkdir } from "fs/promises";
 import Jimp from "jimp";
 import potrace from "potrace";
 
-// Define schema validation for radiologist submission - without File validation
+// Define schema validation for radiologist submission - with qualifications as array
 const radiologistSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   phone: z.string().min(10, "Phone must be at least 10 digits"),
-  qualifications: z.string().min(2, "Qualifications must be at least 2 characters"),
+  subspeciality: z.string().min(2, "Subspeciality must be at least 2 characters"),
+  qualifications: z.array(z.string()).min(1, "At least one qualification is required"),
   designation: z.string().min(2, "Designation must be at least 2 characters"),
   mrn: z.string().min(2, "MRN must be at least 2 characters"),
-  isDefault: z.boolean().optional(),
 });
 
 // Function to convert image buffer to SVG
@@ -63,33 +62,72 @@ async function convertImageToSVG(
   }
 }
 
+// Helper function to parse qualifications from form data
+function parseQualifications(qualificationsData: FormDataEntryValue | null): string[] {
+  if (!qualificationsData) {
+    return [];
+  }
+
+  const qualificationsStr = qualificationsData.toString();
+  
+  try {
+    // Try to parse as JSON array first (if sent as JSON)
+    const parsed = JSON.parse(qualificationsStr);
+    if (Array.isArray(parsed)) {
+      return parsed.filter(q => typeof q === 'string' && q.trim().length > 0);
+    }
+  } catch (e) {
+    // If JSON parsing fails, treat as comma-separated string or single value
+  }
+
+  // Handle comma-separated string or single value
+  return qualificationsStr
+    .split(',')
+    .map(q => q.trim())
+    .filter(q => q.length > 0);
+}
+
 export async function POST(req: Request) {
   try {
+    console.log("POST request received");
+    
     // Get form data
     const formData = await req.formData();
     
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
     const phone = formData.get("phone") as string;
-    const qualifications = formData.get("qualifications") as string;
+    const subspeciality = formData.get("subspeciality") as string;
+    const qualificationsRaw = formData.get("qualifications");
     const designation = formData.get("designation") as string;
     const mrn = formData.get("mrn") as string;
-    const isDefault = formData.get("isDefault") === "true";
     const signature = formData.get("signature");
+    
+    console.log("Form data received:", {
+      name, email, phone, subspeciality, 
+      qualificationsRaw: qualificationsRaw?.toString(),
+      designation, mrn,
+      hasSignature: !!signature
+    });
+    
+    // Parse qualifications into array - this will always return string[]
+    const qualifications = parseQualifications(qualificationsRaw);
+    
+    console.log("Parsed qualifications:", qualifications);
     
     // Check if SVG version was provided directly
     const signatureSvg = formData.get("signatureSvg");
     const svgData = formData.get("svgData") as string;
 
-    // Validate data (excluding the signature file)
+    // Validate data (with qualifications as array)
     const validationResult = radiologistSchema.safeParse({
       name,
       email,
       phone,
+      subspeciality,
       qualifications,
       designation,
       mrn,
-      isDefault,
     });
 
     if (!validationResult.success) {
@@ -102,6 +140,7 @@ export async function POST(req: Request) {
 
     // Check if signature exists
     if (!signature) {
+      console.error("No signature file provided");
       return NextResponse.json(
         { message: "Signature file is required" },
         { status: 400 }
@@ -109,20 +148,21 @@ export async function POST(req: Request) {
     }
 
     // Manual validation for signature size
-    // For FormData, signature could be File or Blob
     let fileSize = 0;
-    let fileName = "signature.png"; // Default name
+    let fileName = "signature.png";
 
     if (signature instanceof Blob) {
       fileSize = signature.size;
-      // Try to get the name if available
       if ('name' in signature) {
         fileName = (signature as any).name;
       }
     }
 
+    console.log("Signature file details:", { fileSize, fileName });
+
     // Check file size (5MB limit)
     if (fileSize > 5 * 1024 * 1024) {
+      console.error("File too large:", fileSize);
       return NextResponse.json(
         { message: "Signature must be less than 5MB" },
         { status: 400 }
@@ -141,6 +181,8 @@ export async function POST(req: Request) {
     const filePath = path.join(uploadDir, uniqueFileName);
     const publicPath = `/uploads/signatures/${uniqueFileName}`;
 
+    console.log("Writing file to:", filePath);
+
     // Write original file to disk
     await writeFile(filePath, buffer);
 
@@ -148,14 +190,13 @@ export async function POST(req: Request) {
     let svgFileName = null;
     let svgPublicPath = null;
     
-    // If SVG data was provided, use it
     if (svgData) {
       svgFileName = `${Date.now()}-signature.svg`;
       svgPublicPath = `/uploads/signatures/${svgFileName}`;
       const svgFilePath = path.join(uploadDir, svgFileName);
       await writeFile(svgFilePath, svgData);
+      console.log("SVG data written to:", svgFilePath);
     }
-    // If SVG file was provided, save it
     else if (signatureSvg instanceof Blob) {
       const svgBytes = await signatureSvg.arrayBuffer();
       const svgBuffer = Buffer.from(svgBytes);
@@ -163,56 +204,117 @@ export async function POST(req: Request) {
       svgPublicPath = `/uploads/signatures/${svgFileName}`;
       const svgFilePath = path.join(uploadDir, svgFileName);
       await writeFile(svgFilePath, svgBuffer);
+      console.log("SVG blob written to:", svgFilePath);
     } 
-    // Otherwise, generate SVG from the original image
     else {
+      console.log("Converting image to SVG...");
       const svg = await convertImageToSVG(buffer);
       if (svg) {
         svgFileName = `${Date.now()}-signature.svg`;
         svgPublicPath = `/uploads/signatures/${svgFileName}`;
         const svgFilePath = path.join(uploadDir, svgFileName);
         await writeFile(svgFilePath, svg);
+        console.log("Converted SVG written to:", svgFilePath);
+      } else {
+        console.warn("Failed to convert image to SVG");
       }
     }
 
-    // First create the radiologist
-    const newRadiologist = await db.radiologist.create({
-      data: {
-        name,
-        email,
-        phone,
-        qualifications,
-        designation,
-        mrn,
-        isDefault: isDefault || false,
-      },
+    console.log("Starting database transaction...");
+
+    // Use a transaction to ensure both operations succeed or fail together
+    const result = await db.$transaction(async (tx) => {
+      // First create the radiologist
+      console.log("Creating radiologist with data:", {
+        name, email, phone, subspeciality, qualifications, designation, mrn
+      });
+      
+      const newRadiologist = await tx.radiologist.create({
+        data: {
+          name,
+          email,
+          phone,
+          subspeciality,
+          qualifications: qualifications,
+          designation,
+          mrn,
+        },
+      });
+
+      console.log("Radiologist created:", newRadiologist.id);
+
+      // Then create the signature linked to the radiologist
+      const newSignature = await tx.signature.create({
+        data: {
+          filename: uniqueFileName,
+          path: publicPath,
+          svgPath: svgPublicPath as string,
+          radiologistId: newRadiologist.id,
+        },
+      });
+
+      console.log("Signature created:", newSignature.id);
+
+      // Check if a user with this email already exists
+      let updatedUser = null;
+      const existingUser = await tx.user.findUnique({
+        where: { email },
+      });
+
+      if (existingUser) {
+        console.log("Updating existing user:", existingUser.id);
+        // Update existing user with qualifications and subspeciality
+        updatedUser = await tx.user.update({
+          where: { email },
+          data: {
+            qualifications,
+            subspeciality,
+            name: name,
+          },
+        });
+      } else {
+        console.log("Creating new user");
+        // Create new user with qualifications and subspeciality
+        updatedUser = await tx.user.create({
+          data: {
+            email,
+            name,
+            qualifications,
+            subspeciality,
+            role: 'PENDING',
+            status: 'PENDING_APPROVAL',
+          },
+        });
+      }
+
+      console.log("User operation completed:", updatedUser.id);
+
+      return {
+        radiologist: newRadiologist,
+        signature: newSignature,
+        user: updatedUser,
+      };
     });
 
-    // Then create the signature linked to the radiologist
-    const newSignature = await db.signature.create({
-      data: {
-        filename: uniqueFileName,
-        path: publicPath,
-        svgPath: svgPublicPath as string, // Add SVG path to the signature record
-        radiologistId: newRadiologist.id,
-      },
-    });
-
-    console.log("Radiologist created:", newRadiologist);
-    console.log("Signature created:", newSignature);
+    console.log("Transaction completed successfully");
+    console.log("Radiologist created:", result.radiologist);
+    console.log("Signature created:", result.signature);
+    console.log("User updated/created:", result.user);
 
     return NextResponse.json(
       { 
         radiologist: {
-          ...newRadiologist,
-          signature: newSignature
-        }, 
-        message: "Radiologist created successfully" 
+          ...result.radiologist,
+          signature: result.signature
+        },
+        user: result.user,
+        message: "Radiologist and user created/updated successfully" 
       },
       { status: 201 }
     );
   } catch (error) {
     console.error("Server Error:", error);
+    console.error("Error stack:", error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json(
       { 
         message: "Something went wrong", 

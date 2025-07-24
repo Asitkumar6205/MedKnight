@@ -8,15 +8,14 @@ import Services from "./(landingpage)/Services";
 import Workflow from "./(landingpage)/Workflow";
 import Technology from "./(landingpage)/Technology";
 import Ourteam from "./(landingpage)/Ourteam";
-import Impact from "./(landingpage)/Impact";
 import Getintouch from "./(landingpage)/Getintouch";
 import Footer from "./(landingpage)/Footer";
 import { BrainCircuit, Loader2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 
 export default function Home() {
-  const [loading, setLoading] = useState(false);
+  const [loadingGetStarted, setLoadingGetStarted] = useState(false);
+  const [loadingLearnMore, setLoadingLearnMore] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const [scrollY, setScrollY] = useState(0);
@@ -24,10 +23,12 @@ export default function Home() {
   const [gridOpacity, setGridOpacity] = useState(0.9);
 
   useEffect(() => {
-    if (loading && pathname === "/signin") {
-      setLoading(false);
+    if (loadingGetStarted && pathname === "/signin") {
+      setLoadingGetStarted(false);
     }
-
+    if (loadingLearnMore && pathname === "/learn-more") {
+      setLoadingLearnMore(false);
+    }
     const handleScroll = () => {
       setScrollY(window.scrollY);
       // Adjust grid opacity based on scroll position
@@ -42,11 +43,15 @@ export default function Home() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [pathname, loading]);
+  }, [pathname, loadingGetStarted, loadingLearnMore]);
 
-  const handleClick = () => {
-    setLoading(true);
-    router.push("/signin");
+  const handleClick1 = () => {
+    setLoadingGetStarted(true);
+    router.push("/signup");
+  };
+  const handleClick2 = () => {
+    setLoadingLearnMore(true);
+    router.push("/learn-more");
   };
 
   // Mouse parallax effect for the hero section
@@ -111,7 +116,7 @@ export default function Home() {
   return (
     <div
       id="home"
-      className="bg-gradient-to-b from-stone-950 to-stone-900 relative overflow-hidden"
+      className="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden"
     >
       {/* Animated background gradient blobs */}
       <div className="fixed inset-0 z-0 overflow-hidden">
@@ -121,7 +126,7 @@ export default function Home() {
       </div>
 
       {/* Mesh gradient overlay */}
-      <div className="fixed inset-0 bg-cover opacity-30 z-0 mix-blend-overlay">
+      {/* <div className="fixed inset-0 bg-cover opacity-30 z-0 mix-blend-overlay">
         <Image
           src="/images/mesh-gradient.svg"
           alt="Background gradient"
@@ -130,7 +135,7 @@ export default function Home() {
           sizes="100vw"
           style={{ objectFit: "cover" }}
         />
-      </div>
+      </div> */}
 
       {/* Tic Tac Toe Grid Background - Dense pattern with more lines */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
@@ -139,7 +144,7 @@ export default function Home() {
       </div>
 
       {/* Noise texture overlay */}
-      <div className="fixed inset-0 bg-repeat opacity-5 z-0">
+      {/* <div className="fixed inset-0 bg-repeat opacity-5 z-0">
         <Image
           src="/images/noise.png"
           alt="Noise texture"
@@ -148,7 +153,7 @@ export default function Home() {
           sizes="100vw"
           style={{ objectFit: "cover" }}
         />
-      </div>
+      </div> */}
 
       {/* Cursor following glow */}
       <div
@@ -166,7 +171,7 @@ export default function Home() {
       {/* Hero Section */}
       <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-4 md:px-8 lg:px-16 pt-16 overflow-hidden">
         {/* Glassmorphism card in the background */}
-        <div className="absolute z-0 w-11/12 max-w-5xl h-3/4 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl"></div>
+        <div className="absolute z-0 w-11/12 max-w-7xl h-3/4 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl"></div>
 
         {/* Moving glow elements with improved positioning */}
         <div
@@ -201,23 +206,28 @@ export default function Home() {
           style={{ animationDelay: "0.6s" }}
         >
           <button
-            onClick={handleClick}
-            disabled={loading}
+            onClick={handleClick1}
+            disabled={loadingGetStarted}
             className="bg-gradient-to-r from-purple-500 to-indigo-600 text-lg h-[50px] text-white font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-10 rounded-full transition-all duration-300 transform hover:scale-105"
           >
-            {loading ? (
+            {loadingGetStarted ? (
               <Loader2 className="animate-spin" size={24} />
             ) : (
               "Get Started"
             )}
           </button>
 
-          <Link
-            href={"/learn-more"}
+          <button
+            onClick={handleClick2}
+            disabled={loadingLearnMore}
             className="text-lg flex items-center justify-center h-[50px] px-10 text-center text-stone-200 border-purple-400 border-solid border-[1px] bg-stone-800/40 hover:bg-purple-400/20 backdrop-blur-md rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-400/10"
           >
-            Learn More
-          </Link>
+              {loadingLearnMore ? (
+              <Loader2 className="animate-spin" size={24} />
+            ) : (
+              "Learn More"
+            )}
+          </button>
         </div>
 
         {/* Scrolling indicator with improved animation */}
@@ -231,301 +241,138 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Features Section with Glassmorphism Cards - Improved responsive layout */}
+      {/* Features Section with Enhanced Cards - Matching overall UI */}
       <div className="relative z-10 py-16 md:py-20 lg:py-24 px-4 md:px-8 lg:px-16 overflow-hidden">
-        <div className="container mx-40 max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 lg:gap-10 justify-items-center">
+            {/* Quick Turnaround Card */}
             <div
-              className="feature-card fade-in-up bg-gradient-to-br from-stone-800/80 to-stone-900/80 p-8 rounded-2xl backdrop-blur-lg border border-white/5 shadow-lg group hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
+              className="feature-card fade-in-up relative p-8 rounded-xl backdrop-blur-lg border border-white/10 shadow-2xl group hover:shadow-purple-500/20 transition-all duration-700 hover:-translate-y-2 w-full max-w-sm overflow-hidden bg-gradient-to-br from-purple-500/10 via-purple-600/90 to-purple-800/10"
               style={{ animationDelay: "0.1s" }}
             >
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              {/* Animated gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              
+              {/* Glowing orb effect */}
+              <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-radial from-purple-400/30 to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
 
-              {/* Card content */}
-              <div className="relative flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-purple-500/10">
-                <PiLightningBold className="h-6 w-6 text-purple-400" />
+              {/* Enhanced icon container */}
+              <div className="relative mb-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-purple-600/10 border border-purple-400/20 group-hover:scale-110 transition-transform duration-500">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-400 to-purple-500 flex items-center justify-center">
+                    <PiLightningBold className="h-5 w-5 text-white" />
+                  </div>
+                </div>
               </div>
-              <h2 className="text-stone-100 text-lg font-bold mb-2 group-hover:text-purple-300 transition-colors duration-300">
-                Quick Turnaround
-              </h2>
-              <p className="text-stone-300 group-hover:text-stone-200 transition-colors duration-300">
-                Lightning-fast, AI-assisted reporting for all imaging modalities
-                - optimized for emergency and routine diagnostics.
-              </p>
+
+              <div className="relative z-10">
+                <h3 className="text-white text-xl font-bold mb-4 group-hover:text-purple-200 transition-colors duration-300">
+                  Quick Turnaround
+                </h3>
+                <p className="text-stone-300 text-sm leading-relaxed group-hover:text-stone-200 transition-colors duration-300 mb-4">
+                  Lightning-fast, AI-assisted reporting for all imaging modalities - optimized for emergency and routine diagnostics.
+                </p>
+                
+                {/* Feature highlights */}
+                <div className="space-y-2">
+                  <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
+                    AI-powered analysis acceleration
+                  </div>
+                  <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
+                    Priority emergency handling
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* 24/7 Availability Card */}
             <div
-              className="feature-card fade-in-up bg-gradient-to-br from-stone-800/80 to-stone-900/80 p-8 rounded-2xl backdrop-blur-lg border border-white/5 shadow-lg group hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
+              className="feature-card fade-in-up relative p-8 rounded-xl backdrop-blur-lg border border-white/10 shadow-2xl group hover:shadow-blue-500/20 transition-all duration-700 hover:-translate-y-2 w-full max-w-sm overflow-hidden bg-gradient-to-br from-blue-500/10 via-blue-600/90 to-blue-800/10"
               style={{ animationDelay: "0.3s" }}
             >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-purple-500/10">
-                <FaRegClock className="h-5 w-5 text-purple-400" />
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-cyan-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              
+              <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-radial from-blue-400/30 to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
+
+              <div className="relative mb-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/10 border border-blue-400/20 group-hover:scale-110 transition-transform duration-500">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center">
+                    <FaRegClock className="h-4 w-4 text-white" />
+                  </div>
+                </div>
               </div>
-              <h2 className="text-stone-100 text-lg font-bold mb-2 group-hover:text-purple-300 transition-colors duration-300">
-                24/7 Availability
-              </h2>
-              <p className="text-stone-300 group-hover:text-stone-200 transition-colors duration-300">
-                Round-the-clock expert radiologist support - ensuring no
-                critical case goes unreported, ever.
-              </p>
+
+              <div className="relative z-10">
+                <h3 className="text-white text-xl font-bold mb-4 group-hover:text-blue-200 transition-colors duration-300">
+                  24/7 Availability
+                </h3>
+                <p className="text-stone-300 text-sm leading-relaxed group-hover:text-stone-200 transition-colors duration-300 mb-4">
+                  Round-the-clock expert radiologist support - ensuring no critical case goes unreported, ever.
+                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
+                    Global radiologist network
+                  </div>
+                  <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
+                    Instant case assignment
+                  </div>
+                </div>
+              </div>
             </div>
 
+            {/* Expert + AI Precision Card */}
             <div
-              className="feature-card fade-in-up bg-gradient-to-br from-stone-800/80 to-stone-900/80 p-8 rounded-2xl backdrop-blur-lg border border-white/5 shadow-lg group hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
+              className="feature-card fade-in-up relative p-8 rounded-xl backdrop-blur-lg border border-white/10 shadow-2xl group hover:shadow-pink-500/20 transition-all duration-700 hover:-translate-y-2 w-full max-w-sm overflow-hidden bg-gradient-to-br from-pink-500/10 via-pink-600/90 to-pink-800/10 md:col-span-2 xl:col-span-1 md:mx-auto xl:mx-0"
               style={{ animationDelay: "0.5s" }}
             >
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <div className="relative flex items-center justify-center w-12 h-12 mb-4 rounded-full bg-purple-500/10">
-                <BrainCircuit className="h-5 w-5 text-purple-400" />
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-600/20 via-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+              
+              <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-radial from-pink-400/30 to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
+
+              <div className="relative mb-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500/20 to-pink-600/10 border border-pink-400/20 group-hover:scale-110 transition-transform duration-500">
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-400 to-pink-500 flex items-center justify-center">
+                    <BrainCircuit className="h-4 w-4 text-white" />
+                  </div>
+                </div>
               </div>
-              <h2 className="text-stone-100 text-lg font-bold mb-2 group-hover:text-purple-300 transition-colors duration-300">
-                Expert + AI Precision
-              </h2>
-              <p className="text-stone-300 group-hover:text-stone-200 transition-colors duration-300">
-                Dual-layer diagnostics combining expert radiologists and
-                cutting-edge AI for faster, more accurate and reliable reports.
-              </p>
+
+              <div className="relative z-10">
+                <h3 className="text-white text-xl font-bold mb-4 group-hover:text-pink-200 transition-colors duration-300">
+                  Expert + AI Precision
+                </h3>
+                <p className="text-stone-300 text-sm leading-relaxed group-hover:text-stone-200 transition-colors duration-300 mb-4">
+                  Dual-layer diagnostics combining expert radiologists and cutting-edge AI for faster, more accurate and reliable reports.
+                </p>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
+                    Machine learning enhancement
+                  </div>
+                  <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
+                    Expert validation process
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Add custom styling for remaining sections */}
-      <div className="relative z-10">
-        <Services />
-        <Workflow />
-        <Technology />
-        <Ourteam />
-        {/* <Impact /> */}
-        <Getintouch />
-        <Footer />
-      </div>
-
-      {/* Add required styles */}
-      <style jsx global>{`
-        body {
-          overflow-x: hidden;
-          margin: 0;
-          padding: 0;
-        }
-
-        /* Animation keyframes */
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes fadeIn {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes scrollUp {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(5px);
-          }
-        }
-
-        @keyframes scrollDown {
-          0%, 100% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-        }
-
-        /* Animation classes */
-        .fade-in-up {
-          animation: fadeInUp 0.8s ease-out forwards;
-          opacity: 0;
-        }
-
-        .fade-in {
-          animation: fadeIn 1s ease-out forwards;
-          opacity: 0;
-        }
-
-        .scroll-indicator {
-          animation: scrollDown 2s ease-in-out infinite;
-        }
-
-        .scroll-dot {
-          animation: scrollUp 1.5s ease-in-out infinite;
-        }
-
-        /* Feature cards with intersection observer support */
-        .feature-card {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-
-        @keyframes float {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-20px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
-        }
-
-        @keyframes pulse {
-          0%,
-          100% {
-            opacity: 0.6;
-          }
-          50% {
-            opacity: 0.3;
-          }
-        }
-
-        @keyframes blob {
-          0% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-          100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-        }
-
-        @keyframes gridPulse {
-          0%,
-          100% {
-            opacity: 0.1;
-          }
-          50% {
-            opacity: 0.2;
-          }
-        }
-
-        .animate-grid {
-          animation: gridPulse 8s infinite ease-in-out;
-        }
-
-        .animate-blob {
-          animation: blob 15s infinite alternate;
-        }
-
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-
-        /* Dense Grid Background */
-        .grid-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background-size: 40px 40px;
-          background-image: linear-gradient(
-              to right,
-              rgba(139, 92, 246, 0.2) 1.5px,
-              transparent 1.5px
-            ),
-            linear-gradient(
-              to bottom,
-              rgba(139, 92, 246, 0.2) 1.5px,
-              transparent 1.5px
-            );
-          animation: gridPulse 8s infinite ease-in-out;
-          transition: opacity 0.5s ease-in-out;
-        }
-
-        /* Prevent content overflow */
-        .container {
-          width: 100%;
-          max-width: 100%;
-          padding-left: 1rem;
-          padding-right: 1rem;
-          margin-left: auto;
-          margin-right: auto;
-        }
-
-        @media (min-width: 640px) {
-          .container {
-            max-width: 640px;
-          }
-        }
-
-        @media (min-width: 768px) {
-          .container {
-            max-width: 768px;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .container {
-            max-width: 1024px;
-          }
-        }
-
-        @media (min-width: 1280px) {
-          .container {
-            max-width: 1280px;
-          }
-        }
-
-        @media (min-width: 1536px) {
-          .container {
-            max-width: 1536px;
-          }
-        }
-      `}</style>
-
-      {/* Add Intersection Observer for feature cards */}
-      <script dangerouslySetInnerHTML={{
-        __html: `
-          document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.feature-card');
-            
-            const observer = new IntersectionObserver((entries) => {
-              entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                  entry.target.classList.add('fade-in-up');
-                  observer.unobserve(entry.target);
-                }
-              });
-            }, {
-              root: null,
-              rootMargin: '-100px',
-              threshold: 0.1
-            });
-            
-            cards.forEach(card => {
-              observer.observe(card);
-            });
-          });
-        `
-      }} />
+      {/* Other sections */}
+      <Services />
+      <Workflow />
+      <Technology />
+      <Ourteam />
+      <Getintouch />
+      <Footer />
     </div>
   );
 }

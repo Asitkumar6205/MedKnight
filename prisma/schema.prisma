@@ -32,7 +32,7 @@ model Session {
   userId       String   @map("user_id")
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  
   @@map("sessions")
 }
 
@@ -46,22 +46,31 @@ model PasswordReset {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  username      String?   @unique
-  password      String?
-  createdAt     DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime  @updatedAt
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  role          Role      @default(PENDING)
-  status        UserStatus @default(PENDING_APPROVAL)
-  passwordReset PasswordReset?
-  accounts      Account[]
-  sessions      Session[]
-  lockedCases   Case[]    // Cases locked by this user
+  id                  String    @id @default(cuid())
+  username            String?   @unique
+  password            String?
+  createdAt           DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt           DateTime  @updatedAt
+  name                String?
+  email               String?   @unique
+  emailVerified       DateTime? @map("email_verified")
+  image               String?
+  role                Role      @default(PENDING)
+  status              UserStatus @default(PENDING_APPROVAL)
+  userType            UserType?  // Add this field
+  qualifications      String[]  @default([])
+  subspeciality       String?
+  passwordReset       PasswordReset?
+  accounts            Account[]
+  sessions            Session[]
+  lockedCases         Case[]    
+  // generatedInvoices   Invoice[] @relation("InvoiceGeneratedBy")
   @@map("users")
+}
+
+enum UserType {
+  RADIOLOGIST
+  HOSPITAL
 }
 
 enum Role {
@@ -112,13 +121,13 @@ model Report {
 }
 
 model Signature {
-  id              String       @id @default(cuid())
-  filename        String   
-  path            String   
-  svgPath         String
-  radiologistId   String       @unique
-  radiologist     Radiologist? @relation(fields: [radiologistId], references: [id], onDelete: Cascade)
-  uploadedAt      DateTime     @default(now())
+  id              String         @id @default(cuid())
+  filename        String     
+  path            String     
+  svgPath         String  
+  radiologistId   String         @unique
+  radiologist     Radiologist?   @relation(fields: [radiologistId], references: [id], onDelete: Cascade)
+  uploadedAt      DateTime       @default(now())
   @@index([radiologistId])  
 }
 
@@ -129,33 +138,39 @@ model Study {
   studySide String[] @default([]) 
   studyType String[] @default([])
   price     Int? 
+  qualifications     String[]    @default([])
+  subspeciality      String
   cases     Case[]  // Many-to-many relationship without fields/references
 }
 
 model Case {
-  id               String     @id @default(cuid())
-  patientId        String     @unique
+  id               String        @id @default(cuid())
+  patientId        String        @unique
+  patientAge       String        @default("")
+  patientContactNo String        @default("")
   doctor           String   
   doctorPhNo       String?    
   technicianName   String?
   reviewReason     String?
   priority         Priority  
   history          String  
-  activeCase       Boolean    @default(false)
-  completedCase    Boolean    @default(false)
-  reviewCase       Boolean    @default(false)
-  
-  // New locking fields
-  isLocked         Boolean    @default(false)
-  lockedBy         String?    // User ID who locked the case
-  lockedAt         DateTime?  // When the case was locked
-  lockExpiry       DateTime?  // Optional: when the lock expires
+  activeCase       Boolean       @default(false)
+  completedCase    Boolean       @default(false)
+  reviewCase       Boolean       @default(false)
+     
+  // New locking fields   
+  isLocked         Boolean       @default(false)
+  lockedBy         String?       // User ID who locked the case
+  lockedAt         DateTime?     // When the case was locked
+  lockExpiry       DateTime?     // Optional: when the lock expires
   
   // Relations
   files            File[]     
   studies          Study[]    
   report           Report?
-  lockedByUser     User?      @relation(fields: [lockedBy], references: [id])
+  lockedByUser     User?         @relation(fields: [lockedBy], references: [id])
+  hospitalId       String        // New field for hospital reference
+  hospital         Hospital      @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
   
   patientName      String
   studyUID         String
@@ -163,25 +178,94 @@ model Case {
   gender           String
   modality         String
   series           String
+  images           String       @default("")
   studyDate        String
   studyTime        String
+  caseUploadTime   String?
   reportTime       String?
   radiologist      String?
   priceItems       PriceItem[]
   totalAmount      Int?
   paymentStatus    PaymentStatus @default(PENDING)
   billingMonth     String?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  invoiceId        String?       // Optional relation field
+  invoice          Invoice?      @relation(fields: [invoiceId], references: [id])
 }
 
+model Hospital {
+  id               String        @id @default(cuid())
+  name             String
+  email            String?       @unique
+  phone            String?
+  address          String?
+  gstin            String?       @default("NO")
+  tan              String?       @default("Unregistered")
+    
+  // Relations
+  cases            Case[]        // One-to-many relation to Cases
+  hospitalUsers    HospitalUser[] // One-to-many relation to hospital staff
+  invoices         Invoice[]     // One-to-many relation to Invoices
+  monthlyBills     MonthlyBill[] // One-to-many relation to Monthly Bills
+  
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+}
+
+model HospitalUser {
+  id               String        @id @default(cuid()) 
+  name             String        
+  email            String        @unique 
+  phone            String        @unique
+  isDefault        Boolean       @default(false) 
+  createdAt        DateTime      @default(now()) 
+  updatedAt        DateTime      @updatedAt
+  hospitalId       String        // New field
+  hospital         Hospital      @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id               String        @id @default(cuid())
+  invoiceNumber    String        @unique
+  billingMonth     String        // e.g., "February 2025"
+  startDate        DateTime      // First case date in the billing period
+  invoiceDate      DateTime      @default(now())
+  
+  // Financial details
+  taxAmount        Int?          // Tax amount if applicable
+  totalAmount      Int           // Final total amount
+  
+  // Client/Billing details
+  clientAddress    String?
+  clientGSTIN      String?       @default("NO")
+  clientTAN        String?       @default("Unregistered")
+  
+  // Hospital relation
+  hospitalId       String        // Foreign key to Hospital
+  hospital         Hospital      @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  
+  // Relations
+  cases            Case[]        // Cases included in this invoice
+
+  generatedByUserId String?      
+  
+  // Timestamps
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  @@index([hospitalId])
+  @@index([billingMonth, hospitalId]) // Composite index for efficient queries
+}
+
+
 model PriceItem {
-  id         String   @id @default(cuid())
-  studyName  String   // The specific study (e.g., "CT Brain")
-  cost       Int      // Cost of this specific study
-  caseId     String   
-  case       Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
+  id               String   @id @default(cuid())
+  studyName        String   // The specific study (e.g., "CT Brain")
+  cost             Int      // Cost of this specific study
+  caseId           String   
+  case             Case     @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  createdAt        DateTime @default(now())
   @@index([caseId])  
 }
 
@@ -195,24 +279,23 @@ enum PaymentStatus {
 
 // Optional: Monthly Bill model for aggregating cases
 model MonthlyBill {
-  id            String    @id @default(cuid())
-  month         String    // Format: "YYYY-MM"
-  totalAmount   Int
-  paidAmount    Int       @default(0)
-  paymentStatus PaymentStatus @default(PENDING)
-  cases         String[]  // Array of case IDs included in this bill
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-}
-
-model Hospital {
-  id         String     @id @default(cuid()) 
-  name       String  
-  email      String     @unique 
-  phone      String     @unique
-  isDefault  Boolean    @default(false) 
-  createdAt  DateTime   @default(now()) 
-  updatedAt  DateTime   @updatedAt
+  id               String        @id @default(cuid())
+  month            String        // Format: "YYYY-MM"
+  totalAmount      Int
+  paidAmount       Int           @default(0)
+  paymentStatus    PaymentStatus @default(PENDING)
+  cases            String[]      // Array of case IDs included in this bill
+  
+  // Hospital relation
+  hospitalId       String        // Foreign key to Hospital
+  hospital         Hospital      @relation(fields: [hospitalId], references: [id], onDelete: Cascade)
+  
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  @@index([hospitalId])
+  @@index([month, hospitalId]) // Composite index for efficient queries
+  @@unique([month, hospitalId]) // Ensure one bill per month per hospital
 }
 
 model Radiologist {
@@ -220,11 +303,11 @@ model Radiologist {
   name               String  
   email              String     @unique 
   phone              String     @unique 
-  qualifications     String
+  qualifications     String[]   @default([])
+  subspeciality      String
   designation        String
   mrn                String     @unique
   signature          Signature?
-  isDefault          Boolean    @default(false) 
   createdAt          DateTime   @default(now()) 
   updatedAt          DateTime   @updatedAt
 }

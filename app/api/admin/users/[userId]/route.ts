@@ -133,6 +133,7 @@ export async function GET(req: NextRequest) {
         role: true,
         status: true,
         name: true,
+        userType: true, // Add this line to include userType
         createdAt: true,
         emailVerified: true,
       },
@@ -189,6 +190,12 @@ export async function PATCH(req: NextRequest) {
     // Get the user before updating
     const userToUpdate = await db.user.findUnique({
       where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        userType: true, // Include userType in the select
+      },
     });
     
     if (!userToUpdate) {
@@ -212,6 +219,7 @@ export async function PATCH(req: NextRequest) {
         email: true,
         role: true,
         status: true,
+        userType: true, // Include userType in the response
       },
     });
     
