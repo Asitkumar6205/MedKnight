@@ -84,10 +84,10 @@ function SuccessStories() {
     <div className="max-lg:mx-4 lg:mx-10 mt-12 mb-8 elative overflow-hidden">
       {/* Section Header */}
       <div className="text-center mb-12">
-        <h3 className="text-3xl font-bold text-stone-100 mb-4 drop-shadow-lg">
+        <h3 className="sm:pt-6 md:pt-8 text-2xl sm:text-3xl md:text-4xl font-bold text-stone-100 mb-4 drop-shadow-lg">
           What Our Partners Say
         </h3>
-        <p className="text-stone-400 max-w-2xl mx-auto text-lg font-light">
+        <p className="text-stone-400 sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto text-sm font-light">
           Join hundreds of radiologists who have transformed their practice with MedKnight
         </p>
       </div>

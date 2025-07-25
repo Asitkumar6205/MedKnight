@@ -107,9 +107,11 @@ export default function Home() {
 
   // Effect to handle mouse movement parallax for glow
   useEffect(() => {
-    const glowElement = document.querySelector('.glow-effect') as HTMLElement;
+    const glowElement = document.querySelector(".glow-effect") as HTMLElement;
     if (glowElement) {
-      glowElement.style.transform = `translate(-50%, -50%) translate(${mousePosition.x * 40}px, ${mousePosition.y * 40}px)`;
+      glowElement.style.transform = `translate(-50%, -50%) translate(${
+        mousePosition.x * 40
+      }px, ${mousePosition.y * 40}px)`;
     }
   }, [mousePosition]);
 
@@ -170,8 +172,8 @@ export default function Home() {
 
       {/* Hero Section */}
       <div className="relative z-10 min-h-screen flex flex-col justify-center items-center px-4 md:px-8 lg:px-16 pt-16 overflow-hidden">
-        {/* Glassmorphism card in the background */}
-        <div className="absolute z-0 w-11/12 max-w-7xl h-3/4 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl"></div>
+        {/* Glassmorphism card in the background - responsive height */}
+        <div className="absolute z-0 w-11/12 max-w-7xl min-h-[85vh] sm:min-h-[80vh] md:h-3/4 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl"></div>
 
         {/* Moving glow elements with improved positioning */}
         <div
@@ -186,53 +188,57 @@ export default function Home() {
           }}
         ></div>
 
-        <h1
-          className="fade-in-up text-center max-w-3xl font-extrabold text-4xl md:text-5xl lg:text-6xl mb-6 bg-gradient-to-r from-purple-400 via-indigo-300 to-stone-200 bg-clip-text text-transparent drop-shadow-lg px-4"
-          style={{ animationDelay: "0.2s" }}
-        >
-          AI-Powered Radiology, 24/7 - Because Every Second Counts.
-        </h1>
-
-        <h2
-          className="fade-in-up text-center max-w-3xl text-xl md:text-2xl mb-8 text-stone-300 px-4 z-10"
-          style={{ animationDelay: "0.4s" }}
-        >
-          Delivering accurate, emergency-prioritized teleradiology reports with
-          the power of AI and expert radiologists - available anytime, anywhere.
-        </h2>
-
-        <div
-          className="fade-in-up flex flex-wrap justify-center gap-4 px-4"
-          style={{ animationDelay: "0.6s" }}
-        >
-          <button
-            onClick={handleClick1}
-            disabled={loadingGetStarted}
-            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-lg h-[50px] text-white font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-10 rounded-full transition-all duration-300 transform hover:scale-105"
+        {/* Content container with proper z-index and spacing */}
+        <div className="relative z-10 flex flex-col items-center justify-center max-w-6xl mx-auto py-8 sm:py-16">
+          <h1
+            className="fade-in-up text-center max-w-4xl font-extrabold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 sm:mb-6 bg-gradient-to-r from-purple-400 via-indigo-300 to-stone-200 bg-clip-text text-transparent drop-shadow-lg px-2 sm:px-4 leading-tight"
+            style={{ animationDelay: "0.2s" }}
           >
-            {loadingGetStarted ? (
-              <Loader2 className="animate-spin" size={24} />
-            ) : (
-              "Get Started"
-            )}
-          </button>
+            AI-Powered Radiology, 24/7 - Because Every Second Counts.
+          </h1>
 
-          <button
-            onClick={handleClick2}
-            disabled={loadingLearnMore}
-            className="text-lg flex items-center justify-center h-[50px] px-10 text-center text-stone-200 border-purple-400 border-solid border-[1px] bg-stone-800/40 hover:bg-purple-400/20 backdrop-blur-md rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-400/10"
+          <h2
+            className="fade-in-up text-center max-w-4xl text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-stone-300 px-2 sm:px-4 leading-relaxed"
+            style={{ animationDelay: "0.4s" }}
           >
+            Delivering accurate, emergency-prioritized teleradiology reports
+            with the power of AI and expert radiologists - available anytime,
+            anywhere.
+          </h2>
+
+          <div
+            className="fade-in-up flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-2 sm:px-4 w-full max-w-lg sm:max-w-none"
+            style={{ animationDelay: "0.6s" }}
+          >
+            <button
+              onClick={handleClick1}
+              disabled={loadingGetStarted}
+              className="bg-gradient-to-r from-purple-500 to-indigo-600 text-base sm:text-lg h-[45px] sm:h-[50px] text-white font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-8 sm:px-10 rounded-full transition-all duration-300 transform hover:scale-105 w-full sm:w-auto"
+            >
+              {loadingGetStarted ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                "Get Started"
+              )}
+            </button>
+
+            <button
+              onClick={handleClick2}
+              disabled={loadingLearnMore}
+              className="text-base sm:text-lg flex items-center justify-center h-[45px] sm:h-[50px] px-8 sm:px-10 text-center text-stone-200 border-purple-400 border-solid border-[1px] bg-stone-800/40 hover:bg-purple-400/20 backdrop-blur-md rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-400/10 w-full sm:w-auto"
+            >
               {loadingLearnMore ? (
-              <Loader2 className="animate-spin" size={24} />
-            ) : (
-              "Learn More"
-            )}
-          </button>
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                "Learn More"
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Scrolling indicator with improved animation */}
         <div
-          className="fade-in absolute bottom-10 left-1/2 transform -translate-x-1/2"
+          className="fade-in absolute bottom-6 sm:bottom-10 left-1/2 transform -translate-x-1/2 z-10"
           style={{ animationDelay: "1.2s" }}
         >
           <div className="scroll-indicator w-6 h-10 rounded-full border-2 border-purple-400/50 flex justify-center pt-2">
@@ -252,7 +258,7 @@ export default function Home() {
             >
               {/* Animated gradient background */}
               <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 via-indigo-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-              
+
               {/* Glowing orb effect */}
               <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-radial from-purple-400/30 to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
 
@@ -270,9 +276,10 @@ export default function Home() {
                   Quick Turnaround
                 </h3>
                 <p className="text-stone-300 text-sm leading-relaxed group-hover:text-stone-200 transition-colors duration-300 mb-4">
-                  Lightning-fast, AI-assisted reporting for all imaging modalities - optimized for emergency and routine diagnostics.
+                  Lightning-fast, AI-assisted reporting for all imaging
+                  modalities - optimized for emergency and routine diagnostics.
                 </p>
-                
+
                 {/* Feature highlights */}
                 <div className="space-y-2">
                   <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
@@ -293,7 +300,7 @@ export default function Home() {
               style={{ animationDelay: "0.3s" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-cyan-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-              
+
               <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-radial from-blue-400/30 to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
 
               <div className="relative mb-6">
@@ -309,9 +316,10 @@ export default function Home() {
                   24/7 Availability
                 </h3>
                 <p className="text-stone-300 text-sm leading-relaxed group-hover:text-stone-200 transition-colors duration-300 mb-4">
-                  Round-the-clock expert radiologist support - ensuring no critical case goes unreported, ever.
+                  Round-the-clock expert radiologist support - ensuring no
+                  critical case goes unreported, ever.
                 </p>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>
@@ -331,7 +339,7 @@ export default function Home() {
               style={{ animationDelay: "0.5s" }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-pink-600/20 via-purple-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
-              
+
               <div className="absolute top-4 right-4 w-20 h-20 bg-gradient-radial from-pink-400/30 to-transparent rounded-full blur-xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
 
               <div className="relative mb-6">
@@ -347,9 +355,11 @@ export default function Home() {
                   Expert + AI Precision
                 </h3>
                 <p className="text-stone-300 text-sm leading-relaxed group-hover:text-stone-200 transition-colors duration-300 mb-4">
-                  Dual-layer diagnostics combining expert radiologists and cutting-edge AI for faster, more accurate and reliable reports.
+                  Dual-layer diagnostics combining expert radiologists and
+                  cutting-edge AI for faster, more accurate and reliable
+                  reports.
                 </p>
-                
+
                 <div className="space-y-2">
                   <div className="flex items-center text-xs text-stone-400 group-hover:text-stone-300 transition-colors duration-300">
                     <div className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2"></div>

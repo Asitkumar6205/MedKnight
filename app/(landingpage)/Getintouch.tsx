@@ -99,56 +99,76 @@ function Getintouch(): React.ReactElement {
       id="getintouch"
       className="max-sm:p-4 max-md:p-7 md:p-7 lg:p-12 lg:my-20 max-lg:my-14 max-sm:my-4 sm:my-6"
     >
-      <div className="grid lg:grid-cols-2 md:grid-cols-2 lg:mx-24  bg-stone-100 py-6 px-12 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl">
-        <div className="flex flex-col pl-0 pb-4 pt-4 pr-4 gap-4">
-          <h2 className="text-4xl font-bold text-stone-100 mb-4">Get in Touch</h2>
+      <div className="relative z-10 pt-10 pb-6 flex flex-col justify-center items-center gap-4">
+        <h2 className="sm:pt-6 md:pt-8 text-2xl sm:text-3xl md:text-4xl font-bold text-stone-100 text-center bg-gradient-to-r from-purple-300 to-indigo-300 bg-clip-text text-transparent">
+          Contact Us
+        </h2>
+      </div>
+      <div className="grid lg:grid-cols-2 md:grid-cols-2 lg:mx-24 bg-stone-100 py-6 px-4 sm:px-6 md:px-8 lg:px-12 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl">
+        <div className="flex flex-col px-2 sm:px-4 pb-4 pt-4 gap-4">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-100 mb-4">
+            Get in Touch
+          </h2>
           <div>
-            <h3 className="py-2 text-stone-100">
+            <h3 className="py-2 text-stone-100 text-sm sm:text-base">
               Ready to Revolutionize Your Radiology Workflow?
             </h3>
-            <h3 className="py-2 text-stone-100">
+            <h3 className="py-2 text-stone-100 text-sm sm:text-base">
               Partner with MedKnight for faster, smarter, and more accurate
               diagnostics. Let's discuss how our AI-powered teleradiology
               solutions can transform your patient care.
             </h3>
           </div>
 
-          <div className="flex flex-row gap-4 items-center pt-4">
-            <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105">
-              <FaPhoneAlt className="h-6 w-6 text-stone-100" />
+          <div className="flex flex-row gap-3 sm:gap-4 items-center pt-4">
+            <div className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105 flex-shrink-0">
+              <FaPhoneAlt className="h-5 w-5 sm:h-6 sm:w-6 text-stone-100" />
             </div>
-            <div>
-              <h2 className="text-stone-200 text-sm">Phone Support</h2>
-              <h2 className="text-stone-200 text-sm">24/7 Available</h2>
-              <h2 className="text-purple-400">
-                +91 6205400732, +91 8789573665
+            <div className="min-w-0 flex-1">
+              <h2 className="text-stone-200 text-xs sm:text-sm">
+                Phone Support
+              </h2>
+              <h2 className="text-stone-200 text-xs sm:text-sm">
+                24/7 Available
+              </h2>
+              <h2 className="text-purple-400 text-xs sm:text-sm break-words">
+                <span className="block sm:inline">+91 6205400732</span>
+                <span className="hidden sm:inline">, </span>
+                <span className="block sm:inline">+91 8789573665</span>
               </h2>
             </div>
           </div>
-          <div className="flex flex-row gap-4 items-center">
-            <div className="h-16 w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105">
-              <MdOutlineMailOutline className="h-8 w-8 text-stone-100" />
+
+          <div className="flex flex-row gap-3 sm:gap-4 items-center">
+            <div className="h-12 w-12 sm:h-14 sm:w-14 lg:h-16 lg:w-16 bg-gradient-to-r from-purple-500 to-indigo-600 flex items-center justify-center text-lg text-stone-700 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 rounded-full transition-all duration-300 transform hover:scale-105 flex-shrink-0">
+              <MdOutlineMailOutline className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 text-stone-100" />
             </div>
-            <div>
-              <h2 className="text-stone-200 text-sm">Email</h2>
-              <h2 className="text-stone-200 text-sm">Get in Touch</h2>
-              <h2 className="text-purple-400">contact@medknight.in</h2>
+            <div className="min-w-0 flex-1">
+              <h2 className="text-stone-200 text-xs sm:text-sm">Email</h2>
+              <h2 className="text-stone-200 text-xs sm:text-sm">
+                Get in Touch
+              </h2>
+              <h2 className="text-purple-400 text-xs sm:text-sm break-words">
+                contact@medknight.in
+              </h2>
             </div>
           </div>
+
           <div className="pt-4">
-            <h2 className="text-stone-100">
+            <h2 className="text-stone-100 text-sm sm:text-base">
               Contact us today for a free pilot consultation tailored to your
               needs.
             </h2>
           </div>
         </div>
+
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col bg-stone-100 pt-8 pb-4 px-6 gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl"
+          className="flex flex-col bg-stone-100 pt-4 sm:pt-6 pb-3 sm:pb-4 px-3 sm:px-6 gap-3 sm:gap-4 backdrop:blur-lg z-0 rounded-lg bg-white/5 backdrop-blur-lg border border-white/10 shadow-2xl max-w-full"
         >
           {submitStatus && (
             <div
-              className={`p-3 rounded ${
+              className={`p-2 sm:p-3 rounded text-xs sm:text-sm ${
                 submitStatus.success
                   ? "bg-green-100 text-green-800"
                   : "bg-red-100 text-red-800"
@@ -157,8 +177,12 @@ function Getintouch(): React.ReactElement {
               {submitStatus.message}
             </div>
           )}
-          <div>
-            <Label htmlFor="fullName" className="text-stone-100 font-bold">
+
+          <div className="space-y-1 sm:space-y-2">
+            <Label
+              htmlFor="fullName"
+              className="text-stone-100 font-bold text-xs sm:text-sm md:text-base block"
+            >
               Full Name
             </Label>
             <Input
@@ -167,12 +191,16 @@ function Getintouch(): React.ReactElement {
               value={formData.fullName}
               onChange={handleChange}
               placeholder="Enter Your Name"
-              className="text-stone-800 bg-slate-100"
+              className="text-stone-800 bg-slate-100 text-xs sm:text-sm md:text-base h-9 sm:h-10 px-3"
               required
             />
           </div>
-          <div>
-            <Label htmlFor="email" className="text-stone-100 font-bold">
+
+          <div className="space-y-1 sm:space-y-2">
+            <Label
+              htmlFor="email"
+              className="text-stone-100 font-bold text-xs sm:text-sm md:text-base block"
+            >
               Email
             </Label>
             <Input
@@ -182,12 +210,16 @@ function Getintouch(): React.ReactElement {
               value={formData.email}
               onChange={handleChange}
               placeholder="Enter Your Email"
-              className="text-stone-800 bg-slate-100"
+              className="text-stone-800 bg-slate-100 text-xs sm:text-sm md:text-base h-9 sm:h-10 px-3"
               required
             />
           </div>
-          <div>
-            <Label htmlFor="organization" className="text-stone-100 font-bold">
+
+          <div className="space-y-1 sm:space-y-2">
+            <Label
+              htmlFor="organization"
+              className="text-stone-100 font-bold text-xs sm:text-sm md:text-base block"
+            >
               Organization
             </Label>
             <Input
@@ -196,12 +228,16 @@ function Getintouch(): React.ReactElement {
               value={formData.organization}
               onChange={handleChange}
               placeholder="Enter Your Organization"
-              className="text-stone-800 bg-slate-100"
+              className="text-stone-800 bg-slate-100 text-xs sm:text-sm md:text-base h-9 sm:h-10 px-3"
               required
             />
           </div>
-          <div>
-            <Label htmlFor="message" className="text-stone-100 font-bold">
+
+          <div className="space-y-1 sm:space-y-2">
+            <Label
+              htmlFor="message"
+              className="text-stone-100 font-bold text-xs sm:text-sm md:text-base block"
+            >
               Message
             </Label>
             <Textarea
@@ -210,14 +246,15 @@ function Getintouch(): React.ReactElement {
               value={formData.message}
               onChange={handleChange}
               placeholder="Type Your Message"
-              className="border h-24 resize-none text-stone-800 bg-slate-100"
+              className="border h-16 sm:h-20 md:h-24 resize-none text-stone-800 bg-slate-100 text-xs sm:text-sm md:text-base px-3 py-2"
               required
             />
           </div>
+
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-lg h-[50px] text-stone-100 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-10 rounded-full transition-all duration-300 transform hover:scale-105"
+            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-sm sm:text-base md:text-lg h-10 sm:h-12 md:h-[50px] text-stone-100 font-bold hover:from-purple-600 hover:to-indigo-700 shadow-lg shadow-purple-500/20 px-6 sm:px-8 md:px-10 rounded-full transition-all duration-300 transform hover:scale-105 mt-1 sm:mt-2"
           >
             {isSubmitting ? "Sending..." : "Send Message"}
           </Button>
