@@ -10,11 +10,10 @@ function Footer() {
       {/* Decorative background elements */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-purple-500/10 via-transparent to-transparent"></div>
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-indigo-500/10 via-transparent to-transparent"></div>
-      
+
       {/* Main footer content */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          
           {/* Company Info */}
           <div className="lg:col-span-1 space-y-6">
             <div className="space-y-4">
@@ -23,10 +22,10 @@ function Footer() {
                 className="inline-flex items-center space-x-2 group transition-all duration-300 hover:scale-105"
               >
                 <div className="flex items-center space-x-1">
-                  <img 
-                    src="logo.png" 
-                    height={45} 
-                    width={55} 
+                  <img
+                    src="logo.png"
+                    height={45}
+                    width={55}
                     alt="MedKnight Logo"
                     className="transition-transform duration-300 group-hover:rotate-12"
                   />
@@ -39,13 +38,13 @@ function Footer() {
                   />
                 </div>
               </Link>
-              
+
               <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                Fast, Accurate, 24/7 Diagnostic Reporting with cutting-edge AI technology 
-                and expert medical professionals.
+                Fast, Accurate, 24/7 Diagnostic Reporting with cutting-edge AI
+                technology and expert medical professionals.
               </p>
             </div>
-            
+
             {/* Social Media Links */}
             <div className="space-y-3">
               <h4 className="text-white font-semibold text-sm uppercase tracking-wider">
@@ -53,9 +52,21 @@ function Footer() {
               </h4>
               <div className="flex space-x-3">
                 {[
-                  { icon: FaInstagramSquare, color: "hover:text-pink-400", bg: "hover:bg-pink-500/10" },
-                  { icon: FaFacebook, color: "hover:text-blue-400", bg: "hover:bg-blue-500/10" },
-                  { icon: FaXTwitter, color: "hover:text-gray-300", bg: "hover:bg-gray-500/10" },
+                  {
+                    icon: FaInstagramSquare,
+                    color: "hover:text-pink-400",
+                    bg: "hover:bg-pink-500/10",
+                  },
+                  {
+                    icon: FaFacebook,
+                    color: "hover:text-blue-400",
+                    bg: "hover:bg-blue-500/10",
+                  },
+                  {
+                    icon: FaXTwitter,
+                    color: "hover:text-gray-300",
+                    bg: "hover:bg-gray-500/10",
+                  },
                 ].map((social, index) => (
                   <div
                     key={index}
@@ -88,7 +99,7 @@ function Footer() {
                 { name: "Workflow", href: "/#workflow" },
                 { name: "Technology", href: "/#technology" },
                 // { name: "Our Team", href: "/#partnership" },
-                { name: "About Us", href: "/#about" }
+                { name: "About Us", href: "/#about" },
               ].map((link, index) => (
                 <li key={index}>
                   <Link
@@ -112,10 +123,10 @@ function Footer() {
             <ul className="space-y-3">
               {[
                 "X-Ray Reporting",
-                "CT Scan Analysis", 
+                "CT Scan Analysis",
                 "MRI Interpretation",
                 // "Ultrasound Reports",
-                "24/7 Support"
+                "24/7 Support",
               ].map((service, index) => (
                 <li key={index}>
                   <Link
@@ -137,7 +148,6 @@ function Footer() {
               <div className="absolute -bottom-2 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full"></div>
             </h3>
             <div className="space-y-4">
-              
               {/* Phone */}
               <div className="flex items-start space-x-4 group">
                 <div className="flex-shrink-0 p-3 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl shadow-lg group-hover:shadow-purple-500/25 transition-all duration-300 group-hover:scale-110">
@@ -148,8 +158,12 @@ function Footer() {
                     Call us at
                   </p>
                   <div className="space-y-1">
-                    <p className="text-white text-sm font-medium">+91-6205400732</p>
-                    <p className="text-white text-sm font-medium">+91-8789573665</p>
+                    <p className="text-white text-sm font-medium">
+                      +91-6205400732
+                    </p>
+                    <p className="text-white text-sm font-medium">
+                      +91-8789573665
+                    </p>
                   </div>
                 </div>
               </div>
@@ -183,7 +197,6 @@ function Footer() {
                   </p>
                 </div>
               </div> */}
-
             </div>
           </div>
         </div>
@@ -191,18 +204,17 @@ function Footer() {
         {/* Divider */}
         <div className="mt-12 pt-8 border-t border-slate-700/50">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            
             {/* Copyright */}
             <div className="text-slate-400 text-sm">
               © 2025 MedKnight. All rights reserved.
             </div>
 
             {/* Legal Links */}
-            <div className="flex flex-wrap items-center space-x-6">
+            <div className="flex flex-col sm:flex-row flex-wrap items-center space-y-2 sm:space-y-0 sm:space-x-6">
               {[
                 { name: "Privacy Policy", href: "/privacy-policy" },
                 { name: "Terms of Service", href: "/terms-of-service" },
-                { name: "Cookies Policy", href: "/cookies-policy" }
+                { name: "Cookies Policy", href: "/cookies-policy" },
               ].map((link, index) => (
                 <Link
                   key={index}

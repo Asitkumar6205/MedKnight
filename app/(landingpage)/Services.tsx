@@ -25,11 +25,11 @@ function Services() {
       {/* Background gradient overlay */}
       <div className="absolute inset-0"></div>
 
-      <div className="relative z-10 p-14 flex flex-col justify-center items-center gap-4">
-        <h2 className="pt-8 text-4xl font-bold text-stone-100 text-center bg-gradient-to-r from-purple-300 to-indigo-300 bg-clip-text text-transparent">
+      <div className="relative z-10 p-4 sm:p-6 md:p-10 lg:p-14 flex flex-col justify-center items-center gap-3 sm:gap-4">
+        <h2 className="pt-4 sm:pt-6 md:pt-8 text-2xl sm:text-3xl md:text-4xl font-bold text-stone-100 text-center bg-gradient-to-r from-purple-300 to-indigo-300 bg-clip-text text-transparent leading-tight px-2">
           Our Comprehensive Services
         </h2>
-        <h3 className="text-center text-xl font-light text-stone-300 lg:max-w-3xl leading-relaxed">
+        <h3 className="text-center text-sm sm:text-base md:text-lg lg:text-xl font-light text-stone-300 max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-3xl leading-relaxed px-2">
           End-to-end AI-powered teleradiology solutions across all imaging
           modalities — enabling accurate, rapid, and accessible diagnostics for
           healthcare providers, anytime.
@@ -158,19 +158,24 @@ function Services() {
       </div>
 
       {/* Enhanced CTA Button */}
-      <div className="flex justify-center items-center pb-14 mt-12 relative z-10">
+      <div className="flex justify-center items-center pb-6 sm:pb-10 md:pb-14 mt-6 sm:mt-8 md:mt-12 relative z-10 px-4">
         <Link
           href="/signin"
           onClick={handleClick}
-          className="group flex justify-center items-center bg-gradient-to-r from-purple-500 to-indigo-600 text-lg h-14 text-white font-bold hover:from-purple-600 hover:to-indigo-700 shadow-xl shadow-purple-500/30 px-12 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+          className="group flex justify-center items-center bg-gradient-to-r from-purple-500 to-indigo-600 text-sm sm:text-base md:text-lg h-12 sm:h-13 md:h-14 text-white font-bold hover:from-purple-600 hover:to-indigo-700 shadow-xl shadow-purple-500/30 px-6 sm:px-8 md:px-12 rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 w-full max-w-xs sm:max-w-sm md:max-w-none md:w-auto"
         >
           {loading ? (
-            <Loader2 className="animate-spin" size={24} />
+            <Loader2 className="animate-spin" size={20} />
           ) : (
             <>
-              Get Started with Our Services
-              <span className="ml-3 group-hover:translate-x-1 transition-transform duration-200">
-                <FaArrowRight />
+              <span className="text-center">
+                <span className="block sm:hidden">Get Started</span>
+                <span className="hidden sm:block">
+                  Get Started with Our Services
+                </span>
+              </span>
+              <span className="ml-2 sm:ml-3 group-hover:translate-x-1 transition-transform duration-200">
+                <FaArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
               </span>
             </>
           )}
