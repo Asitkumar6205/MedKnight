@@ -87,7 +87,7 @@ function SuccessStories() {
         <h3 className="sm:pt-6 md:pt-8 text-2xl sm:text-3xl md:text-4xl font-bold text-stone-100 mb-4 drop-shadow-lg">
           What Our Partners Say
         </h3>
-        <p className="text-stone-400 text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto text-lg font-light">
+        <p className="text-stone-400 sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto text-sm font-light">
           Join hundreds of radiologists who have transformed their practice with MedKnight
         </p>
       </div>
