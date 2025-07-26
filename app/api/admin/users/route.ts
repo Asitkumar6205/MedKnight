@@ -10,7 +10,7 @@ async function sendApprovalEmail(email: string, approved: boolean) {
   const baseUrl = process.env.NEXTAUTH_URL || 'https://medknight.in';
   const emailServer = process.env.EMAIL_SERVER || {
     host: process.env.EMAIL_SERVER_HOST || '',
-    port: Number(process.env.EMAIL_SERVER_PORT || 587),
+    port: Number(process.env.EMAIL_SERVER_PORT || 465),
     auth: {
       user: process.env.EMAIL_SERVER_USER || '',
       pass: process.env.EMAIL_SERVER_PASSWORD || '',

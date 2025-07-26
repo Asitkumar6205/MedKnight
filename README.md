@@ -39,7 +39,7 @@ SERVER_PASSWORD=your-server-password
 
 # Email Server (for passwordless auth or notifications)
 EMAIL_SERVER_HOST=smtp.yourmail.com
-EMAIL_SERVER_PORT=587
+EMAIL_SERVER_PORT=587/465
 EMAIL_SERVER_USER=your-email@example.com
 EMAIL_SERVER_PASSWORD=your-email-password
 EMAIL_FROM=your-email@example.com
