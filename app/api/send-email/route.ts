@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     // Configure your email transporter with the correct env variable names
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_SERVER_HOST,
-      port: parseInt(process.env.EMAIL_SERVER_PORT || '587', 10),
+      port: parseInt(process.env.EMAIL_SERVER_PORT || '465', 10),
       secure: false, // Use true if you're on port 465 with SSL, false for other ports like 587
       auth: {
         user: process.env.EMAIL_SERVER_USER,
