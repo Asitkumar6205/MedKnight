@@ -1,4 +1,3 @@
-// app/api/admin/users/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
@@ -7,29 +6,29 @@ import { createTransport } from "nodemailer";
 
 // Helper function to send approval email
 async function sendApprovalEmail(email: string, approved: boolean) {
-  const baseUrl = process.env.NEXTAUTH_URL || 'https://medknight.in';
+  const baseUrl = process.env.NEXTAUTH_URL || "https://medknight.in";
   const emailServer = process.env.EMAIL_SERVER || {
-    host: process.env.EMAIL_SERVER_HOST || '',
+    host: process.env.EMAIL_SERVER_HOST || "",
     port: Number(process.env.EMAIL_SERVER_PORT || 465),
     auth: {
-      user: process.env.EMAIL_SERVER_USER || '',
-      pass: process.env.EMAIL_SERVER_PASSWORD || '',
+      user: process.env.EMAIL_SERVER_USER || "",
+      pass: process.env.EMAIL_SERVER_PASSWORD || "",
     },
   };
-  
-  const from = process.env.EMAIL_FROM || 'no-reply@medknight.in';
+
+  const from = process.env.EMAIL_FROM || "no-reply@medknight.in";
   const { host } = new URL(baseUrl);
-  
+
   const transport = createTransport(emailServer);
-  
-  const subject = approved 
-    ? `Your account on ${host} has been approved` 
+
+  const subject = approved
+    ? `Your account on ${host} has been approved`
     : `Your account request on ${host} has been rejected`;
-  
+
   const text = approved
     ? `Your account on ${host} has been approved. You can now sign in at ${baseUrl}/signin`
     : `We're sorry, but your account request on ${host} has been rejected. Please contact the administrator for more information.`;
-  
+
   const html = approved
     ? `
       <body style="background: #f9f9f9;">
@@ -76,7 +75,7 @@ async function sendApprovalEmail(email: string, approved: boolean) {
         </table>
       </body>
     `;
-  
+
   await transport.sendMail({
     to: email,
     from,
@@ -90,32 +89,29 @@ async function sendApprovalEmail(email: string, approved: boolean) {
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user?.email) {
       return NextResponse.json(
         { message: "Not authenticated" },
         { status: 401 }
       );
     }
-    
+
     const adminUser = await db.user.findUnique({
       where: {
         email: session.user.email,
       },
     });
-    
+
     if (!adminUser || adminUser.role !== "ADMIN") {
-      return NextResponse.json(
-        { message: "Not authorized" },
-        { status: 403 }
-      );
+      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
     }
-    
+
     // Get query parameters for filtering
     const searchParams = req.nextUrl.searchParams;
-    const status = searchParams.get('status');
-    const role = searchParams.get('role');
-    
+    const status = searchParams.get("status");
+    const role = searchParams.get("role");
+
     let whereClause = {};
     if (status) {
       whereClause = { ...whereClause, status };
@@ -123,7 +119,7 @@ export async function GET(req: NextRequest) {
     if (role) {
       whereClause = { ...whereClause, role };
     }
-    
+
     const users = await db.user.findMany({
       where: whereClause,
       select: {
@@ -133,14 +129,15 @@ export async function GET(req: NextRequest) {
         role: true,
         status: true,
         name: true,
+        userType: true, // ✅ ADDED THIS LINE - This was missing!
         createdAt: true,
         emailVerified: true,
       },
       orderBy: {
-        createdAt: 'desc',
+        createdAt: "desc",
       },
     });
-    
+
     return NextResponse.json({ users });
   } catch (error) {
     console.error("Admin users API error:", error);
@@ -155,54 +152,73 @@ export async function GET(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    
+
     if (!session || !session.user?.email) {
       return NextResponse.json(
         { message: "Not authenticated" },
         { status: 401 }
       );
     }
-    
+
     const adminUser = await db.user.findUnique({
       where: {
         email: session.user.email,
       },
     });
-    
+
     if (!adminUser || adminUser.role !== "ADMIN") {
-      return NextResponse.json(
-        { message: "Not authorized" },
-        { status: 403 }
-      );
+      return NextResponse.json({ message: "Not authorized" }, { status: 403 });
     }
-    
+
     const body = await req.json();
     const { userId, status, role } = body;
-    
+
     if (!userId || (!status && !role)) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
       );
     }
-    
-    // Get the user before updating
+
+    // Get the user before updating (including userType for automatic role assignment)
     const userToUpdate = await db.user.findUnique({
       where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        status: true,
+        userType: true, // ✅ Make sure we get userType for automatic role assignment
+      },
     });
-    
+
     if (!userToUpdate) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
-    
+
     // Update user status/role
     const updateData: any = {};
     if (status) updateData.status = status;
-    if (role) updateData.role = role;
-    
+
+    // ✅ ENHANCED: Automatically determine role based on userType if not explicitly provided
+    if (role) {
+      updateData.role = role;
+    } else if (status === "ACTIVE" && userToUpdate.userType) {
+      // Automatically assign role based on userType when approving
+      switch (userToUpdate.userType) {
+        case "RADIOLOGIST":
+          updateData.role = "RADIOLOGIST";
+          break;
+        case "HOSPITAL":
+          updateData.role = "HOSPITAL";
+          break;
+        case "ADMIN":
+          updateData.role = "ADMIN";
+          break;
+        default:
+          updateData.role = "PENDING";
+      }
+    }
+
     const updatedUser = await db.user.update({
       where: { id: userId },
       data: updateData,
@@ -212,17 +228,15 @@ export async function PATCH(req: NextRequest) {
         email: true,
         role: true,
         status: true,
+        userType: true, // ✅ Include userType in response
       },
     });
-    
+
     // If the user was pending and is now approved or rejected, send email
     if (userToUpdate.status === "PENDING_APPROVAL" && status) {
-      await sendApprovalEmail(
-        userToUpdate.email || "",
-        status === "ACTIVE"
-      );
+      await sendApprovalEmail(userToUpdate.email || "", status === "ACTIVE");
     }
-    
+
     return NextResponse.json({ user: updatedUser });
   } catch (error) {
     console.error("Admin update user API error:", error);

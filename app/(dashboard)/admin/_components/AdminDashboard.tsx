@@ -85,10 +85,7 @@ export default function AdminDashboard() {
   const handleApproveUser = async (userId: string, userType: string) => {
     setIsLoading({ ...isLoading, [userId]: true });
     try {
-      // Automatically determine role based on userType
-      const role = userType === "RADIOLOGIST" ? "RADIOLOGIST" : "HOSPITAL";
-
-      // Approve the user
+      // The API will automatically determine role based on userType
       const response = await fetch("/api/admin/users", {
         method: "PATCH",
         headers: {
@@ -97,7 +94,7 @@ export default function AdminDashboard() {
         body: JSON.stringify({
           userId,
           status: "ACTIVE",
-          role,
+          // No need to manually set role - API handles it automatically
         }),
       });
 
@@ -105,7 +102,6 @@ export default function AdminDashboard() {
         throw new Error("Failed to approve user");
       }
 
-      // Refresh the user list
       fetchUsers();
       setShowModal(false);
     } catch (err) {
@@ -473,13 +469,17 @@ export default function AdminDashboard() {
                           )}
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-sm">
-                          {user.role && (
+                          {user.userType ? (
                             <span
-                              className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${getRoleBadgeClasses(
-                                user.role
+                              className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${getUserTypeBadgeClasses(
+                                user.userType
                               )}`}
                             >
-                              {user.role}
+                              {user.userType}
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 text-xs">
+                              No type assigned
                             </span>
                           )}
                         </td>
@@ -689,5 +689,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-
