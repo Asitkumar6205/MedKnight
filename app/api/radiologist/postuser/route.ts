@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod";
-import { writeFile } from "fs/promises";
-import path from "path";
-import { mkdir } from "fs/promises";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import Jimp from "jimp";
 import potrace from "potrace";
+
+// Initialize S3 client
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION!,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+  },
+});
+
+const BUCKET_NAME = process.env.S3_SIGNATURE_UPLOADS!;
 
 // Define schema validation for radiologist submission - with qualifications as array
 const radiologistSchema = z.object({
@@ -17,6 +26,31 @@ const radiologistSchema = z.object({
   designation: z.string().min(2, "Designation must be at least 2 characters"),
   mrn: z.string().min(2, "MRN must be at least 2 characters"),
 });
+
+// Function to upload file to S3
+async function uploadFileToS3(
+  buffer: Buffer,
+  fileName: string,
+  contentType: string
+): Promise<string> {
+  const key = `signatures/${fileName}`;
+  
+  const command = new PutObjectCommand({
+    Bucket: BUCKET_NAME,
+    Key: key,
+    Body: buffer,
+    ContentType: contentType,
+  });
+
+  try {
+    await s3Client.send(command);
+    // Return the S3 URL
+    return `https://${BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
+  } catch (error) {
+    console.error('Error uploading to S3:', error);
+    throw new Error('Failed to upload file to S3');
+  }
+}
 
 // Function to convert image buffer to SVG
 async function convertImageToSVG(
@@ -173,48 +207,44 @@ export async function POST(req: Request) {
     const bytes = await (signature as Blob).arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create directory if it doesn't exist
-    const uploadDir = path.join(process.cwd(), "public/uploads/signatures");
-    await mkdir(uploadDir, { recursive: true });
+    // Generate unique file names with timestamp
+    const timestamp = Date.now();
+    const uniqueFileName = `${timestamp}-${fileName}`;
+    const fileExtension = fileName.split('.').pop()?.toLowerCase() || 'png';
+    const contentType = fileExtension === 'png' ? 'image/png' : 
+                       fileExtension === 'jpg' || fileExtension === 'jpeg' ? 'image/jpeg' : 
+                       'image/png';
 
-    const uniqueFileName = `${Date.now()}-${fileName}`;
-    const filePath = path.join(uploadDir, uniqueFileName);
-    const publicPath = `/uploads/signatures/${uniqueFileName}`;
+    console.log("Uploading original signature to S3...");
 
-    console.log("Writing file to:", filePath);
+    // Upload original file to S3
+    const s3Url = await uploadFileToS3(buffer, uniqueFileName, contentType);
+    console.log("Original signature uploaded to S3:", s3Url);
 
-    // Write original file to disk
-    await writeFile(filePath, buffer);
-
-    // Handle SVG generation/saving
-    let svgFileName = null;
-    let svgPublicPath = null;
+    // Handle SVG generation/upload
+    let svgS3Url = null;
     
     if (svgData) {
-      svgFileName = `${Date.now()}-signature.svg`;
-      svgPublicPath = `/uploads/signatures/${svgFileName}`;
-      const svgFilePath = path.join(uploadDir, svgFileName);
-      await writeFile(svgFilePath, svgData);
-      console.log("SVG data written to:", svgFilePath);
+      const svgFileName = `${timestamp}-signature.svg`;
+      const svgBuffer = Buffer.from(svgData, 'utf-8');
+      svgS3Url = await uploadFileToS3(svgBuffer, svgFileName, 'image/svg+xml');
+      console.log("SVG data uploaded to S3:", svgS3Url);
     }
     else if (signatureSvg instanceof Blob) {
       const svgBytes = await signatureSvg.arrayBuffer();
       const svgBuffer = Buffer.from(svgBytes);
-      svgFileName = `${Date.now()}-${(signatureSvg as any).name || 'signature.svg'}`;
-      svgPublicPath = `/uploads/signatures/${svgFileName}`;
-      const svgFilePath = path.join(uploadDir, svgFileName);
-      await writeFile(svgFilePath, svgBuffer);
-      console.log("SVG blob written to:", svgFilePath);
+      const svgFileName = `${timestamp}-${(signatureSvg as any).name || 'signature.svg'}`;
+      svgS3Url = await uploadFileToS3(svgBuffer, svgFileName, 'image/svg+xml');
+      console.log("SVG blob uploaded to S3:", svgS3Url);
     } 
     else {
       console.log("Converting image to SVG...");
       const svg = await convertImageToSVG(buffer);
       if (svg) {
-        svgFileName = `${Date.now()}-signature.svg`;
-        svgPublicPath = `/uploads/signatures/${svgFileName}`;
-        const svgFilePath = path.join(uploadDir, svgFileName);
-        await writeFile(svgFilePath, svg);
-        console.log("Converted SVG written to:", svgFilePath);
+        const svgFileName = `${timestamp}-signature.svg`;
+        const svgBuffer = Buffer.from(svg, 'utf-8');
+        svgS3Url = await uploadFileToS3(svgBuffer, svgFileName, 'image/svg+xml');
+        console.log("Converted SVG uploaded to S3:", svgS3Url);
       } else {
         console.warn("Failed to convert image to SVG");
       }
@@ -247,8 +277,8 @@ export async function POST(req: Request) {
       const newSignature = await tx.signature.create({
         data: {
           filename: uniqueFileName,
-          path: publicPath,
-          svgPath: svgPublicPath as string,
+          path: s3Url, // Store S3 URL instead of local path
+          svgPath: svgS3Url as string, // Store S3 URL for SVG
           radiologistId: newRadiologist.id,
         },
       });
