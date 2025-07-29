@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { X } from "lucide-react";
+import { Mail, User, X } from "lucide-react";
 
 // Create a type definition for the imported function
 type HandleFileConversionFunction = (
@@ -38,7 +39,10 @@ const radiologistSchema = z.object({
 type RadiologistFormData = z.infer<typeof radiologistSchema>;
 
 interface RadiologistFormModalProps {
-  onSubmit: (data: RadiologistFormData, signatureFile: File | null) => Promise<void>;
+  onSubmit: (
+    data: RadiologistFormData,
+    signatureFile: File | null
+  ) => Promise<void>;
   isLoading?: boolean;
   showMRNField?: boolean;
 }
@@ -46,8 +50,9 @@ interface RadiologistFormModalProps {
 export default function RadiologistFormModal({
   onSubmit,
   isLoading = false,
-  showMRNField = true
+  showMRNField = true,
 }: RadiologistFormModalProps) {
+  const { data: session, status } = useSession();
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [signatureFile, setSignatureFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -66,18 +71,20 @@ export default function RadiologistFormModal({
   // Load the file conversion utility on component mount
   useEffect(() => {
     // Import the function only on the client side
-    import("../../utils/signatureConverter").then((module) => {
-      handleFileConversion = module.handleFileConversion;
-    }).catch((error) => {
-      console.log("Signature converter not available:", error);
-    });
+    import("../../utils/signatureConverter")
+      .then((module) => {
+        handleFileConversion = module.handleFileConversion;
+      })
+      .catch((error) => {
+        console.log("Signature converter not available:", error);
+      });
   }, []);
 
   // Handle form submission
   const handleFormSubmit = async (data: RadiologistFormData) => {
     // Clear previous errors
     setSubmitError(null);
-    
+
     // Manual file validation
     if (!signatureFile) {
       setFileError("Signature file is required");
@@ -94,25 +101,29 @@ export default function RadiologistFormModal({
     try {
       console.log("Form data being submitted:", data);
       console.log("Signature file:", signatureFile);
-      
+
       await onSubmit(data, signatureFile);
       resetForm();
     } catch (error) {
       console.error("Error submitting form:", error);
-      setSubmitError(error instanceof Error ? error.message : "An error occurred while submitting the form");
+      setSubmitError(
+        error instanceof Error
+          ? error.message
+          : "An error occurred while submitting the form"
+      );
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      
+
       // Validate file type
-      if (!file.type.startsWith('image/')) {
+      if (!file.type.startsWith("image/")) {
         setFileError("Please select an image file");
         return;
       }
-      
+
       setSignatureFile(file);
       setSelectedFileName(file.name);
 
@@ -141,6 +152,10 @@ export default function RadiologistFormModal({
     resetForm();
   };
 
+  // Get userName and userEmail with fallback to prevent undefined values
+  const userName = session?.user?.name || session?.user?.username || "User";
+  const userEmail = session?.user?.email || "";
+
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-40">
       <div className="bg-white p-6 rounded-lg shadow-xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto relative">
@@ -167,38 +182,53 @@ export default function RadiologistFormModal({
         {/* Form */}
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
-              Radiologist Name<span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-gray-700">
+              User Name
             </label>
-            <input
+            <div className="mt-1 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <User className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
               {...register("name")}
-              className="w-full border border-stone-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 transition-colors"
-              placeholder="Enter radiologist name"
-              disabled={isLoading}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.name.message}
-              </p>
-            )}
+                id="email"
+                name="email"
+                type="email"
+                value={userName}
+                readOnly
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-600 sm:text-sm cursor-not-allowed"
+              />
+            </div>
+            <p className="mt-1 text-xs text-gray-500">
+              This is the user name you used to sign up
+            </p>
           </div>
 
+          {/* Email (Read-only) */}
           <div>
-            <label className="block text-sm font-medium text-stone-700 mb-1">
-              Email<span className="text-red-500">*</span>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email Address
             </label>
-            <input
+            <div className="mt-1 relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Mail className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
               {...register("email")}
-              type="email"
-              className="w-full border border-stone-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-stone-500 focus:border-stone-500 transition-colors"
-              placeholder="Enter email address"
-              disabled={isLoading}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.email.message}
-              </p>
-            )}
+                id="email"
+                name="email"
+                type="email"
+                value={userEmail}
+                readOnly
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-600 sm:text-sm cursor-not-allowed"
+              />
+            </div>
+            <p className="mt-1 text-xs text-gray-500">
+              This is the email address you used to sign up
+            </p>
           </div>
 
           <div>
@@ -232,9 +262,7 @@ export default function RadiologistFormModal({
               <option value="" disabled>
                 Select Qualifications
               </option>
-              <option value="MD in Radiodiagnosis">
-                MD in Radiodiagnosis
-              </option>
+              <option value="MD in Radiodiagnosis">MD in Radiodiagnosis</option>
               <option value="DNB in Radiodiagnosis">
                 DNB in Radiodiagnosis
               </option>
@@ -259,16 +287,14 @@ export default function RadiologistFormModal({
                 Imaging
               </option>
               <option value="MD/DNB in Radiodiagnosis with Fellowship in Abdominal Imaging">
-                MD/DNB in Radiodiagnosis with Fellowship in Abdominal
-                Imaging
+                MD/DNB in Radiodiagnosis with Fellowship in Abdominal Imaging
               </option>
               <option value="MD/DNB in Radiodiagnosis with Fellowship in Head and Neck Imaging">
                 MD/DNB in Radiodiagnosis with Fellowship in Head and Neck
                 Imaging
               </option>
               <option value="MD/DNB in Radiodiagnosis with Fellowship in Pediatric Radiology">
-                MD/DNB in Radiodiagnosis with Fellowship in Pediatric
-                Radiology
+                MD/DNB in Radiodiagnosis with Fellowship in Pediatric Radiology
               </option>
               <option value="MD/DNB in Radiodiagnosis with Fellowship in Nuclear Medicine">
                 MD/DNB in Radiodiagnosis with Fellowship in Nuclear Medicine
@@ -321,9 +347,7 @@ export default function RadiologistFormModal({
               <option value="Head and Neck Radiology">
                 Head and Neck Radiology
               </option>
-              <option value="Pediatric Radiology">
-                Pediatric Radiology
-              </option>
+              <option value="Pediatric Radiology">Pediatric Radiology</option>
               <option value="Nuclear Medicine">Nuclear Medicine</option>
               <option value="Breast Imaging">Breast Imaging</option>
               <option value="Obstetric and Gynecologic Imaging">
@@ -386,7 +410,7 @@ export default function RadiologistFormModal({
               <label
                 htmlFor="file-upload"
                 className={`cursor-pointer bg-stone-100 hover:bg-stone-200 border border-stone-300 rounded-md px-4 py-2 text-sm font-medium text-stone-700 transition-colors ${
-                  isLoading ? 'opacity-50 cursor-not-allowed' : ''
+                  isLoading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
                 Choose File

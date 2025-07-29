@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { UserPlus } from "lucide-react";
 import RadiologistFormModal from "./RadiologistFormModal";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Stethoscope, X } from "lucide-react"; // Added icons for radiologist welcome modal
 
 // Create a type definition for the imported function
 type HandleFileConversionFunction = (
@@ -49,6 +49,59 @@ type RadiologistFormData = {
   signature?: any;
 };
 
+// Welcome Modal Props
+interface WelcomeModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  userName: string;
+}
+
+// Welcome Modal Component
+const WelcomeModal: React.FC<WelcomeModalProps> = ({ isOpen, onClose, userName }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <Stethoscope className="h-8 w-8 text-blue-600 mr-3" />
+            <h2 className="text-2xl font-bold text-gray-900">Welcome, Doctor!</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+        
+        <div className="mb-6">
+          <p className="text-gray-600 mb-4">
+            Welcome to the platform, <span className="font-semibold text-blue-600">Dr. {userName}</span>!
+          </p>
+          <p className="text-gray-600 mb-4">
+            To get started, we need to set up your radiologist profile. This includes your 
+            professional information, qualifications, and digital signature for reports.
+          </p>
+          <p className="text-sm text-gray-500">
+            This is a one-time setup process that will enable you to create and sign radiology reports.
+          </p>
+        </div>
+        
+        <div className="flex justify-end">
+          <button
+            onClick={onClose}
+            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            Set Up Profile
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function RadiologistManagement() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -56,8 +109,9 @@ function RadiologistManagement() {
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [showSuccessAdded, setShowSuccessAdded] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false); // Added welcome modal state
 
-    useEffect(() => {
+  useEffect(() => {
     if (status === 'loading') return; // Still loading
 
     if (!session) {
@@ -79,10 +133,14 @@ function RadiologistManagement() {
         
         if (data.hasCompleted) {
           router.push('/admin');
+        } else {
+          // Show welcome modal if setup is not completed
+          setShowWelcomeModal(true);
         }
       } catch (error) {
         console.error('Error checking setup status:', error);
-        // Continue with setup if there's an error
+        // Show welcome modal if there's an error checking status
+        setShowWelcomeModal(true);
       }
     };
 
@@ -96,6 +154,11 @@ function RadiologistManagement() {
       handleFileConversion = module.handleFileConversion;
     });
   }, []);
+
+  // Handle welcome modal close
+  const handleWelcomeModalClose = () => {
+    setShowWelcomeModal(false);
+  };
 
   // Handle form submission
   const handleFormSubmit = async (data: RadiologistFormData, signatureFile: File | null) => {
@@ -233,6 +296,13 @@ function RadiologistManagement() {
           <div className="w-12 h-12 border-4 border-stone-500 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
+
+      {/* Welcome Modal */}
+      <WelcomeModal
+        isOpen={showWelcomeModal}
+        onClose={handleWelcomeModalClose}
+        userName={session?.user?.name || "Doctor"}
+      />
 
       {/* Success Notification */}
       {showSuccess && (
