@@ -14,7 +14,7 @@ const s3Client = new S3Client({
   },
 });
 
-const BUCKET_NAME = process.env.S3_SIGNATURE_UPLOADS!;
+const BUCKET_NAME = process.env.S3_REPORTS!;
 
 // Define schema validation for radiologist submission - with qualifications as array
 const radiologistSchema = z.object({
