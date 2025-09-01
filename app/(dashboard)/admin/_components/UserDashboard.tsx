@@ -1559,7 +1559,7 @@ export default function UserDashboard() {
           <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center">
             <div>
               <p className="text-sm text-gray-500">Available Radiologists</p>
-              <p className="text-2xl font-bold text-gray-900">coming soon...</p>
+              <p className="text-2xl font-bold text-gray-900">3</p>
               <p className="text-xs text-red-500">↓ 2 from yesterday</p>
             </div>
             <Users className="h-10 w-10 text-purple-500" />
